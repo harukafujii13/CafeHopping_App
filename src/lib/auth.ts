@@ -19,7 +19,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         //verify if a user exists in our database
 
-        const user = { id: 1, name: 'hoge', email: 'hoge@hoge.com' };
+        const user = { id: '1', name: 'hoge', email: 'hoge@hoge.com' };
         return user;
       },
     }),
