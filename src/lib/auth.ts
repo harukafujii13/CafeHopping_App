@@ -1,7 +1,15 @@
 import type { NextAuthOptions } from 'next-auth';
+import { compare } from 'bcryptjs';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { prisma } from './prisma';
 
 export const authOptions: NextAuthOptions = {
+  pages: {
+    signIn: '/login',
+  },
+  session: {
+    strategy: 'jwt',
+  },
   providers: [
     CredentialsProvider({
       name: 'Email and Password',
@@ -18,9 +26,26 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         //verify if a user exists in our database
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
 
-        const user = { id: '1', name: 'hoge', email: 'hoge@hoge.com' };
-        return user;
+        const user = await prisma.user.findUnique({
+          where: {
+            email: credentials.email,
+          },
+        });
+
+        if (!user || !(await compare(credentials.password, user.password))) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          randomKey: Math.random().toString(36).slice(-8),
+        };
       },
     }),
   ],

@@ -7,6 +7,16 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        'primary-gray': '#757575',
+        'primary-yellow': '#F6BD60',
+        'primary-coral': '#F28482',
+        'primary-green': '#84A59D',
+        'primary-rose': '#F5CAC3',
+        'deep-rose': '#F3C0B9',
+        'light-green': '#95B1AA',
+      },
+
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
@@ -15,4 +25,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+};
