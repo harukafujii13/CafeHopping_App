@@ -1,4 +1,5 @@
 import { LoginForm } from './form';
+import Googlemap from '@/components/googlemap';
 
 export default function LoginPage() {
   return (
@@ -7,6 +8,7 @@ export default function LoginPage() {
         <div>
           <h1 className="text-7xl font-bold mb-3">Login</h1>
           <LoginForm />
+          <Googlemap />
         </div>
       </div>
     </>

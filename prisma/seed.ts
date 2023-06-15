@@ -25,3 +25,5 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
+
+// npx prisma db push
