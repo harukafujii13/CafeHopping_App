@@ -1,5 +1,5 @@
 import { LoginForm } from './form';
-import Googlemap from '@/components/googlemap';
+import Googlemap from '@/components/googlemap.component';
 
 export default function LoginPage() {
   return (
