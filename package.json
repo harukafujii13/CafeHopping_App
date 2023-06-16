@@ -12,6 +12,7 @@
     "seed": "ts-node --compiler-options {\"module\":\"commonjs\"} prisma/seed.ts"
   },
   "dependencies": {
+    "@next/font": "^13.4.6",
     "@prisma/client": "^4.15.0",
     "@react-google-maps/api": "^2.18.1",
     "@types/node": "20.2.5",
