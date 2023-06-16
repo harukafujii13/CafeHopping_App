@@ -1,8 +1,8 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
-import Link from 'next/link';
 import { ChangeEvent, FormEvent, useState } from 'react';
+import Link from 'next/link';
 
 export const RegisterForm = () => {
   let [loading, setLoading] = useState(false);
@@ -45,56 +45,68 @@ export const RegisterForm = () => {
   };
 
   const input_style =
-    'form-control block w-full px-4 py-5 mb-6 text-sm font-normal text-gray-700 bg-white border border-solid border-gray-300 rounded focus:outline-none';
+    'form-control block w-[15rem] h-[3rem] px-4 py-5 text-sm font-normal text-primary-gray bg-white bg-clip-padding border border-solid border-gray-400 rounded transition ease-in-out m-0 focus:text-primary-gray focus:bg-white focus:border-blue-600 focus:outline-none mb-6';
 
   const button_style =
     'inline-block px-7 py-4 mb-4 text-white font-medium text-sm leading-snug uppercase rounded transition duration-150 ease-in-out w-full';
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="flex flex-col w-lg row-gap-10">
-      <input
-        required
-        type="text"
-        name="name"
-        placeholder="Name"
-        value={formValues.name}
-        onChange={handleChange}
-        className={input_style}
-      />
+    <>
+      <form
+        onSubmit={onSubmit}
+        className="flex flex-col w-lg row-gap-10">
+        <input
+          required
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={formValues.name}
+          onChange={handleChange}
+          className={input_style}
+        />
 
-      <input
-        required
-        type="email"
-        name="email"
-        placeholder="Email address"
-        value={formValues.email}
-        onChange={handleChange}
-        className={input_style}
-      />
+        <input
+          required
+          type="email"
+          name="email"
+          placeholder="Email address"
+          value={formValues.email}
+          onChange={handleChange}
+          className={input_style}
+        />
 
-      <input
-        required
-        type="password"
-        name="password"
-        placeholder="Password"
-        value={formValues.password}
-        onChange={handleChange}
-        className={input_style}
-      />
-      <button
-        className={`${
-          loading ? 'bg-[#ccc]' : 'bg-blue-600 hover:bg-blue-700'
-        } ${button_style}`}
-        disabled={loading}>
-        {loading ? 'loading...' : 'Register'}
-      </button>
-      <Link
+        <input
+          required
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formValues.password}
+          onChange={handleChange}
+          className={input_style}
+        />
+        <button
+          className={`${
+            loading ? 'bg-[#ccc]' : 'bg-primary-coral hover:bg-primary-rose'
+          } ${button_style}`}
+          disabled={loading}>
+          {loading ? 'loading...' : 'Register'}
+        </button>
+        {/* <Link
         href="/"
         className={`${'bg-red-600 hover:bg-red-700 text-center'} ${button_style}`}>
         Home
+      </Link> */}
+      </form>
+      <div className="mt-2 text-center">
+        <p className="text-[1rem] font-bold text-primary-gray">
+          You already have an account?
+        </p>
+      </div>
+      <Link href="/login">
+        <h1 className="cursor-pointer text-[1.2rem] font-bold text-primary-green cursor-pointer underline">
+          LOG IN
+        </h1>
       </Link>
-    </form>
+    </>
   );
 };

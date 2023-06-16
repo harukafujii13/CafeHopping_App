@@ -55,6 +55,9 @@ export const LoginForm = () => {
   const input_style =
     'form-control block w-[15rem] h-[3rem] px-4 py-5 text-sm font-normal text-primary-gray bg-white bg-clip-padding border border-solid border-gray-400 rounded transition ease-in-out m-0 focus:text-primary-gray focus:bg-white focus:border-blue-600 focus:outline-none';
 
+  const button_style =
+    'inline-block px-7 py-4 mb-4 text-white font-medium text-sm leading-snug uppercase rounded transition duration-150 ease-in-out w-full';
+
   return (
     <>
       <form onSubmit={onSubmit}>
@@ -83,8 +86,9 @@ export const LoginForm = () => {
         </div>
         <button
           type="submit"
-          style={{ backgroundColor: `${loading ? '#F6D0CB' : '#84A59D'}` }}
-          className="inline-block px-7 py-4 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full"
+          className={`${
+            loading ? 'bg-[#ccc]' : 'bg-primary-green hover:bg-[#C4D4D0]'
+          } ${button_style}`}
           disabled={loading}>
           {loading ? 'loading...' : 'Sign In'}
         </button>
@@ -120,7 +124,7 @@ export const LoginForm = () => {
         Continue with GitHub
       </a> */}
       </form>
-      <div className="mt-6 text-center">
+      <div className="mt-2 text-center">
         <p className="text-[1rem] font-bold text-primary-gray">
           You don't have an account?
         </p>
