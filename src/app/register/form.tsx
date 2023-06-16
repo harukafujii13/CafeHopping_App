@@ -45,7 +45,7 @@ export const RegisterForm = () => {
   };
 
   const input_style =
-    'form-control block w-[15rem] h-[3rem] px-4 py-5 text-sm font-normal text-primary-gray bg-white bg-clip-padding border border-solid border-gray-400 rounded transition ease-in-out m-0 focus:text-primary-gray focus:bg-white focus:border-blue-600 focus:outline-none mb-6';
+    'form-control block w-[15rem] h-[3rem] px-4 py-5 text-sm font-normal text-primary-gray bg-white bg-clip-padding border border-solid border-gray-400 rounded transition ease-in-out m-0 focus:text-primary-gray focus:bg-white focus:border-blue-600 focus:outline-none mb-5';
 
   const button_style =
     'inline-block px-7 py-4 mb-4 text-white font-medium text-sm leading-snug uppercase rounded transition duration-150 ease-in-out w-full';

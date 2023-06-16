@@ -62,7 +62,7 @@ export const LoginForm = () => {
     <>
       <form onSubmit={onSubmit}>
         {error && <p className="text-center text-red-500 mb-3">{error}</p>}
-        <div className="mb-6">
+        <div className="mb-5">
           <input
             required
             type="email"
@@ -73,7 +73,7 @@ export const LoginForm = () => {
             className={`${input_style}`}
           />
         </div>
-        <div className="mb-6">
+        <div className="mb-5">
           <input
             required
             type="password"
