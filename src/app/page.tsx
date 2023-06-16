@@ -17,7 +17,6 @@ export default async function Home() {
         <RegisterButton />
         <ProfileButton />
         <LogoutButton />
-
         <h1 className="text-7xl font-bold mb-3">Server Session</h1>
         <code>{JSON.stringify(session)}</code>
         <User />
