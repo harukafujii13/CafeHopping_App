@@ -48,6 +48,10 @@ export const LoginForm = () => {
     setFormValues({ ...formValues, [name]: value });
   };
 
+  const handleSignUp = () => {
+    router.push('/register');
+  };
+
   const input_style =
     'form-control block w-[15rem] h-[3rem] px-4 py-5 text-sm font-normal text-primary-gray bg-white bg-clip-padding border border-solid border-gray-400 rounded transition ease-in-out m-0 focus:text-primary-gray focus:bg-white focus:border-blue-600 focus:outline-none';
 
@@ -116,9 +120,16 @@ export const LoginForm = () => {
         Continue with GitHub
       </a> */}
       </form>
-      <div>
-        <h1>You don't have an account?</h1>
-        <p>SIGN UP</p>
+      <div className="mt-6 text-center">
+        <p className="text-[1rem] font-bold text-primary-gray">
+          You don't have an account?
+        </p>
+        <h1
+          onClick={handleSignUp}
+          style={{ cursor: 'pointer', color: 'primary-coral' }}
+          className="text-[1.2rem] font-bold text-primary-coral cursor-pointer underline">
+          SIGN UP
+        </h1>
       </div>
     </>
   );

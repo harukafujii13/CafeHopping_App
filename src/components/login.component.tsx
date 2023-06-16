@@ -17,7 +17,7 @@ export const LoginFrame = ({ children }: { children: ReactNode }) => {
           </div>
           <div className="p-3 flex flex-col w-[40%] font-main items-center gap-[0.3rem] max-lg:gap-[0.1rem] max-md:relative max-md:z-10 max-md:bg-[rgba(255,255,255,0.7)] max-md:rounded-lg max-md:py-5 max-md:px-4 max-md:w-4/5 max-md:h-4/5 max-md:justify-center">
             <div>
-              <h1 className="mb-5 text-[2rem] max-xs:mb-2 max-xs:text-[1.5rem] text-primary-yellow">
+              <h1 className="mb-5 text-[2rem] max-xs:mb-2 max-xs:text-[1.5rem] text-primary-yellow font-medium">
                 Cafe Hopping APP
               </h1>
             </div>
