@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
-// import loginPage from '/public/images/login-img.jpg';
+import { Inter } from 'next/font/google';
 
 export const LoginFrame = ({ children }: { children: ReactNode }) => {
   return (

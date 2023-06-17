@@ -12,6 +12,8 @@
     "seed": "ts-node --compiler-options {\"module\":\"commonjs\"} prisma/seed.ts"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@next/font": "^13.4.6",
     "@prisma/client": "^4.15.0",
     "@react-google-maps/api": "^2.18.1",
@@ -19,6 +21,7 @@
     "@types/react": "18.2.7",
     "@types/react-dom": "18.2.4",
     "autoprefixer": "10.4.14",
+    "axios": "^1.4.0",
     "bcryptjs": "^2.4.3",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.4",
