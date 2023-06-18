@@ -1,20 +1,45 @@
 'use client';
-import React, { FC, useEffect, useMemo, useState } from 'react';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { FC, useEffect, useState, useMemo } from 'react';
+import {
+  GoogleMap,
+  Marker,
+  InfoWindow,
+  useJsApiLoader,
+  useLoadScript,
+} from '@react-google-maps/api';
+import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url';
 
 interface Location {
   lat: number;
   lng: number;
 }
 
+interface Place {
+  geometry: {
+    location: Location;
+  };
+  name: string;
+  photos?: { getUrl: () => string }[];
+  rating?: number;
+}
+
+// Define libraries outside the component
+const libraries: Libraries = ['places'];
+
 const CafeFinder: FC = () => {
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
-  const [searchPlace, setSearchPlace] = useState<string>('');
-  const [markers, setMarkers] = useState<Location[]>([]);
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_APP_GOOGLE_API_KEY || '',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
+    libraries,
   });
+
+  const containerStyle = useMemo(
+    () => ({ width: '50rem', height: '40rem' }),
+    []
+  );
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords }) => {
@@ -27,78 +52,67 @@ const CafeFinder: FC = () => {
     });
   }, []);
 
-  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    searchCafes();
-  };
+  useEffect(() => {
+    if (isLoaded && currentLocation) {
+      const service = new google.maps.places.PlacesService(
+        document.createElement('div')
+      );
 
-  const searchCafes = () => {
-    if (!searchPlace) return;
-
-    const request = {
-      location: new window.google.maps.LatLng(
-        currentLocation?.lat,
-        currentLocation?.lng
-      ),
-      radius: 1000, // Adjust the radius as needed
-      type: ['cafe'],
-      keyword: searchPlace,
-    };
-
-    const service = new window.google.maps.places.PlacesService(
-      document.createElement('div')
-    );
-
-    service.nearbySearch(request, (results, status) => {
-      if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-        // Clear previous markers
-        setMarkers([]);
-
-        // Create new markers for each cafe result
-        const markers = results.map((result) => ({
-          lat: result.geometry?.location.lat(),
-          lng: result.geometry?.location.lng(),
-        }));
-
-        setMarkers(markers);
-      }
-    });
-  };
-
-  const center = useMemo<Location>(
-    () => ({
-      lat: currentLocation?.lat || 18.52043,
-      lng: currentLocation?.lng || 73.856743,
-    }),
-    [currentLocation]
-  );
+      service.nearbySearch(
+        {
+          location: currentLocation,
+          radius: 5000, // Change as per your requirements
+          type: 'restaurant',
+          keyword: 'cafe',
+        },
+        (results, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+            setPlaces(
+              results.map((result) => ({
+                geometry: result.geometry,
+                name: result.name,
+                photos: result.photos,
+                rating: result.rating,
+              }))
+            );
+          }
+        }
+      );
+    }
+  }, [isLoaded, currentLocation]);
 
   return (
     <div>
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          value={searchPlace}
-          onChange={(event) => setSearchPlace(event.target.value)}
-          placeholder="Enter a place"
-        />
-        <button type="submit">Search</button>
-      </form>
-
       {!isLoaded ? (
         <h1>Loading...</h1>
       ) : (
         <GoogleMap
-          mapContainerClassName="map-container h-[500px] w-[500px]"
-          center={center}
+          mapContainerStyle={containerStyle}
+          center={currentLocation}
           zoom={15}>
-          {currentLocation && <Marker position={currentLocation} />}
-          {markers.map((marker, index) => (
+          {places.map((place, index) => (
             <Marker
               key={index}
-              position={marker}
+              position={place.geometry.location}
+              onClick={() => setSelectedPlace(place)}
             />
           ))}
+          {selectedPlace && (
+            <InfoWindow
+              position={selectedPlace.geometry.location}
+              onCloseClick={() => setSelectedPlace(null)}>
+              <div>
+                <h2>{selectedPlace.name}</h2>
+                {selectedPlace.photos && selectedPlace.photos.length > 0 && (
+                  <img
+                    src={selectedPlace.photos[0].getUrl()}
+                    alt={selectedPlace.name}
+                  />
+                )}
+                {selectedPlace.rating && <p>Rating: {selectedPlace.rating}</p>}
+              </div>
+            </InfoWindow>
+          )}
         </GoogleMap>
       )}
     </div>
