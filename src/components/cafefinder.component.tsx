@@ -135,15 +135,20 @@ const CafeFinder: FC = () => {
             <InfoWindow
               position={selectedPlace.geometry.location}
               onCloseClick={() => setSelectedPlace(null)}>
-              <div>
-                <h2>{selectedPlace.name}</h2>
+              <div className="flex flex-col items-center justify-center bg-white p-4 rounded-lg shadow-lg text-primary-gray">
+                <h2 className="text-lg font-bold mb-2">{selectedPlace.name}</h2>
                 {selectedPlace.photos && selectedPlace.photos.length > 0 && (
                   <img
-                    src={selectedPlace.photos[0].getUrl()}
+                    className="w-40 h-40 object-cover rounded-lg mb-2"
+                    src={selectedPlace.photos[0].getUrl({ maxWidth: 200 })}
                     alt={selectedPlace.name}
                   />
                 )}
-                {selectedPlace.rating && <p>Rating: {selectedPlace.rating}</p>}
+                {selectedPlace.rating && (
+                  <p className="font-semibold">
+                    Rating: {selectedPlace.rating}
+                  </p>
+                )}
               </div>
             </InfoWindow>
           )}
