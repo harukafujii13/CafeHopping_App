@@ -38,7 +38,7 @@ const CafeFinder: FC = () => {
   });
 
   const containerStyle = useMemo(
-    () => ({ width: '50rem', height: '30rem' }),
+    () => ({ width: '60rem', height: '33rem', margin: '0 auto' }),
     []
   );
 
@@ -101,15 +101,24 @@ const CafeFinder: FC = () => {
 
   return (
     <div>
-      <input
-        type="text"
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-        placeholder="Enter location"
-      />
-      <button onClick={handleSearch}>Search</button>
+      <div className="flex m-[2rem] items-center justify-center">
+        <input
+          type="text"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder="Enter location"
+          className="border border-primary-gray rounded-lg px-4 py-1 w-[22rem] h-[3rem]"
+        />
+        <button
+          onClick={handleSearch}
+          className="bg-primary-yellow hover:bg-[#F9D79F] text-white rounded-lg px-4 py-1 h-[3rem] ml-[0.3rem]">
+          Search
+        </button>
+      </div>
       {!isLoaded ? (
-        <h1>Loading...</h1>
+        <h1 className="text-primary-yellow text-[5rem] mt-[10rem] text-center font-bold">
+          Loading...
+        </h1>
       ) : (
         <GoogleMap
           mapContainerStyle={containerStyle}
