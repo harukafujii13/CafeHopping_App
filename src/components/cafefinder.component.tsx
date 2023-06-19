@@ -154,7 +154,7 @@ const CafeFinder: FC = () => {
           )}
         </GoogleMap>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[3rem] mt-[2rem] mx-[2.5rem] text-primary-gray">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[3rem] mt-[2rem] mx-[2.5rem] text-primary-gray pb-[3rem]">
         {places.map((place, index) => (
           <div
             key={index}
