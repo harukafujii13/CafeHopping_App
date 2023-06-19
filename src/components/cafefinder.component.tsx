@@ -1,11 +1,11 @@
 'use client';
+
 import { FC, useEffect, useState, useMemo } from 'react';
 import {
   GoogleMap,
   Marker,
   InfoWindow,
   useJsApiLoader,
-  useLoadScript,
 } from '@react-google-maps/api';
 import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url';
 
@@ -30,6 +30,7 @@ const CafeFinder: FC = () => {
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const [searchInput, setSearchInput] = useState('');
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
@@ -37,7 +38,7 @@ const CafeFinder: FC = () => {
   });
 
   const containerStyle = useMemo(
-    () => ({ width: '50rem', height: '40rem' }),
+    () => ({ width: '50rem', height: '30rem' }),
     []
   );
 
@@ -81,8 +82,32 @@ const CafeFinder: FC = () => {
     }
   }, [isLoaded, currentLocation]);
 
+  const handleSearch = () => {
+    const geocoder = new google.maps.Geocoder();
+
+    geocoder.geocode({ address: searchInput }, (results, status) => {
+      if (status === 'OK') {
+        const location = results[0].geometry.location;
+
+        setCurrentLocation({
+          lat: location.lat(),
+          lng: location.lng(),
+        });
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+  };
+
   return (
     <div>
+      <input
+        type="text"
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+        placeholder="Enter location"
+      />
+      <button onClick={handleSearch}>Search</button>
       {!isLoaded ? (
         <h1>Loading...</h1>
       ) : (
