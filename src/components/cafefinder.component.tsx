@@ -38,7 +38,7 @@ const CafeFinder: FC = () => {
   });
 
   const containerStyle = useMemo(
-    () => ({ width: '60rem', height: '33rem', margin: '0 auto' }),
+    () => ({ width: '60rem', height: '30rem', margin: '0 auto' }),
     []
   );
 
@@ -154,6 +154,28 @@ const CafeFinder: FC = () => {
           )}
         </GoogleMap>
       )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-[2rem] mx-[2.5rem]">
+        {places.map((place, index) => (
+          <div
+            key={index}
+            className="p-4 bg-white rounded-lg shadow-md">
+            {place.photos && place.photos.length > 0 && (
+              <img
+                className="w-full h-48 object-cover rounded-t-lg"
+                src={place.photos[0].getUrl({ maxWidth: 500 })}
+                alt={place.name}
+              />
+            )}
+            <div className="p-4">
+              <h3 className="font-bold text-xl mb-2">{place.name}</h3>
+              {place.rating && (
+                <p className="font-semibold mb-2">Rating: {place.rating}</p>
+              )}
+              {/* Add any additional information about the place here */}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
