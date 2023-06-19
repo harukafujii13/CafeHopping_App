@@ -154,14 +154,14 @@ const CafeFinder: FC = () => {
           )}
         </GoogleMap>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-[2rem] mx-[2.5rem]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[3rem] mt-[2rem] mx-[2.5rem] text-primary-gray">
         {places.map((place, index) => (
           <div
             key={index}
-            className="p-4 bg-white rounded-lg shadow-md">
+            className="bg-white shadow-md">
             {place.photos && place.photos.length > 0 && (
               <img
-                className="w-full h-48 object-cover rounded-t-lg"
+                className="w-full h-48 object-cover "
                 src={place.photos[0].getUrl({ maxWidth: 500 })}
                 alt={place.name}
               />
