@@ -1,5 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
+//it's using PostgreSQL as the database provider
 
 generator client {
   provider = "prisma-client-js"
@@ -16,3 +17,5 @@ model User {
   email     String @unique
   password  String
 }
+
+//Model: The model block defines a data model for the User entity in the database. 
