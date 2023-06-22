@@ -18,18 +18,39 @@ interface Place {
   geometry: {
     location: Location;
   };
-  name: string;
+  name: string; //name of the place ex)"New York City"
   photos?: { getUrl: () => string }[];
   rating?: number;
 }
+//memo1
+//geometry: This is an object that includes the geographic location of the place.
+
+//memo2
+//The location property is an object of the Location interface,
+//which includes lat and lng properties to specify the latitude and longitude coordinates of the place.
+
+//memo3
+//photos: This is an optional property, represented by the ? symbol.
+//It is an array of objects, where each object should have a getUrl method that returns a string.
+//This could be used to store a collection of photos related to the place, with each photo represented by a URL.
+
+//memo4
+//rating: This is another optional property that, if present, should be a number.
+//It could be used to store a rating score for the place.
 
 // Define libraries outside the component
 const libraries: Libraries = ['places'];
+//By including 'places' in the libraries array, you are ensuring
+//that the Places library is loaded when the Google Maps API is loaded in your application.
 
 const CafeFinder: FC = () => {
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
+  //places is an array of Place objects, representing places of interest returned from the Google Maps API.
+
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  //selectedPlace is a Place object that stores the place currently selected by the user on the map.
+
   const [searchInput, setSearchInput] = useState('');
 
   const { isLoaded } = useJsApiLoader({
@@ -52,6 +73,7 @@ const CafeFinder: FC = () => {
       setCurrentLocation(location);
     });
   }, []);
+  //retrieves the user's current location when the component mounts
 
   useEffect(() => {
     if (isLoaded && currentLocation) {
@@ -82,16 +104,24 @@ const CafeFinder: FC = () => {
     }
   }, [isLoaded, currentLocation]);
 
+  // runs a nearbySearch using the PlacesService from the Google Maps Places library
+  //whenever isLoaded or currentLocation changes. It sets the returned places into the places state.
+
   const handleSearch = () => {
     const geocoder = new google.maps.Geocoder();
+    //It first creates a new instance of google.maps.Geocoder().
+    //The Geocoder class provides geocoding and reverse geocoding of addresses.
 
     geocoder.geocode({ address: searchInput }, (results, status) => {
       if (status === 'OK') {
+        //the geocoding was successful
         const location = results[0].geometry.location;
 
         setCurrentLocation({
           lat: location.lat(),
           lng: location.lng(),
+          //called with the latitude (lat) and longitude (lng) of the location.
+          //This updates the current location, which is stored in the state.
         });
       } else {
         alert('Geocode was not successful for the following reason: ' + status);
@@ -121,7 +151,7 @@ const CafeFinder: FC = () => {
         </h1>
       ) : (
         <GoogleMap
-          mapContainerStyle={containerStyle}
+          mapContainerStyle={containerStyle} //avoid unnecessary re-renders
           center={currentLocation}
           zoom={15}>
           {places.map((place, index) => (
@@ -165,6 +195,7 @@ const CafeFinder: FC = () => {
                 src={place.photos[0].getUrl({ maxWidth: 500 })}
                 alt={place.name}
               />
+              //If the place has photos, the first photo's URL is retrieved using place.photos[0].getUrl({ maxWidth: 500 }) and is displayed in an img tag.
             )}
             <div className="p-4">
               <h3 className="font-bold text-xl mb-2">{place.name}</h3>
@@ -181,3 +212,15 @@ const CafeFinder: FC = () => {
 };
 
 export default CafeFinder;
+
+//For each place in the places array, a Marker component is rendered on the map at the place's location.
+//Each marker's position prop is set to the location of the place it represents,
+//and onClick event is set to a function that updates the selectedPlace state
+//to the current place when the marker is clicked.
+
+//If a place is selected (i.e., selectedPlace is not null), an InfoWindow component is rendered.
+//This component displays more information about the selected place in a popup window.
+
+//The InfoWindow is positioned at the location of the selected place.
+//When it's closed (by clicking the 'x' button),
+//the onCloseClick prop sets selectedPlace back to null, effectively hiding the info window.

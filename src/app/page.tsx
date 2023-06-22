@@ -24,3 +24,7 @@ export default async function Home() {
     </main>
   );
 }
+
+//memo1
+//session: The getServerSession function is called to retrieve the server session
+//using the provided authOptions. The resulting session object is stored in the session variable.
