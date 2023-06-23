@@ -54,8 +54,6 @@ const CafeFinder: FC = () => {
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   //selectedPlace is a Place object that stores the place currently selected by the user on the map.
 
-  const [searchInput, setSearchInput] = useState('');
-
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
     libraries,
@@ -116,21 +114,26 @@ const CafeFinder: FC = () => {
     //It first creates a new instance of google.maps.Geocoder().
     //The Geocoder class provides geocoding and reverse geocoding of addresses.
 
-    geocoder.geocode({ address: searchInput }, (results, status) => {
-      if (status === 'OK') {
-        //the geocoding was successful
-        const location = results[0].geometry.location;
+    geocoder.geocode(
+      { address: searchInputRef.current?.value },
+      (results, status) => {
+        if (status === 'OK') {
+          //the geocoding was successful
+          const location = results[0].geometry.location;
 
-        setCurrentLocation({
-          lat: location.lat(),
-          lng: location.lng(),
-          //called with the latitude (lat) and longitude (lng) of the location.
-          //This updates the current location, which is stored in the state.
-        });
-      } else {
-        alert('Geocode was not successful for the following reason: ' + status);
+          setCurrentLocation({
+            lat: location.lat(),
+            lng: location.lng(),
+            //called with the latitude (lat) and longitude (lng) of the location.
+            //This updates the current location, which is stored in the state.
+          });
+        } else {
+          alert(
+            'Geocode was not successful for the following reason: ' + status
+          );
+        }
       }
-    });
+    );
   };
 
   usePlacesAutocomplete({ input: searchInputRef.current });
@@ -141,8 +144,6 @@ const CafeFinder: FC = () => {
         <input
           ref={searchInputRef}
           type="text"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
           placeholder="Enter location"
           className="border border-primary-gray rounded-lg px-4 py-1 w-[22rem] h-[3rem]"
         />
