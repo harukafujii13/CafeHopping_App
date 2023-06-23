@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useEffect, useState, useMemo } from 'react';
+import { FC, useEffect, useState, useMemo, useRef } from 'react';
 import {
   GoogleMap,
   Marker,
@@ -8,6 +8,7 @@ import {
   useJsApiLoader,
 } from '@react-google-maps/api';
 import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url';
+import usePlacesAutocomplete from '@/hooks/autocomplete';
 
 interface Location {
   lat: number;
@@ -44,6 +45,8 @@ const libraries: Libraries = ['places'];
 //that the Places library is loaded when the Google Maps API is loaded in your application.
 
 const CafeFinder: FC = () => {
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
   //places is an array of Place objects, representing places of interest returned from the Google Maps API.
@@ -56,6 +59,7 @@ const CafeFinder: FC = () => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
     libraries,
+    language: 'en', // This specifies the language as English.
   });
 
   const containerStyle = useMemo(
@@ -85,8 +89,8 @@ const CafeFinder: FC = () => {
         {
           location: currentLocation,
           radius: 5000, // Change as per your requirements
-          type: 'restaurant',
-          keyword: 'cafe',
+          type: 'cafe',
+          // keyword: 'cafe',
         },
         (results, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK && results) {
@@ -129,10 +133,13 @@ const CafeFinder: FC = () => {
     });
   };
 
+  usePlacesAutocomplete({ input: searchInputRef.current });
+
   return (
     <div>
       <div className="flex m-[2rem] items-center justify-center">
         <input
+          ref={searchInputRef}
           type="text"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
