@@ -9,6 +9,7 @@ import {
 } from '@react-google-maps/api';
 import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url';
 import usePlacesAutocomplete from '@/hooks/autocomplete';
+import StarRating from './starRating.component';
 
 interface Location {
   lat: number;
@@ -23,6 +24,7 @@ interface Place {
   photos?: { getUrl: () => string }[];
   rating?: number;
 }
+
 //memo1
 //geometry: This is an object that includes the geographic location of the place.
 
@@ -183,8 +185,8 @@ const CafeFinder: FC = () => {
                   />
                 )}
                 {selectedPlace.rating && (
-                  <p className="font-semibold">
-                    Rating: {selectedPlace.rating}
+                  <p>
+                    Rating: <StarRating rating={selectedPlace.rating} />
                   </p>
                 )}
               </div>
@@ -208,7 +210,9 @@ const CafeFinder: FC = () => {
             <div className="p-4">
               <h3 className="font-bold text-xl mb-2">{place.name}</h3>
               {place.rating && (
-                <p className="font-semibold mb-2">Rating: {place.rating}</p>
+                <p className="font-semibold mb-2">
+                  Rating: {place.rating} <StarRating rating={place.rating} />
+                </p>
               )}
               {/* Add any additional information about the place here */}
             </div>
