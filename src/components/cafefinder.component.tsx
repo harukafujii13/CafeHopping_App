@@ -179,15 +179,18 @@ const CafeFinder: FC = () => {
                 <h2 className="text-lg font-bold mb-2">{selectedPlace.name}</h2>
                 {selectedPlace.photos && selectedPlace.photos.length > 0 && (
                   <img
-                    className="w-40 h-40 object-cover rounded-lg mb-2"
+                    className="w-40 h-40 object-cover mb-2"
                     src={selectedPlace.photos[0].getUrl({ maxWidth: 200 })}
                     alt={selectedPlace.name}
                   />
                 )}
                 {selectedPlace.rating && (
-                  <p>
-                    Rating: <StarRating rating={selectedPlace.rating} />
-                  </p>
+                  <div className="flex items-center">
+                    <p className="mr-[0.3rem] font-normal">
+                      Rating: {selectedPlace.rating}
+                    </p>
+                    <StarRating rating={selectedPlace.rating} />
+                  </div>
                 )}
               </div>
             </InfoWindow>
@@ -208,7 +211,7 @@ const CafeFinder: FC = () => {
               //If the place has photos, the first photo's URL is retrieved using place.photos[0].getUrl({ maxWidth: 500 }) and is displayed in an img tag.
             )}
             <div className="p-4">
-              <h3 className="font-bold text-xl mb-2">{place.name}</h3>
+              <h3 className="font-bold text-xl">{place.name}</h3>
               {place.rating && (
                 <div className="font-semibold flex items-center ">
                   <p className="mr-[0.5rem]">{place.rating}</p>{' '}
