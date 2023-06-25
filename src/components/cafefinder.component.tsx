@@ -210,9 +210,10 @@ const CafeFinder: FC = () => {
             <div className="p-4">
               <h3 className="font-bold text-xl mb-2">{place.name}</h3>
               {place.rating && (
-                <p className="font-semibold mb-2">
-                  Rating: {place.rating} <StarRating rating={place.rating} />
-                </p>
+                <div className="font-semibold flex items-center ">
+                  <p className="mr-[0.5rem]">{place.rating}</p>{' '}
+                  <StarRating rating={place.rating} />
+                </div>
               )}
               {/* Add any additional information about the place here */}
             </div>

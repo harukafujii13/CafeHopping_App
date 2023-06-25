@@ -13,22 +13,23 @@ const StarRating: FC<StarRatingProps> = ({ rating }) => {
   return (
     <div className="flex ">
       {[...Array(fullStars)].map((_, i) => (
-        <FontAwesomeIcon
-          className="text-primary-yellow w-[1rem] h-[1rem]"
-          key={`full-${i}`}
-          icon={faStar}
+        <img
+          className="w-[1.2rem] h-[1.2rem]"
+          src={'/images/full-star.png'}
+          alt="star rating"
         />
       ))}
       {halfStar && (
-        <FontAwesomeIcon
-          icon={faStarHalfAlt}
-          className="text-primary-yellow w-[1.2rem] h-[1.2rem]"
+        <img
+          className="w-[1.2rem] h-[1.2rem]"
+          src={'/images/half-star.png'}
+          alt="star rating"
         />
       )}
       {[...Array(emptyStars)].map((_, i) => (
         <img
           className="w-[1.2rem] h-[1.2rem]"
-          src={'/images/star.png'}
+          src={'/images/empty-star.png'}
           alt="star rating"
         />
       ))}
