@@ -169,6 +169,10 @@ const CafeFinder: FC = () => {
               key={index}
               position={place.geometry.location}
               onClick={() => setSelectedPlace(place)}
+              icon={{
+                url: '/images/cafe-icon.png',
+                scaledSize: new window.google.maps.Size(45, 45),
+              }}
             />
           ))}
           {selectedPlace && (
