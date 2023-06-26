@@ -218,7 +218,7 @@ const CafeFinder: FC = () => {
               <h3 className="font-bold text-xl">{place.name}</h3>
               {place.rating && (
                 <div className="font-semibold flex items-center ">
-                  <p className="mr-[0.5rem]">{place.rating}</p>{' '}
+                  <p className="mr-[0.3rem]">{place.rating}</p>{' '}
                   <StarRating rating={place.rating} />
                 </div>
               )}
