@@ -23,6 +23,8 @@ interface Place {
   name: string; //name of the place ex)"New York City"
   photos?: { getUrl: () => string }[];
   rating?: number;
+  place_id: string; // Add place_id to use in Place Details request
+  opening_hours?: { weekday_text: string[] }; // Add opening_hours to store fetched opening hours
 }
 
 //memo1
@@ -100,6 +102,7 @@ const CafeFinder: FC = () => {
                 name: result.name,
                 photos: result.photos,
                 rating: result.rating,
+                place_id: result.place_id, // Store place_id from results to use in Place Details request
               }))
             );
           }
@@ -140,6 +143,24 @@ const CafeFinder: FC = () => {
 
   usePlacesAutocomplete({ input: searchInputRef.current });
 
+  const handleMarkerClick = (place: Place) => {
+    const service = new google.maps.places.PlacesService(
+      document.createElement('div')
+    );
+
+    service.getDetails(
+      {
+        placeId: place.place_id,
+        fields: ['opening_hours'],
+      },
+      (result, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          setSelectedPlace({ ...place, opening_hours: result.opening_hours });
+        }
+      }
+    );
+  };
+
   return (
     <div>
       <div className="flex m-[2rem] items-center justify-center">
@@ -168,7 +189,7 @@ const CafeFinder: FC = () => {
             <Marker
               key={index}
               position={place.geometry.location}
-              onClick={() => setSelectedPlace(place)}
+              onClick={() => handleMarkerClick(place)}
               icon={{
                 url: '/images/cafe-icon.png',
                 scaledSize: new window.google.maps.Size(45, 45),
@@ -205,6 +226,18 @@ const CafeFinder: FC = () => {
                       Rating: {selectedPlace.rating}
                     </p>
                     <StarRating rating={selectedPlace.rating} />
+                  </div>
+                )}
+                {selectedPlace.opening_hours && (
+                  <div>
+                    <h4>Opening Hours:</h4>
+                    <ul>
+                      {selectedPlace.opening_hours.weekday_text.map(
+                        (day, index) => (
+                          <li key={index}>{day}</li>
+                        )
+                      )}
+                    </ul>
                   </div>
                 )}
               </div>
