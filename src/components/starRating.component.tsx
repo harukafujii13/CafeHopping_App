@@ -11,6 +11,7 @@ const StarRating: FC<StarRatingProps> = ({ rating }) => {
     <div className="flex ">
       {[...Array(fullStars)].map((_, i) => (
         <img
+          key={`fullStar-${i}`}
           className="w-[1.2rem] h-[1.2rem]"
           src={'/images/full-star.png'}
           alt="star rating"
@@ -18,6 +19,7 @@ const StarRating: FC<StarRatingProps> = ({ rating }) => {
       ))}
       {halfStar && (
         <img
+          key="halfStar"
           className="w-[1.2rem] h-[1.2rem]"
           src={'/images/half-star.png'}
           alt="star rating"
@@ -25,6 +27,7 @@ const StarRating: FC<StarRatingProps> = ({ rating }) => {
       )}
       {[...Array(emptyStars)].map((_, i) => (
         <img
+          key={`emptyStar-${i}`}
           className="w-[1.2rem] h-[1.2rem]"
           src={'/images/empty-star.png'}
           alt="star rating"
