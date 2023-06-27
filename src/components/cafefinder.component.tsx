@@ -245,31 +245,48 @@ const CafeFinder: FC = () => {
           )}
         </GoogleMap>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[3rem] mt-[2rem] mx-[2.5rem] text-primary-gray pb-[3rem]">
-        {places.map((place, index) => (
-          <div
-            key={index}
-            className="bg-white shadow-md">
-            {place.photos && place.photos.length > 0 && (
-              <img
-                className="w-full h-48 object-cover "
-                src={place.photos[0].getUrl({ maxWidth: 500 })}
-                alt={place.name}
-              />
-              //If the place has photos, the first photo's URL is retrieved using place.photos[0].getUrl({ maxWidth: 500 }) and is displayed in an img tag.
-            )}
-            <div className="p-4">
-              <h3 className="font-bold text-xl">{place.name}</h3>
-              {place.rating && (
-                <div className="font-semibold flex items-center ">
-                  <p className="mr-[0.3rem]">{place.rating}</p>{' '}
-                  <StarRating rating={place.rating} />
-                </div>
+      <div className="flex justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[3rem] mt-[2rem] mx-[2.5rem] text-primary-gray pb-[3rem]">
+          {places.map((place, index) => (
+            <div
+              key={index}
+              className="bg-white shadow-md max-w-sm">
+              {place.photos && place.photos.length > 0 && (
+                <img
+                  className=" w-full h-48 object-cover"
+                  src={place.photos[0].getUrl({ maxWidth: 500 })}
+                  alt={place.name}
+                />
               )}
-              {/* Add any additional information about the place here */}
+              <div className="p-4">
+                <h3 className="font-bold text-xl">{place.name}</h3>
+                {place.rating && (
+                  <div className="font-semibold flex items-center">
+                    <p className="mr-[0.3rem]">{place.rating}</p>
+                    <StarRating rating={place.rating} />
+                  </div>
+                )}
+                {/* Add any additional information about the place here */}
+                <a
+                  href="#"
+                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  More info
+                  <svg
+                    aria-hidden="true"
+                    className="w-4 h-4 ml-2 -mr-1"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fillRule="evenodd"
+                      d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                      clipRule="evenodd"></path>
+                  </svg>
+                </a>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
