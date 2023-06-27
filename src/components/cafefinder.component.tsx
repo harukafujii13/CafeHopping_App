@@ -175,6 +175,17 @@ const CafeFinder: FC = () => {
               }}
             />
           ))}
+
+          {currentLocation && (
+            <Marker
+              position={currentLocation}
+              icon={{
+                url: '/images/current-location.png',
+                scaledSize: new window.google.maps.Size(55, 55),
+              }}
+            />
+          )}
+
           {selectedPlace && (
             <InfoWindow
               position={selectedPlace.geometry.location}

@@ -38,3 +38,8 @@ const StarRating: FC<StarRatingProps> = ({ rating }) => {
 };
 
 export default StarRating;
+
+//keys in React should be unique among their siblings,
+//they don't have to be globally unique in the entire application.
+//The key helps React identify which items have changed, are added,
+//or are removed, and should be stable and not change over time.
