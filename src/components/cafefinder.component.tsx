@@ -10,6 +10,7 @@ import {
 import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url';
 import usePlacesAutocomplete from '@/hooks/autocomplete';
 import StarRating from './starRating.component';
+import DistanceToCafe from './distanceToCafe.component';
 
 interface Location {
   lat: number;
@@ -24,7 +25,7 @@ interface Place {
   photos?: { getUrl: () => string }[];
   rating?: number;
   place_id: string; // Add place_id to use in Place Details request
-  opening_hours?: { weekday_text: string[] }; // Add opening_hours to store fetched opening hours
+  opening_hours?: { weekday_text: string[]; isOpen?: boolean };
 }
 
 //memo1
@@ -103,6 +104,7 @@ const CafeFinder: FC = () => {
                 photos: result.photos,
                 rating: result.rating,
                 place_id: result.place_id, // Store place_id from results to use in Place Details request
+                opening_hours: result.opening_hours,
               }))
             );
           }
@@ -155,7 +157,10 @@ const CafeFinder: FC = () => {
       },
       (result, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-          setSelectedPlace({ ...place, opening_hours: result.opening_hours });
+          let isOpen = result.opening_hours
+            ? result.opening_hours.isOpen()
+            : undefined;
+          setSelectedPlace({ ...place, isOpen });
         }
       }
     );
@@ -228,18 +233,6 @@ const CafeFinder: FC = () => {
                     <StarRating rating={selectedPlace.rating} />
                   </div>
                 )}
-                {selectedPlace.opening_hours && (
-                  <div>
-                    <h4>Opening Hours:</h4>
-                    <ul>
-                      {selectedPlace.opening_hours.weekday_text.map(
-                        (day, index) => (
-                          <li key={index}>{day}</li>
-                        )
-                      )}
-                    </ul>
-                  </div>
-                )}
               </div>
             </InfoWindow>
           )}
@@ -265,6 +258,16 @@ const CafeFinder: FC = () => {
                     <p className="mr-[0.3rem]">{place.rating}</p>
                     <StarRating rating={place.rating} />
                   </div>
+                )}
+                <p>{place.isOpen ? 'Open Now' : 'Closed'}</p>
+                {currentLocation && (
+                  <DistanceToCafe
+                    currentLocation={currentLocation}
+                    cafeLocation={{
+                      lat: place.geometry.location.lat(),
+                      lng: place.geometry.location.lng(),
+                    }}
+                  />
                 )}
                 {/* Add any additional information about the place here */}
                 <a
