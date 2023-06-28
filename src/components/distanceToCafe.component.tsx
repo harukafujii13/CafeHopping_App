@@ -43,7 +43,7 @@ const DistanceToCafe: React.FC<DistanceToCafeProps> = ({
   const cafeLng = cafeLocation.lng;
 
   return (
-    <p>
+    <p className="font-bold text-x">
       Distance:{' '}
       {calculateDistance(
         currentLocation.lat,

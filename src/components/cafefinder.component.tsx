@@ -25,7 +25,7 @@ interface Place {
   photos?: { getUrl: () => string }[];
   rating?: number;
   place_id: string; // Add place_id to use in Place Details request
-  opening_hours?: { weekday_text: string[]; isOpen?: boolean };
+  opening_hours?: { weekday_text: string[] }; // Add opening_hours to store fetched opening hours
 }
 
 //memo1
@@ -104,7 +104,6 @@ const CafeFinder: FC = () => {
                 photos: result.photos,
                 rating: result.rating,
                 place_id: result.place_id, // Store place_id from results to use in Place Details request
-                opening_hours: result.opening_hours,
               }))
             );
           }
@@ -157,10 +156,7 @@ const CafeFinder: FC = () => {
       },
       (result, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-          let isOpen = result.opening_hours
-            ? result.opening_hours.isOpen()
-            : undefined;
-          setSelectedPlace({ ...place, isOpen });
+          setSelectedPlace({ ...place, opening_hours: result.opening_hours });
         }
       }
     );
@@ -233,6 +229,18 @@ const CafeFinder: FC = () => {
                     <StarRating rating={selectedPlace.rating} />
                   </div>
                 )}
+                {selectedPlace.opening_hours && (
+                  <div>
+                    <h4>Opening Hours:</h4>
+                    <ul>
+                      {selectedPlace.opening_hours.weekday_text.map(
+                        (day, index) => (
+                          <li key={index}>{day}</li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                )}
               </div>
             </InfoWindow>
           )}
@@ -253,26 +261,27 @@ const CafeFinder: FC = () => {
               )}
               <div className="p-4">
                 <h3 className="font-bold text-xl">{place.name}</h3>
-                {place.rating && (
-                  <div className="font-semibold flex items-center">
-                    <p className="mr-[0.3rem]">{place.rating}</p>
-                    <StarRating rating={place.rating} />
-                  </div>
-                )}
-                <p>{place.isOpen ? 'Open Now' : 'Closed'}</p>
-                {currentLocation && (
-                  <DistanceToCafe
-                    currentLocation={currentLocation}
-                    cafeLocation={{
-                      lat: place.geometry.location.lat(),
-                      lng: place.geometry.location.lng(),
-                    }}
-                  />
-                )}
+                <div className="flex my-[0.3rem]">
+                  {place.rating && (
+                    <div className="font-semibold flex items-center mr-[2rem]">
+                      <p className="mr-[0.3rem]">{place.rating}</p>
+                      <StarRating rating={place.rating} />
+                    </div>
+                  )}
+                  {currentLocation && (
+                    <DistanceToCafe
+                      currentLocation={currentLocation}
+                      cafeLocation={{
+                        lat: place.geometry.location.lat(),
+                        lng: place.geometry.location.lng(),
+                      }}
+                    />
+                  )}
+                </div>
                 {/* Add any additional information about the place here */}
                 <a
                   href="#"
-                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  className="inline-flex items-center px-3 py-2 text-x font-bold text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                   More info
                   <svg
                     aria-hidden="true"
