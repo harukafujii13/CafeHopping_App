@@ -203,7 +203,7 @@ const CafeFinder: FC = () => {
               position={currentLocation}
               icon={{
                 url: '/images/current-location.png',
-                scaledSize: new window.google.maps.Size(55, 55),
+                scaledSize: new window.google.maps.Size(50, 50),
               }}
             />
           )}
