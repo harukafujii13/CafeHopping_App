@@ -11,6 +11,7 @@ import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-ur
 import usePlacesAutocomplete from '@/hooks/autocomplete';
 import StarRating from './starRating.component';
 import DistanceToCafe from './distanceToCafe.component';
+import PlaceModal from './placeModal.component';
 
 interface Location {
   lat: number;
@@ -58,6 +59,9 @@ const CafeFinder: FC = () => {
 
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   //selectedPlace is a Place object that stores the place currently selected by the user on the map.
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalPlace, setModalPlace] = useState<Place | null>(null);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
@@ -160,6 +164,15 @@ const CafeFinder: FC = () => {
         }
       }
     );
+  };
+
+  const handleMoreInfoClick = (place: Place) => {
+    setModalPlace(place);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
   };
 
   return (
@@ -279,9 +292,9 @@ const CafeFinder: FC = () => {
                   )}
                 </div>
                 {/* Add any additional information about the place here */}
-                <a
-                  href="#"
-                  className="inline-flex items-center px-3 py-2 text-x font-bold text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button
+                  onClick={() => handleMoreInfoClick(place)}
+                  className="inline-flex items-center px-3 py-2 text-x font-bold text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-[#b9cbc6] dark:bg-[#95b1a8] dark:hover:bg-primary-green dark:focus:ring-[#688d81]">
                   More info
                   <svg
                     aria-hidden="true"
@@ -294,12 +307,19 @@ const CafeFinder: FC = () => {
                       d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
                       clipRule="evenodd"></path>
                   </svg>
-                </a>
+                </button>
               </div>
             </div>
           ))}
         </div>
       </div>
+      {modalOpen && (
+        <PlaceModal
+          isOpen={modalOpen}
+          closeModal={closeModal}
+          place={modalPlace}
+        />
+      )}
     </div>
   );
 };
