@@ -60,8 +60,7 @@ const CafeFinder: FC = () => {
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   //selectedPlace is a Place object that stores the place currently selected by the user on the map.
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalPlace, setModalPlace] = useState<Place | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
@@ -166,13 +165,14 @@ const CafeFinder: FC = () => {
     );
   };
 
-  const handleMoreInfoClick = (place: Place) => {
-    setModalPlace(place);
-    setModalOpen(true);
+  const handleMoreInfo = (place) => {
+    console.log(place);
+    setSelectedPlace(place);
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    setModalOpen(false);
+    setIsModalOpen(false);
   };
 
   return (
@@ -291,9 +291,10 @@ const CafeFinder: FC = () => {
                     />
                   )}
                 </div>
+
                 {/* Add any additional information about the place here */}
                 <button
-                  onClick={() => handleMoreInfoClick(place)}
+                  onClick={() => handleMoreInfo(place)}
                   className="inline-flex items-center px-3 py-2 text-x font-bold text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-[#b9cbc6] dark:bg-[#95b1a8] dark:hover:bg-primary-green dark:focus:ring-[#688d81]">
                   More info
                   <svg
@@ -313,13 +314,11 @@ const CafeFinder: FC = () => {
           ))}
         </div>
       </div>
-      {modalOpen && (
-        <PlaceModal
-          isOpen={modalOpen}
-          closeModal={closeModal}
-          place={modalPlace}
-        />
-      )}
+      <PlaceModal
+        isOpen={isModalOpen}
+        closeModal={closeModal}
+        place={selectedPlace}
+      />
     </div>
   );
 };

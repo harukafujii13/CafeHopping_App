@@ -7,6 +7,7 @@ interface ModalProps {
 }
 
 const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
+  console.log(place);
   return (
     <div
       className={`fixed z-10 inset-0 overflow-y-auto ${
