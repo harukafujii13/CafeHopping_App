@@ -1,5 +1,4 @@
 'use client';
-
 import { FC, useEffect, useState, useMemo, useRef } from 'react';
 import {
   GoogleMap,
@@ -12,12 +11,10 @@ import usePlacesAutocomplete from '@/hooks/autocomplete';
 import StarRating from './starRating.component';
 import DistanceToCafe from './distanceToCafe.component';
 import PlaceModal from './placeModal.component';
-
 interface Location {
   lat: number;
   lng: number;
 }
-
 interface Place {
   geometry: {
     location: Location;
@@ -28,69 +25,76 @@ interface Place {
   place_id: string; // Add place_id to use in Place Details request
   opening_hours?: { weekday_text: string[] }; // Add opening_hours to store fetched opening hours
 }
-
 //memo1
 //geometry: This is an object that includes the geographic location of the place.
-
 //memo2
 //The location property is an object of the Location interface,
 //which includes lat and lng properties to specify the latitude and longitude coordinates of the place.
-
 //memo3
 //photos: This is an optional property, represented by the ? symbol.
 //It is an array of objects, where each object should have a getUrl method that returns a string.
 //This could be used to store a collection of photos related to the place, with each photo represented by a URL.
-
 //memo4
 //rating: This is another optional property that, if present, should be a number.
 //It could be used to store a rating score for the place.
-
 // Define libraries outside the component
 const libraries: Libraries = ['places'];
 //By including 'places' in the libraries array, you are ensuring
 //that the Places library is loaded when the Google Maps API is loaded in your application.
-
+//This function is used to fetch the opening hours of a place using the placeId.
+//It returns an array of strings, where each string represents the opening hours for a day of the week.
+//Currently has no error handling
+const getPlaceDetails = (placeId: string | undefined) => {
+  return new Promise<string[]>((resolve, reject) => {
+    if (!placeId) return resolve([] as string[]);
+    let placeOpeningHours: string[] = [];
+    const service = new google.maps.places.PlacesService(
+      document.createElement('div')
+    );
+    const request = { placeId, fields: ['opening_hours'] };
+    service.getDetails(request, (place, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        placeOpeningHours = place?.opening_hours?.weekday_text || [];
+      }
+      resolve(placeOpeningHours);
+    });
+  });
+};
 const CafeFinder: FC = () => {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
-
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
   //places is an array of Place objects, representing places of interest returned from the Google Maps API.
-
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   //selectedPlace is a Place object that stores the place currently selected by the user on the map.
-
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
     libraries,
     language: 'en', // This specifies the language as English.
   });
-
   const containerStyle = useMemo(
     () => ({ width: '60rem', height: '30rem', margin: '0 auto' }),
     []
   );
-
+  useEffect(() => {
+    console.log('places UE --->', places);
+  }, [places]);
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       const location: Location = {
         lat: coords.latitude,
         lng: coords.longitude,
       };
-
       setCurrentLocation(location);
     });
   }, []);
   //retrieves the user's current location when the component mounts
-
   useEffect(() => {
     if (isLoaded && currentLocation) {
       const service = new google.maps.places.PlacesService(
         document.createElement('div')
       );
-
       service.nearbySearch(
         {
           location: currentLocation,
@@ -98,38 +102,37 @@ const CafeFinder: FC = () => {
           type: 'cafe',
           // keyword: 'cafe',
         },
-        (results, status) => {
+        async (results, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-            setPlaces(
-              results.map((result) => ({
-                geometry: result.geometry,
-                name: result.name,
-                photos: result.photos,
-                rating: result.rating,
-                place_id: result.place_id, // Store place_id from results to use in Place Details request
-              }))
-            );
+            const renderedPlace = results.map((result) => ({
+              geometry: result.geometry,
+              name: result.name,
+              photos: result.photos,
+              rating: result.rating,
+              place_id: result.place_id, // Store place_id from results to use in Place Details request
+            }));
+            renderedPlace.forEach(async (place) => {
+              const placeDetails = await getPlaceDetails(place.place_id);
+              place.opening_hours = { weekday_text: placeDetails };
+            });
+            setPlaces(renderedPlace);
           }
         }
       );
     }
   }, [isLoaded, currentLocation]);
-
   // runs a nearbySearch using the PlacesService from the Google Maps Places library
   //whenever isLoaded or currentLocation changes. It sets the returned places into the places state.
-
   const handleSearch = () => {
     const geocoder = new google.maps.Geocoder();
     //It first creates a new instance of google.maps.Geocoder().
     //The Geocoder class provides geocoding and reverse geocoding of addresses.
-
     geocoder.geocode(
       { address: searchInputRef.current?.value },
       (results, status) => {
         if (status === 'OK') {
           //the geocoding was successful
           const location = results[0].geometry.location;
-
           setCurrentLocation({
             lat: location.lat(),
             lng: location.lng(),
@@ -144,14 +147,11 @@ const CafeFinder: FC = () => {
       }
     );
   };
-
   usePlacesAutocomplete({ input: searchInputRef.current });
-
   const handleMarkerClick = (place: Place) => {
     const service = new google.maps.places.PlacesService(
       document.createElement('div')
     );
-
     service.getDetails(
       {
         placeId: place.place_id,
@@ -164,17 +164,14 @@ const CafeFinder: FC = () => {
       }
     );
   };
-
   const handleMoreInfo = (place) => {
-    console.log(place);
+    console.log('handleMoreInfo', place);
     setSelectedPlace(place);
     setIsModalOpen(true);
   };
-
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
   return (
     <div>
       <div className="flex m-[2rem] items-center justify-center">
@@ -210,7 +207,6 @@ const CafeFinder: FC = () => {
               }}
             />
           ))}
-
           {currentLocation && (
             <Marker
               position={currentLocation}
@@ -220,7 +216,6 @@ const CafeFinder: FC = () => {
               }}
             />
           )}
-
           {selectedPlace && (
             <InfoWindow
               position={selectedPlace.geometry.location}
@@ -242,7 +237,7 @@ const CafeFinder: FC = () => {
                     <StarRating rating={selectedPlace.rating} />
                   </div>
                 )}
-                {selectedPlace.opening_hours && (
+                {/* {selectedPlace.opening_hours && (
                   <div>
                     <h4>Opening Hours:</h4>
                     <ul>
@@ -253,7 +248,7 @@ const CafeFinder: FC = () => {
                       )}
                     </ul>
                   </div>
-                )}
+                )} */}
               </div>
             </InfoWindow>
           )}
@@ -291,7 +286,6 @@ const CafeFinder: FC = () => {
                     />
                   )}
                 </div>
-
                 {/* Add any additional information about the place here */}
                 <button
                   onClick={() => handleMoreInfo(place)}
@@ -322,17 +316,4 @@ const CafeFinder: FC = () => {
     </div>
   );
 };
-
 export default CafeFinder;
-
-//For each place in the places array, a Marker component is rendered on the map at the place's location.
-//Each marker's position prop is set to the location of the place it represents,
-//and onClick event is set to a function that updates the selectedPlace state
-//to the current place when the marker is clicked.
-
-//If a place is selected (i.e., selectedPlace is not null), an InfoWindow component is rendered.
-//This component displays more information about the selected place in a popup window.
-
-//The InfoWindow is positioned at the location of the selected place.
-//When it's closed (by clicking the 'x' button),
-//the onCloseClick prop sets selectedPlace back to null, effectively hiding the info window.
