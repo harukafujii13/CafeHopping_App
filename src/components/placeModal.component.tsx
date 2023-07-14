@@ -28,14 +28,14 @@ const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
             <div className="sm:flex sm:items-start  justify-center">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                 <h3
-                  className="text-xl leading-6 font-bold text-primary-gray"
+                  className="text-2xl leading-6 font-bold text-primary-gray flex justify-center text-primary-green"
                   id="modal-headline">
                   {place?.name}
                 </h3>
                 <div className="mt-2">
                   {place?.opening_hours && (
                     <div>
-                      <h4 className="font-bold text-base yext-primary-gray">
+                      <h4 className="font-bold text-base text-primary-yellow">
                         Opening Hours:
                       </h4>
                       <ul>
@@ -49,7 +49,7 @@ const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
               </div>
             </div>
           </div>
-          <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button
               type="button"
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-coral text-x font-bold text-white hover:bg-primary-rose focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#95b1a8] sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
