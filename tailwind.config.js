@@ -16,7 +16,10 @@ module.exports = {
         'deep-rose': '#F3C0B9',
         'light-green': '#95B1AA',
       },
-
+      fontFamily: {
+        inter: ['var(--font-inter)'],
+        rubik: ['var(--font-rubik)'],
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':

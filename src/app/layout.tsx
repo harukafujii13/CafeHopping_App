@@ -1,18 +1,22 @@
 import './globals.css';
 import { NextAuthProvider } from './providers';
-import { Roboto } from 'next/font/google';
+import { Inter, Rubik } from 'next/font/google';
 
 export const metadata = {
   title: 'Cafe Hopping',
   description: 'Cafe finder APP',
 };
-//The metadata object contains information about the application,
-//such as the title and description. It can be used for SEO purposes or any other metadata-related functionality.
 
-const roboto = Roboto({
+const inter = Inter({
   subsets: ['latin'],
-  display: 'swap',
-  weight: '400',
+  weight: ['400'],
+  variable: '--font-inter',
+});
+
+const rubik = Rubik({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-rubik',
 });
 
 export default function RootLayout({
@@ -23,7 +27,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={roboto.className}>
+      className={`${inter.variable}${rubik.variable}`}>
       <body>
         <NextAuthProvider>{children}</NextAuthProvider>
       </body>
