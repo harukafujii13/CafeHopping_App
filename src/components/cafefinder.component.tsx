@@ -11,10 +11,12 @@ import usePlacesAutocomplete from '@/hooks/autocomplete';
 import StarRating from './starRating.component';
 import DistanceToCafe from './distanceToCafe.component';
 import PlaceModal from './placeModal.component';
+
 interface Location {
   lat: number;
   lng: number;
 }
+
 interface Place {
   geometry: {
     location: Location;
@@ -71,15 +73,17 @@ const CafeFinder: FC = () => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
     libraries,
-    language: 'en', // This specifies the language as English.
+    language: 'en', // language as English.
   });
   const containerStyle = useMemo(
     () => ({ width: '60rem', height: '30rem', margin: '0 auto' }),
     []
   );
+
   useEffect(() => {
     console.log('places UE --->', places);
   }, [places]);
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       const location: Location = {

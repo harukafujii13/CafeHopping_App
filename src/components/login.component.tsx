@@ -10,7 +10,7 @@ export const LoginFrame = ({ children }: { children: ReactNode }) => {
         <div className="w-[85%] max-w-[1000px] xl:max-h-[800px] lg:max-h-[700px] md:max-h-[550px] flex items-center mx-auto rounded-xl overflow-hidden shadow-lg aspect-[3/2] bg-[white] max-md:aspect-[3/4] max-sm:flex-col max-md:relative  max-md:justify-center max-md:w-[85%] max-xs:w-[95%] max-xs:h-auto max-lg:max-h-[90%] my-[5%]">
           <div className="w-[60%] max-md:absolute max-md:z-1 max-md:w-full">
             <img
-              className="w-[5px]"
+              className="w-full"
               src={'/images/login-img.jpg'}
               alt="logo"
             />
