@@ -6,6 +6,12 @@ module.exports = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    maxWidth: {
+      container: '1440px',
+      contentContainer: '1140px',
+      containerSmall: '1024px',
+      containerxs: '768px',
+    },
     extend: {
       colors: {
         'primary-gray': '#6b7280',
