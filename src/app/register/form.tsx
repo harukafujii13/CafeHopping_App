@@ -45,10 +45,10 @@ export const RegisterForm = () => {
   };
 
   const input_style =
-    'form-control block w-[15rem] h-[3rem] px-4 py-5 text-sm font-normal text-primary-gray bg-white bg-clip-padding border border-solid border-gray-400 rounded transition ease-in-out m-0 focus:text-primary-gray focus:bg-white focus:border-blue-600 focus:outline-none mb-5';
+    'form-control block w-[15rem] h-[3rem] px-4 py-5 text-sm font-normal text-primary-gray bg-white bg-clip-padding border border-solid border-gray-400 rounded transition ease-in-out m-0 focus:text-primary-gray focus:bg-white focus:border-blue-600 focus:outline-none mb-5 font-inter';
 
   const button_style =
-    'inline-block px-7 py-4 mb-4 text-white font-medium text-sm leading-snug uppercase rounded transition duration-150 ease-in-out w-full';
+    'inline-block px-7 py-4 mb-4 text-white font-medium text-sm leading-snug uppercase rounded transition duration-150 ease-in-out w-full font-inter';
 
   return (
     <>
@@ -98,12 +98,12 @@ export const RegisterForm = () => {
       </Link> */}
       </form>
       <div className="mt-2 text-center">
-        <p className="text-[1rem] font-bold text-primary-gray">
+        <p className="text-[1rem] font-bold text-primary-gray font-inter">
           You already have an account?
         </p>
       </div>
       <Link href="/login">
-        <h1 className="cursor-pointer text-[1.2rem] font-bold text-primary-green cursor-pointer underline">
+        <h1 className="cursor-pointer text-[1.2rem] font-bold text-primary-green cursor-pointer underline font-inter">
           LOG IN
         </h1>
       </Link>

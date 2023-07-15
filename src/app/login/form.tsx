@@ -53,7 +53,7 @@ export const LoginForm = () => {
   };
 
   const input_style =
-    'form-control block w-[15rem] h-[3rem] px-4 py-5 text-sm font-normal text-primary-gray bg-white bg-clip-padding border border-solid border-gray-400 rounded transition ease-in-out m-0 focus:text-primary-gray focus:bg-white focus:border-blue-600 focus:outline-none';
+    'form-control block w-[15rem] h-[3rem] px-4 py-5 text-sm font-normal text-primary-gray bg-white bg-clip-padding border border-solid border-gray-400 rounded transition ease-in-out m-0 focus:text-primary-gray focus:bg-white focus:border-blue-600 focus:outline-none font-inter';
 
   const button_style =
     'inline-block px-7 py-4 mb-4 text-white font-medium text-sm leading-snug uppercase rounded transition duration-150 ease-in-out w-full';
@@ -61,7 +61,9 @@ export const LoginForm = () => {
   return (
     <>
       <form onSubmit={onSubmit}>
-        {error && <p className="text-center text-red-500 mb-3">{error}</p>}
+        {error && (
+          <p className="text-center text-red-500 mb-3 font-inter">{error}</p>
+        )}
         <div className="mb-5">
           <input
             required
@@ -94,13 +96,13 @@ export const LoginForm = () => {
         </button>
       </form>
       <div className="mt-2 text-center">
-        <p className="text-[1rem] font-bold text-primary-gray">
+        <p className="text-[1rem] font-bold text-primary-gray font-inter">
           You don't have an account?
         </p>
         <h1
           onClick={handleSignUp}
           style={{ cursor: 'pointer', color: 'primary-coral' }}
-          className="text-[1.2rem] font-bold text-primary-coral cursor-pointer underline">
+          className="text-[1.2rem] font-bold text-primary-coral cursor-pointer underline font-inter">
           SIGN UP
         </h1>
       </div>
