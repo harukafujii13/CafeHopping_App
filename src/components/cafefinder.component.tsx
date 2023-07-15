@@ -178,21 +178,21 @@ const CafeFinder: FC = () => {
   };
   return (
     <div>
-      <div className="flex m-[2rem] items-center justify-center">
+      <div className="flex m-[2rem] items-center justify-center ">
         <input
           ref={searchInputRef}
           type="text"
           placeholder="Enter location"
-          className="border border-primary-gray rounded-lg px-4 py-1 w-[22rem] h-[3rem]"
+          className="border border-primary-gray rounded-lg px-4 py-1 w-[22rem] h-[3rem] font-inter"
         />
         <button
           onClick={handleSearch}
-          className="bg-primary-yellow hover:bg-[#F9D79F] text-white rounded-lg px-4 py-1 h-[3rem] ml-[0.3rem]">
+          className="bg-primary-yellow hover:bg-[#F9D79F] text-white rounded-lg px-4 py-1 h-[3rem] ml-[0.3rem] font-inter">
           Search
         </button>
       </div>
       {!isLoaded ? (
-        <h1 className="text-primary-yellow text-[5rem] mt-[10rem] text-center font-bold">
+        <h1 className="text-primary-yellow text-[5rem] mt-[10rem] text-center font-bold font-rubik">
           Loading...
         </h1>
       ) : (
@@ -225,7 +225,9 @@ const CafeFinder: FC = () => {
               position={selectedPlace.geometry.location}
               onCloseClick={() => setSelectedPlace(null)}>
               <div className="flex flex-col items-center justify-center bg-white p-4 rounded-lg shadow-lg text-primary-gray">
-                <h2 className="text-lg font-bold mb-2">{selectedPlace.name}</h2>
+                <h2 className="text-base font-bold mb-2 font-inter">
+                  {selectedPlace.name}
+                </h2>
                 {selectedPlace.photos && selectedPlace.photos.length > 0 && (
                   <img
                     className="w-40 h-40 object-cover mb-2"
@@ -235,7 +237,7 @@ const CafeFinder: FC = () => {
                 )}
                 {selectedPlace.rating && (
                   <div className="flex items-center">
-                    <p className="mr-[0.3rem] font-normal">
+                    <p className="mr-[0.3rem] font-normal font-inter">
                       Rating: {selectedPlace.rating}
                     </p>
                     <StarRating rating={selectedPlace.rating} />
@@ -272,10 +274,10 @@ const CafeFinder: FC = () => {
                 />
               )}
               <div className="p-4">
-                <h3 className="font-bold text-xl">{place.name}</h3>
+                <h3 className="font-bold text-lg font-inter">{place.name}</h3>
                 <div className="flex my-[0.3rem]">
                   {place.rating && (
-                    <div className="font-semibold flex items-center mr-[2rem]">
+                    <div className="font-semibold font-inter text-base flex items-center mr-[2rem]">
                       <p className="mr-[0.3rem]">{place.rating}</p>
                       <StarRating rating={place.rating} />
                     </div>
@@ -293,7 +295,7 @@ const CafeFinder: FC = () => {
                 {/* Add any additional information about the place here */}
                 <button
                   onClick={() => handleMoreInfo(place)}
-                  className="inline-flex items-center px-3 py-2 text-x font-bold text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-[#b9cbc6] dark:bg-[#95b1a8] dark:hover:bg-primary-green dark:focus:ring-[#688d81]">
+                  className="inline-flex items-center px-3 py-2 text-x font-inter font-bold text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-[#b9cbc6] dark:bg-[#95b1a8] dark:hover:bg-primary-green dark:focus:ring-[#688d81]">
                   More info
                   <svg
                     aria-hidden="true"

@@ -28,17 +28,17 @@ const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
             <div className="sm:flex sm:items-start  justify-center">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                 <h3
-                  className="text-2xl leading-6 font-bold text-primary-gray flex justify-center text-primary-green"
+                  className="text-xl leading-6 font-bold font-inter text-primary-gray flex justify-center"
                   id="modal-headline">
                   {place?.name}
                 </h3>
                 <div className="mt-2">
                   {place?.opening_hours && (
                     <div>
-                      <h4 className="font-bold text-base text-primary-yellow">
-                        Opening Hours:
+                      <h4 className="font-medium text-base font-inter text-primary-yellow">
+                        Opening Hours
                       </h4>
-                      <ul>
+                      <ul className="font-inter font-normal text-sm">
                         {place.opening_hours.weekday_text.map((day, index) => (
                           <li key={index}>{day}</li>
                         ))}
