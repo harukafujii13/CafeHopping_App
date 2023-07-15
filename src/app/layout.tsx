@@ -28,7 +28,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${inter.variable}${rubik.variable}`}>
-      <body>
+      <body className="h-screen">
         <NextAuthProvider>{children}</NextAuthProvider>
       </body>
     </html>

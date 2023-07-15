@@ -28,7 +28,7 @@ export const Navbar = () => {
         </div>
 
         <div className="hidden md:inline-flex items-center gap-7">
-          <ul className="flex text-primary-gray text-[1.1rem] gap-7 font-bold">
+          <ul className="flex text-primary-gray text-[1.1rem] gap-7 font-normal">
             <Link
               href={'/main'}
               className="hover:text-[#4E3104]">
