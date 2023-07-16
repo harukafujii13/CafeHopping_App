@@ -192,9 +192,16 @@ const CafeFinder: FC = () => {
         </button>
       </div>
       {!isLoaded ? (
-        <h1 className="text-primary-yellow text-[5rem] mt-[10rem] text-center font-bold font-rubik">
-          Loading...
-        </h1>
+        <div className="flex flex-col items-center">
+          <h1 className="text-primary-yellow text-4xl md:text-5xl lg:text-6xl mt-8 md:mt-16 text-center font-bold font-rubik">
+            But first coffee...
+          </h1>
+          <img
+            className="w-80 lg:w-[20rem] mx-auto mt-[1rem]"
+            src={'/images/roundCoffee-img 1.png'}
+            alt="logo"
+          />
+        </div>
       ) : (
         <GoogleMap
           mapContainerStyle={containerStyle} //avoid unnecessary re-renders
