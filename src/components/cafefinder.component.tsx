@@ -117,7 +117,6 @@ const CafeFinder: FC = () => {
           location: currentLocation,
           radius: 5000, // Change as per your requirements
           type: 'cafe',
-          // keyword: 'cafe',
         },
         async (results, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK && results) {
@@ -138,12 +137,10 @@ const CafeFinder: FC = () => {
       );
     }
   }, [isLoaded, currentLocation]);
-  // runs a nearbySearch using the PlacesService from the Google Maps Places library
-  //whenever isLoaded or currentLocation changes. It sets the returned places into the places state.
+
   const handleSearch = () => {
     const geocoder = new google.maps.Geocoder();
-    //It first creates a new instance of google.maps.Geocoder().
-    //The Geocoder class provides geocoding and reverse geocoding of addresses.
+
     geocoder.geocode(
       { address: searchInputRef.current?.value },
       (results, status) => {
@@ -153,8 +150,6 @@ const CafeFinder: FC = () => {
           setCurrentLocation({
             lat: location.lat(),
             lng: location.lng(),
-            //called with the latitude (lat) and longitude (lng) of the location.
-            //This updates the current location, which is stored in the state.
           });
         } else {
           alert(
