@@ -1,4 +1,5 @@
 'use client';
+
 import { FC, useEffect, useState, useMemo, useRef } from 'react';
 import {
   GoogleMap,
@@ -11,6 +12,7 @@ import usePlacesAutocomplete from '@/hooks/autocomplete';
 import StarRating from './starRating.component';
 import DistanceToCafe from './distanceToCafe.component';
 import PlaceModal from './placeModal.component';
+import { useWindowWidth } from '@react-hook/window-size';
 
 interface Location {
   lat: number;
@@ -27,25 +29,9 @@ interface Place {
   place_id: string; // Add place_id to use in Place Details request
   opening_hours?: { weekday_text: string[] }; // Add opening_hours to store fetched opening hours
 }
-//memo1
-//geometry: This is an object that includes the geographic location of the place.
-//memo2
-//The location property is an object of the Location interface,
-//which includes lat and lng properties to specify the latitude and longitude coordinates of the place.
-//memo3
-//photos: This is an optional property, represented by the ? symbol.
-//It is an array of objects, where each object should have a getUrl method that returns a string.
-//This could be used to store a collection of photos related to the place, with each photo represented by a URL.
-//memo4
-//rating: This is another optional property that, if present, should be a number.
-//It could be used to store a rating score for the place.
-// Define libraries outside the component
+
 const libraries: Libraries = ['places'];
-//By including 'places' in the libraries array, you are ensuring
-//that the Places library is loaded when the Google Maps API is loaded in your application.
-//This function is used to fetch the opening hours of a place using the placeId.
-//It returns an array of strings, where each string represents the opening hours for a day of the week.
-//Currently has no error handling
+
 const getPlaceDetails = (placeId: string | undefined) => {
   return new Promise<string[]>((resolve, reject) => {
     if (!placeId) return resolve([] as string[]);
@@ -66,19 +52,46 @@ const CafeFinder: FC = () => {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
-  //places is an array of Place objects, representing places of interest returned from the Google Maps API.
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
-  //selectedPlace is a Place object that stores the place currently selected by the user on the map.
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
     libraries,
     language: 'en', // language as English.
   });
-  const containerStyle = useMemo(
-    () => ({ width: '60rem', height: '30rem', margin: '0 auto' }),
-    []
-  );
+
+  const breakpoints = {
+    xs: 480,
+    sm: 640,
+    md: 768,
+    lg: 1024,
+    xl: 1280,
+  };
+
+  const onlyWidth = useWindowWidth();
+
+  const containerStyle = useMemo(() => {
+    let width;
+    if (onlyWidth < breakpoints.xs) {
+      width = '100%';
+    } else if (onlyWidth < breakpoints.sm) {
+      width = '480px';
+    } else if (onlyWidth < breakpoints.md) {
+      width = '640px';
+    } else if (onlyWidth < breakpoints.lg) {
+      width = '768px';
+    } else if (onlyWidth < breakpoints.xl) {
+      width = '1024px';
+    } else {
+      width = '1280px';
+    }
+
+    return {
+      width,
+      height: '30rem',
+      margin: '0 auto',
+    };
+  }, [onlyWidth]);
 
   useEffect(() => {
     console.log('places UE --->', places);
