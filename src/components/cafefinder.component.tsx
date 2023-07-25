@@ -281,10 +281,10 @@ const CafeFinder: FC = () => {
                 />
               )}
               <div className="p-4">
-                <h3 className="font-bold text-lg font-inter">{place.name}</h3>
-                <div className="flex my-[0.3rem]">
+                <h3 className="font-bold text-xl font-inter">{place.name}</h3>
+                <div className="flex flex-col xl:flex-row py-2">
                   {place.rating && (
-                    <div className="font-semibold font-inter text-base flex items-center mr-[2rem]">
+                    <div className="font-semibold font-inter text-base flex items-center mr-6">
                       <p className="mr-[0.3rem]">{place.rating}</p>
                       <StarRating rating={place.rating} />
                     </div>
