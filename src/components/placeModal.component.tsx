@@ -1,5 +1,13 @@
 import React, { FC } from 'react';
 
+interface Place {
+  name: string;
+  opening_hours: {
+    open_now: boolean;
+    weekday_text: string[];
+  };
+}
+
 interface ModalProps {
   isOpen: boolean;
   closeModal: () => void;
