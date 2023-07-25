@@ -13,17 +13,23 @@ const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
   return (
     <div className="flex gap-[2px]">
       {[...Array(fullStars)].map((_, i) => (
-        <p className="text-primary-yellow w-[1rem] h-auto">
+        <p
+          key={`fullStar-${i}`}
+          className="text-primary-yellow w-[1rem] h-auto">
           <BsStarFill />
         </p>
       ))}
       {halfStar && (
-        <p className="text-primary-yellow">
+        <p
+          key="halfStar"
+          className="text-primary-yellow">
           <BsStarHalf />
         </p>
       )}
       {[...Array(emptyStars)].map((_, i) => (
-        <p className="text-primary-yellow">
+        <p
+          key={`emptyStar-${i}`}
+          className="text-primary-yellow">
           <BsStar />
         </p>
       ))}
