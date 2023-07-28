@@ -13,6 +13,8 @@ import StarRating from './starRating.component';
 import DistanceToCafe from './distanceToCafe.component';
 import PlaceModal from './placeModal.component';
 import { useWindowWidth } from '@react-hook/window-size';
+import { MdFavorite } from 'react-icons/md';
+import { BsFillBookmarkDashFill } from 'react-icons/bs';
 
 interface Location {
   lat: number;
