@@ -8,8 +8,15 @@ interface Location {
   lng: number;
 }
 
+const centerLocation: Location = {
+  lat: 18.52043,
+  lng: 73.856743,
+};
+
 const Googlemap: FC = () => {
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
+
+  const mapCenter = currentLocation ?? centerLocation;
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_APP_GOOGLE_API_KEY || '',
@@ -21,18 +28,9 @@ const Googlemap: FC = () => {
         lat: coords.latitude,
         lng: coords.longitude,
       };
-
       setCurrentLocation(location);
     });
   }, []);
-
-  const center = useMemo<Location>(
-    () => ({
-      lat: 18.52043,
-      lng: 73.856743,
-    }),
-    []
-  );
 
   return (
     <div>
@@ -41,7 +39,7 @@ const Googlemap: FC = () => {
       ) : (
         <GoogleMap
           mapContainerClassName="map-container h-[500px] w-[500px]"
-          center={currentLocation}
+          center={mapCenter}
           zoom={15}>
           <Marker position={{ lat: 18.52043, lng: 73.856743 }} />
           <Marker position={{ lat: 19.52043, lng: 73.856743 }} />
