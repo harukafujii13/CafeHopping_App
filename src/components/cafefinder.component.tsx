@@ -286,7 +286,7 @@ const CafeFinder: FC = () => {
               {place.photos && place.photos.length > 0 && (
                 <img
                   className=" w-full h-48 object-cover"
-                  src={place.photos[0].getUrl({ maxWidth: 500 })}
+                  src={place.photos[0].getUrl()}
                   alt={place.name}
                 />
               )}
