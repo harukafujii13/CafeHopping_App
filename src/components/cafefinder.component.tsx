@@ -248,7 +248,7 @@ const CafeFinder: FC = () => {
                 {selectedPlace.photos && selectedPlace.photos.length > 0 && (
                   <img
                     className="w-40 h-40 object-cover mb-2"
-                    src={selectedPlace.photos[0].getUrl({ maxWidth: 200 })}
+                    src={selectedPlace.photos[0].getUrl()}
                     alt={selectedPlace.name}
                   />
                 )}
