@@ -150,7 +150,7 @@ const CafeFinder: FC = () => {
     geocoder.geocode(
       { address: searchInputRef.current?.value },
       (results, status) => {
-        if (status === 'OK') {
+        if (status === 'OK' && results) {
           //the geocoding was successful
           const location = results[0].geometry.location;
           setCurrentLocation({
@@ -222,7 +222,7 @@ const CafeFinder: FC = () => {
       ) : (
         <GoogleMap
           mapContainerStyle={containerStyle} //avoid unnecessary re-renders
-          center={currentLocation}
+          center={currentLocation!}
           zoom={15}>
           {places.map((place, index) => (
             <Marker
