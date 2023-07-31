@@ -131,11 +131,11 @@ const CafeFinder: FC = () => {
               rating: result.rating,
               place_id: result.place_id, // Store place_id from results to use in Place Details request
             })) as unknown as Place[];
-            // renderedPlace.forEach(async (place) => {
-            //   const placeDetails = await getPlaceDetails(place.place_id);
+            renderedPlace.forEach(async (place) => {
+              const placeDetails = await getPlaceDetails(place.place_id);
 
-            //   place.opening_hours = { weekday_text: placeDetails };
-            // });
+              place.opening_hours = { weekday_text: placeDetails };
+            });
 
             setPlaces(renderedPlace);
           }
