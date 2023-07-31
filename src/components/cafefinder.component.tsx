@@ -110,10 +110,12 @@ const CafeFinder: FC = () => {
   }, []);
   //retrieves the user's current location when the component mounts
   useEffect(() => {
+    console.log(isLoaded && currentLocation);
     if (isLoaded && currentLocation) {
       const service = new google.maps.places.PlacesService(
         document.createElement('div')
       );
+
       service.nearbySearch(
         {
           location: currentLocation,
@@ -128,11 +130,13 @@ const CafeFinder: FC = () => {
               photos: result.photos,
               rating: result.rating,
               place_id: result.place_id, // Store place_id from results to use in Place Details request
-            }));
-            renderedPlace.forEach(async (place) => {
-              const placeDetails = await getPlaceDetails(place.place_id);
-              place.opening_hours = { weekday_text: placeDetails };
-            });
+            })) as unknown as Place[];
+            // renderedPlace.forEach(async (place) => {
+            //   const placeDetails = await getPlaceDetails(place.place_id);
+
+            //   place.opening_hours = { weekday_text: placeDetails };
+            // });
+
             setPlaces(renderedPlace);
           }
         }
@@ -173,7 +177,10 @@ const CafeFinder: FC = () => {
       },
       (result, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-          setSelectedPlace({ ...place, opening_hours: result.opening_hours });
+          setSelectedPlace({
+            ...place,
+            opening_hours: result!.opening_hours as { weekday_text: string[] },
+          });
         }
       }
     );
@@ -220,7 +227,7 @@ const CafeFinder: FC = () => {
           {places.map((place, index) => (
             <Marker
               key={index}
-              position={place.geometry.location}
+              position={place.geometry?.location}
               onClick={() => handleMarkerClick(place)}
               icon={{
                 url: '/images/cafe-icon.png',
