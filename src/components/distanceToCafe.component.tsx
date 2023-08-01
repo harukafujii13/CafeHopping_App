@@ -1,15 +1,9 @@
 import React from 'react';
-
-interface Location {
-  lat: number;
-  lng: number;
-}
-
+import { Location } from './cafefinder.component';
 interface DistanceToCafeProps {
   currentLocation: Location;
   cafeLocation: Location;
 }
-
 const DistanceToCafe: React.FC<DistanceToCafeProps> = ({
   currentLocation,
   cafeLocation,
@@ -33,15 +27,12 @@ const DistanceToCafe: React.FC<DistanceToCafeProps> = ({
     const d = R * c; // Distance in km
     return d.toFixed(2);
   };
-
   const deg2rad = (deg: number) => {
     return deg * (Math.PI / 180);
   };
-
   // Extract latitude and longitude from the cafe's location object.
   const cafeLat = cafeLocation.lat;
   const cafeLng = cafeLocation.lng;
-
   return (
     <p className="font-semibold font-inter text-base">
       Distance:{' '}
@@ -55,5 +46,4 @@ const DistanceToCafe: React.FC<DistanceToCafeProps> = ({
     </p>
   );
 };
-
 export default DistanceToCafe;

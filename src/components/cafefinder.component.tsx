@@ -1,5 +1,4 @@
 'use client';
-
 import { FC, useEffect, useState, useMemo, useRef } from 'react';
 import {
   GoogleMap,
@@ -15,25 +14,29 @@ import PlaceModal from './placeModal.component';
 import { useWindowWidth } from '@react-hook/window-size';
 import { MdFavorite } from 'react-icons/md';
 import { BsFillBookmarkDashFill } from 'react-icons/bs';
-
 export interface Location {
   lat: number;
   lng: number;
 }
-
+interface LocationWithFunction {
+  lat: () => number;
+  lng: () => number;
+}
 export interface Place {
   geometry: {
-    location: Location;
+    location: Location & Pick<LocationWithFunction, 'lat' | 'lng'>;
   };
-  name: string; //name of the place ex)"New York City"
+  name: string;
   photos?: { getUrl: () => string }[];
   rating?: number;
-  place_id: string; // Add place_id to use in Place Details request
-  opening_hours?: { weekday_text: string[] }; // Add opening_hours to store fetched opening hours
+  place_id: string;
+  opening_hours?: { weekday_text: string[] };
 }
-
+const getCafeLocation = (place: Place) => {
+  const loc: LocationWithFunction = place.geometry.location;
+  return { lat: loc.lat(), lng: loc.lng() };
+};
 const libraries: Libraries = ['places'];
-
 const getPlaceDetails = (placeId: string | undefined) => {
   return new Promise<string[]>((resolve, reject) => {
     if (!placeId) return resolve([] as string[]);
@@ -61,7 +64,6 @@ const CafeFinder: FC = () => {
     libraries,
     language: 'en', // language as English.
   });
-
   const breakpoints = {
     xs: 480,
     sm: 640,
@@ -69,9 +71,7 @@ const CafeFinder: FC = () => {
     lg: 1024,
     xl: 1280,
   };
-
   const onlyWidth = useWindowWidth();
-
   const containerStyle = useMemo(() => {
     let width;
     if (onlyWidth < breakpoints.xs) {
@@ -87,18 +87,15 @@ const CafeFinder: FC = () => {
     } else {
       width = '1280px';
     }
-
     return {
       width,
       height: '30rem',
       margin: '0 auto',
     };
   }, [onlyWidth]);
-
   useEffect(() => {
     console.log('places UE --->', places);
   }, [places]);
-
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       const location: Location = {
@@ -115,7 +112,6 @@ const CafeFinder: FC = () => {
       const service = new google.maps.places.PlacesService(
         document.createElement('div')
       );
-
       service.nearbySearch(
         {
           location: currentLocation,
@@ -133,20 +129,16 @@ const CafeFinder: FC = () => {
             })) as unknown as Place[];
             renderedPlace.forEach(async (place) => {
               const placeDetails = await getPlaceDetails(place.place_id);
-
               place.opening_hours = { weekday_text: placeDetails };
             });
-
             setPlaces(renderedPlace);
           }
         }
       );
     }
   }, [isLoaded, currentLocation]);
-
   const handleSearch = () => {
     const geocoder = new google.maps.Geocoder();
-
     geocoder.geocode(
       { address: searchInputRef.current?.value },
       (results, status) => {
@@ -199,7 +191,7 @@ const CafeFinder: FC = () => {
         <input
           ref={searchInputRef}
           type="text"
-          placeholder="Enter location"
+          placeholder="Enter your location"
           className="border border-primary-gray rounded-lg px-4 py-1 w-[22rem] h-[3rem] font-inter"
         />
         <button
@@ -309,10 +301,7 @@ const CafeFinder: FC = () => {
                   {currentLocation && (
                     <DistanceToCafe
                       currentLocation={currentLocation}
-                      cafeLocation={{
-                        lat: place.geometry.location.lat(),
-                        lng: place.geometry.location.lng(),
-                      }}
+                      cafeLocation={getCafeLocation(place)}
                     />
                   )}
                 </div>
@@ -347,3 +336,9 @@ const CafeFinder: FC = () => {
   );
 };
 export default CafeFinder;
+function lat() {
+  throw new Error('Function not implemented.');
+}
+function lng() {
+  throw new Error('Function not implemented.');
+}
