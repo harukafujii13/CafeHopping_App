@@ -77,25 +77,27 @@ export const Navbar = () => {
             <div className="md:w-2/5 sm:w-3/5 w-full h-full overflow-y-scroll scrollbarHide bg-[#F7EDE2] flex flex-col items-center px-4 py-10 relative">
               <MdOutlineClose
                 onClick={() => setShowMenu(false)}
-                className="text-4xl text-primary-text cursor-pointer hover:text-primary-coral absolute top-4 right-4"
+                className="text-4xl text-primary-text cursor-pointer text-[#4E3104] hover:text-primary-coral absolute top-4 right-4"
               />
               <ul className="flex flex-col gap-5 items-start mt-[10rem]">
                 <Link href={'/main'}>
-                  <li className="text-2xl hover:text-primary-green">Home</li>
+                  <li className="text-2xl text-[#4E3104] hover:text-primary-green font-rubik font-bold">
+                    Home
+                  </li>
                 </Link>
                 <Link href={'/bookmark'}>
-                  <li className="text-2xl hover:text-primary-green">
+                  <li className="text-2xl text-[#4E3104] hover:text-primary-green font-rubik font-bold">
                     Bookmark
                   </li>
                 </Link>
                 <Link href={'/favorite'}>
-                  <li className="text-2xl hover:text-primary-green">
+                  <li className="text-2xl text-[#4E3104] hover:text-primary-green font-rubik font-bold">
                     Favorite
                   </li>
                 </Link>
                 <FontAwesomeIcon
                   icon={faArrowRightFromBracket}
-                  className="h-[27px] cursor-pointer hover:text-primary-green"
+                  className="h-[27px] cursor-pointer hover:text-primary-green text-[#4E3104]"
                   onClick={handleSignOut}
                 />
               </ul>
