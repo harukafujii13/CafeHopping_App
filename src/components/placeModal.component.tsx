@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { Place } from '@/components/cafeFinder.component';
+import { Place } from '@/components/cafefinder.component';
 
 interface ModalProps {
   isOpen: boolean;
