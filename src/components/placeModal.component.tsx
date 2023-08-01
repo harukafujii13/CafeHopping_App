@@ -1,12 +1,6 @@
 import React, { FC } from 'react';
 
-interface Place {
-  name: string;
-  opening_hours: {
-    open_now: boolean;
-    weekday_text: string[];
-  };
-}
+import { Place } from '@/components/cafeFinder.component';
 
 interface ModalProps {
   isOpen: boolean;

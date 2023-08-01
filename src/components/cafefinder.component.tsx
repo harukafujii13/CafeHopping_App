@@ -16,12 +16,12 @@ import { useWindowWidth } from '@react-hook/window-size';
 import { MdFavorite } from 'react-icons/md';
 import { BsFillBookmarkDashFill } from 'react-icons/bs';
 
-interface Location {
+export interface Location {
   lat: number;
   lng: number;
 }
 
-interface Place {
+export interface Place {
   geometry: {
     location: Location;
   };
@@ -185,7 +185,7 @@ const CafeFinder: FC = () => {
       }
     );
   };
-  const handleMoreInfo = (place) => {
+  const handleMoreInfo = (place: Place) => {
     console.log('handleMoreInfo', place);
     setSelectedPlace(place);
     setIsModalOpen(true);
