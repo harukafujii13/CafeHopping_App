@@ -5,9 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "start": "next start",
-    "lint": "next lint",
-    "postinstall": "prisma generate",
-    "build": "prisma generate && <actual-build-command>"
+    "lint": "next lint"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"commonjs\"} prisma/seed.ts"
