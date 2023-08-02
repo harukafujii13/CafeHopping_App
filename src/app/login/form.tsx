@@ -97,7 +97,7 @@ export const LoginForm = () => {
       </form>
       <div className="mt-2 text-center">
         <p className="text-[1rem] font-bold text-primary-gray font-inter">
-          You don't have an account?
+          You don&apos;t have an account?
         </p>
         <h1
           onClick={handleSignUp}
