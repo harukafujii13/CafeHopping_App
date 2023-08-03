@@ -9,7 +9,7 @@
     "build": "next build"
   },
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"commonjs\"} prisma/seed.ts"
+    "seed": "npx ts-node --compiler-options {\"module\":\"commonjs\"} prisma/seed.ts"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
