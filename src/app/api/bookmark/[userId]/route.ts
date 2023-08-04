@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { useParams } from 'next/navigation';
 import { NextResponse } from 'next/server';
 
-export async function GET(req: Request, context) {
+export async function GET(req: Request, context: any) {
   const queryUserId: string = context.params?.userId;
   try {
     const bookmarks = await prisma.bookmark.findMany({
