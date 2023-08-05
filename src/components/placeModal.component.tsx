@@ -1,6 +1,9 @@
 import { Place } from '@/components/cafefinder.component';
 import StarRating from './starRating.component';
 import { FC } from 'react';
+import { GoogleMap, Marker } from '@react-google-maps/api';
+import { useContext } from 'react';
+import { GoogleMapsContext } from '@/components/cafefinder.component';
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,7 +12,9 @@ interface ModalProps {
 }
 
 const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
+  console.log(place);
   console.log(place?.geometry.location.lat);
+  const isLoaded = useContext(GoogleMapsContext);
 
   return (
     <div
@@ -29,7 +34,24 @@ const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
             <div className="sm:flex sm:items-start justify-center">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                 {/* map */}
-
+                {!isLoaded ? (
+                  <h1>Loading...</h1>
+                ) : (
+                  <GoogleMap
+                    mapContainerClassName="map-container h-[500px] w-[500px]"
+                    zoom={15}
+                    center={{
+                      lat: place?.geometry.location.lat() || 0,
+                      lng: place?.geometry.location.lng() || 0,
+                    }}>
+                    <Marker
+                      position={{
+                        lat: place?.geometry.location.lat() || 0,
+                        lng: place?.geometry.location.lng() || 0,
+                      }}
+                    />
+                  </GoogleMap>
+                )}
                 <div
                   className="text-2xl leading-6 font-bold text-primary-gray font-inter mb-4"
                   id="modal-headline">
