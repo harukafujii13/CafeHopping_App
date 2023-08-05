@@ -1,5 +1,5 @@
 'use client';
-import { FC, useEffect, useState, useMemo, useRef } from 'react';
+import { FC, useEffect, useState, useMemo, useRef, createContext } from 'react';
 import {
   GoogleMap,
   Marker,
@@ -53,6 +53,9 @@ const getPlaceDetails = (placeId: string | undefined) => {
     });
   });
 };
+
+export const GoogleMapsContext = createContext(false);
+
 const CafeFinder: FC = () => {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
@@ -186,80 +189,81 @@ const CafeFinder: FC = () => {
     setIsModalOpen(false);
   };
   return (
-    <div>
-      <div className="flex m-[2rem] items-center justify-center ">
-        <input
-          ref={searchInputRef}
-          type="text"
-          placeholder="Enter your location"
-          className="border border-primary-gray rounded-lg px-4 py-1 w-[22rem] h-[3rem] font-inter"
-        />
-        <button
-          onClick={handleSearch}
-          className="bg-primary-yellow hover:bg-[#F9D79F] text-white rounded-lg px-4 py-1 h-[3rem] ml-[0.3rem] font-inter">
-          Search
-        </button>
-      </div>
-      {!isLoaded ? (
-        <div className="flex flex-col items-center">
-          <h1 className="text-primary-yellow text-4xl md:text-5xl lg:text-6xl mt-8 md:mt-16 text-center font-bold font-rubik">
-            But first coffee...
-          </h1>
-          <img
-            className="w-80 lg:w-[20rem] mx-auto mt-[1rem]"
-            src={'/images/roundCoffee-img 1.png'}
-            alt="logo"
+    <GoogleMapsContext.Provider value={isLoaded}>
+      <div>
+        <div className="flex m-[2rem] items-center justify-center ">
+          <input
+            ref={searchInputRef}
+            type="text"
+            placeholder="Enter your location"
+            className="border border-primary-gray rounded-lg px-4 py-1 w-[22rem] h-[3rem] font-inter"
           />
+          <button
+            onClick={handleSearch}
+            className="bg-primary-yellow hover:bg-[#F9D79F] text-white rounded-lg px-4 py-1 h-[3rem] ml-[0.3rem] font-inter">
+            Search
+          </button>
         </div>
-      ) : (
-        <GoogleMap
-          mapContainerStyle={containerStyle} //avoid unnecessary re-renders
-          center={currentLocation!}
-          zoom={15}>
-          {places.map((place, index) => (
-            <Marker
-              key={index}
-              position={place.geometry?.location}
-              onClick={() => handleMarkerClick(place)}
-              icon={{
-                url: '/images/cafe-icon.png',
-                scaledSize: new window.google.maps.Size(45, 45),
-              }}
+        {!isLoaded ? (
+          <div className="flex flex-col items-center">
+            <h1 className="text-primary-yellow text-4xl md:text-5xl lg:text-6xl mt-8 md:mt-16 text-center font-bold font-rubik">
+              But first coffee...
+            </h1>
+            <img
+              className="w-80 lg:w-[20rem] mx-auto mt-[1rem]"
+              src={'/images/roundCoffee-img 1.png'}
+              alt="logo"
             />
-          ))}
-          {currentLocation && (
-            <Marker
-              position={currentLocation}
-              icon={{
-                url: '/images/current-location.png',
-                scaledSize: new window.google.maps.Size(50, 50),
-              }}
-            />
-          )}
-          {selectedPlace && (
-            <InfoWindow
-              position={selectedPlace.geometry.location}
-              onCloseClick={() => setSelectedPlace(null)}>
-              <div className="flex flex-col items-center justify-center bg-white p-4 rounded-lg shadow-lg text-primary-gray">
-                <h2 className="text-base font-bold mb-2 font-inter">
-                  {selectedPlace.name}
-                </h2>
-                {selectedPlace.photos && selectedPlace.photos.length > 0 && (
-                  <img
-                    className="w-40 h-40 object-cover mb-2"
-                    src={selectedPlace.photos[0].getUrl()}
-                    alt={selectedPlace.name}
-                  />
-                )}
-                {selectedPlace.rating && (
-                  <div className="flex items-center">
-                    <p className="mr-[0.3rem] font-normal font-inter">
-                      Rating: {selectedPlace.rating}
-                    </p>
-                    <StarRating rating={selectedPlace.rating} />
-                  </div>
-                )}
-                {/* {selectedPlace.opening_hours && (
+          </div>
+        ) : (
+          <GoogleMap
+            mapContainerStyle={containerStyle} //avoid unnecessary re-renders
+            center={currentLocation!}
+            zoom={15}>
+            {places.map((place, index) => (
+              <Marker
+                key={index}
+                position={place.geometry?.location}
+                onClick={() => handleMarkerClick(place)}
+                icon={{
+                  url: '/images/cafe-icon.png',
+                  scaledSize: new window.google.maps.Size(45, 45),
+                }}
+              />
+            ))}
+            {currentLocation && (
+              <Marker
+                position={currentLocation}
+                icon={{
+                  url: '/images/current-location.png',
+                  scaledSize: new window.google.maps.Size(50, 50),
+                }}
+              />
+            )}
+            {selectedPlace && (
+              <InfoWindow
+                position={selectedPlace.geometry.location}
+                onCloseClick={() => setSelectedPlace(null)}>
+                <div className="flex flex-col items-center justify-center bg-white p-4 rounded-lg shadow-lg text-primary-gray">
+                  <h2 className="text-base font-bold mb-2 font-inter">
+                    {selectedPlace.name}
+                  </h2>
+                  {selectedPlace.photos && selectedPlace.photos.length > 0 && (
+                    <img
+                      className="w-40 h-40 object-cover mb-2"
+                      src={selectedPlace.photos[0].getUrl()}
+                      alt={selectedPlace.name}
+                    />
+                  )}
+                  {selectedPlace.rating && (
+                    <div className="flex items-center">
+                      <p className="mr-[0.3rem] font-normal font-inter">
+                        Rating: {selectedPlace.rating}
+                      </p>
+                      <StarRating rating={selectedPlace.rating} />
+                    </div>
+                  )}
+                  {/* {selectedPlace.opening_hours && (
                   <div>
                     <h4>Opening Hours:</h4>
                     <ul>
@@ -271,77 +275,78 @@ const CafeFinder: FC = () => {
                     </ul>
                   </div>
                 )} */}
-              </div>
-            </InfoWindow>
-          )}
-        </GoogleMap>
-      )}
-      <div className="flex justify-center">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[2rem] mt-[2rem] mx-[2.5rem] text-primary-gray pb-[3rem]">
-          {places.map((place, index) => (
-            <div
-              key={index}
-              className="bg-white shadow-md max-w-sm">
-              {place.photos && place.photos.length > 0 && (
-                <img
-                  className=" w-full h-48 object-cover"
-                  src={place.photos[0].getUrl()}
-                  alt={place.name}
-                />
-              )}
-              <div className="p-4">
-                <h3 className="font-bold text-xl font-inter">{place.name}</h3>
-                <div className="flex flex-col xl:flex-row py-2">
-                  {place.rating && (
-                    <div className="font-semibold font-inter text-base flex items-center mr-6">
-                      <p className="mr-[0.3rem]">{place.rating}</p>
-                      <StarRating rating={place.rating} />
+                </div>
+              </InfoWindow>
+            )}
+          </GoogleMap>
+        )}
+        <div className="flex justify-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[2rem] mt-[2rem] mx-[2.5rem] text-primary-gray pb-[3rem]">
+            {places.map((place, index) => (
+              <div
+                key={index}
+                className="bg-white shadow-md max-w-sm">
+                {place.photos && place.photos.length > 0 && (
+                  <img
+                    className=" w-full h-48 object-cover"
+                    src={place.photos[0].getUrl()}
+                    alt={place.name}
+                  />
+                )}
+                <div className="p-4">
+                  <h3 className="font-bold text-xl font-inter">{place.name}</h3>
+                  <div className="flex flex-col xl:flex-row py-2">
+                    {place.rating && (
+                      <div className="font-semibold font-inter text-base flex items-center mr-6">
+                        <p className="mr-[0.3rem]">{place.rating}</p>
+                        <StarRating rating={place.rating} />
+                      </div>
+                    )}
+                    {currentLocation && (
+                      <DistanceToCafe
+                        currentLocation={currentLocation}
+                        cafeLocation={getCafeLocation(place)}
+                      />
+                    )}
+                  </div>
+                  {/* Add any additional information about the place here */}
+                  <div className="flex flex-row gap-3 items-center">
+                    <div className="text-primary-gray text-[1.7rem]">
+                      <BsFillBookmarkDashFill />
                     </div>
-                  )}
-                  {currentLocation && (
-                    <DistanceToCafe
-                      currentLocation={currentLocation}
-                      cafeLocation={getCafeLocation(place)}
-                    />
-                  )}
-                </div>
-                {/* Add any additional information about the place here */}
-                <div className="flex flex-row gap-3 items-center">
-                  <div className="text-primary-gray text-[1.7rem]">
-                    <BsFillBookmarkDashFill />
-                  </div>
-                  <div className="text-primary-gray text-[1.7rem]">
-                    <MdFavorite />
-                  </div>
+                    <div className="text-primary-gray text-[1.7rem]">
+                      <MdFavorite />
+                    </div>
 
-                  <button
-                    onClick={() => handleMoreInfo(place)}
-                    className="inline-flex items-center px-3 py-2 text-x font-inter font-bold text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-[#b9cbc6] dark:bg-[#95b1a8] dark:hover:bg-primary-green dark:focus:ring-[#688d81]">
-                    More info
-                    <svg
-                      aria-hidden="true"
-                      className="w-4 h-4 ml-2 -mr-1"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        fillRule="evenodd"
-                        d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                        clipRule="evenodd"></path>
-                    </svg>
-                  </button>
+                    <button
+                      onClick={() => handleMoreInfo(place)}
+                      className="inline-flex items-center px-3 py-2 text-x font-inter font-bold text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-[#b9cbc6] dark:bg-[#95b1a8] dark:hover:bg-primary-green dark:focus:ring-[#688d81]">
+                      More info
+                      <svg
+                        aria-hidden="true"
+                        className="w-4 h-4 ml-2 -mr-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          fillRule="evenodd"
+                          d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                          clipRule="evenodd"></path>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+        <PlaceModal
+          isOpen={isModalOpen}
+          closeModal={closeModal}
+          place={selectedPlace}
+        />
       </div>
-      <PlaceModal
-        isOpen={isModalOpen}
-        closeModal={closeModal}
-        place={selectedPlace}
-      />
-    </div>
+    </GoogleMapsContext.Provider>
   );
 };
 export default CafeFinder;
