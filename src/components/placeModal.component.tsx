@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
-
 import { Place } from '@/components/cafefinder.component';
+import StarRating from './starRating.component';
+import { FC } from 'react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,6 +9,8 @@ interface ModalProps {
 }
 
 const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
+  console.log(place?.geometry.location.lat);
+
   return (
     <div
       className={`fixed z-50 inset-0 overflow-y-auto ${
@@ -26,11 +28,33 @@ const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
           <div className="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="sm:flex sm:items-start justify-center">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                <h3
+                {/* map */}
+
+                <div
                   className="text-2xl leading-6 font-bold text-primary-gray font-inter mb-4"
                   id="modal-headline">
                   {place?.name}
-                </h3>
+                </div>
+                {/* <div>
+                  {place?.photos && (
+                    <img
+                      className=" w-full h-48 object-cover"
+                      src={place.photos[0].getUrl()}
+                      alt={place.name}
+                    />
+                  )}
+                </div> */}
+
+                <div>
+                  {place?.rating && (
+                    <div className="font-semibold font-inter text-base flex items-center mr-6">
+                      <p className="mr-[0.3rem]">{place.rating}</p>
+                      <StarRating rating={place.rating} />
+                    </div>
+                  )}
+                </div>
+                <div></div>
+
                 {place?.opening_hours && (
                   <div className="text-left">
                     <h4 className="font-medium text-lg text-primary-yellow mb-2 font-inter ">
