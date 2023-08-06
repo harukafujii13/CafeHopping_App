@@ -33,7 +33,6 @@ const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
           <div className="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="sm:flex sm:items-start justify-center">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                {/* map */}
                 {!isLoaded ? (
                   <h1>Loading...</h1>
                 ) : (
@@ -49,6 +48,10 @@ const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
                         lat: place?.geometry.location.lat() || 0,
                         lng: place?.geometry.location.lng() || 0,
                       }}
+                      icon={{
+                        url: '/images/cafe-icon.png',
+                        scaledSize: new window.google.maps.Size(55, 55),
+                      }}
                     />
                   </GoogleMap>
                 )}
@@ -57,15 +60,6 @@ const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
                   id="modal-headline">
                   {place?.name}
                 </div>
-                {/* <div>
-                  {place?.photos && (
-                    <img
-                      className=" w-full h-48 object-cover"
-                      src={place.photos[0].getUrl()}
-                      alt={place.name}
-                    />
-                  )}
-                </div> */}
 
                 <div>
                   {place?.rating && (
