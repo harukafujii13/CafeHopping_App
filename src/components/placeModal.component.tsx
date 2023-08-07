@@ -60,40 +60,43 @@ const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
               </GoogleMap>
             )}
           </div>
-          <div className="w-full md:w-1/2 p-4 space-y-4 overflow-y-auto">
+          <div className="w-full md:w-1/2 p-4 overflow-y-auto flex flex-col items-center">
             <div
-              className="text-2xl leading-6 font-bold text-primary-gray font-inter mb-4"
+              className="text-3xl leading-6 font-bold text-primary-gray font-inter my-[1.5rem]"
               id="modal-headline">
               {place?.name}
             </div>
             <div>
-              {place?.rating && (
-                <div className="font-semibold font-inter text-base flex items-center mr-6">
-                  <p className="mr-[0.3rem]">{place.rating}</p>
-                  <StarRating rating={place.rating} />
+              <div className="mb-2">
+                {place?.rating && (
+                  <div className="font-semibold font-inter text-base flex items-center mr-6">
+                    <div className="mr-[0.3rem] text-primary-gray font-inter font-medium text-lg">
+                      Rating: {place.rating}
+                    </div>
+                    <StarRating rating={place.rating} />
+                  </div>
+                )}
+              </div>
+              {place?.opening_hours && (
+                <div className="text-left">
+                  <div className="font-medium text-lg text-primary-gray mb-2 font-inter ">
+                    Opening Hours:
+                  </div>
+                  <ul className="list-disc list-inside space-y-2 text-primary-gray text-md font-inter">
+                    {place.opening_hours.weekday_text.map((day, index) => (
+                      <li key={index}>{day}</li>
+                    ))}
+                  </ul>
                 </div>
               )}
-            </div>
-            <div></div>
-            {place?.opening_hours && (
-              <div className="text-left">
-                <h4 className="font-medium text-lg text-primary-yellow mb-2 font-inter ">
-                  Opening Hours
-                </h4>
-                <ul className="list-disc list-inside space-y-2 text-primary-gray text-md font-inter">
-                  {place.opening_hours.weekday_text.map((day, index) => (
-                    <li key={index}>{day}</li>
-                  ))}
-                </ul>
+              <div className="px-4 py-3 sm:px-6 flex justify-center items-center">
+                <button
+                  type="button"
+                  className="inline-flex justify-center rounded-md px-6 py-2 bg-primary-coral text-base font-medium text-white font-inter hover:bg-primary-rose focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b9cbc6] text-sm"
+                  onClick={closeModal}>
+                  Close
+                </button>
               </div>
-            )}
-            <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-              <button
-                type="button"
-                className="w-full inline-flex justify-center rounded-md px-4 py-2 bg-primary-coral text-base font-medium text-white font-inter hover:bg-primary-rose focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b9cbc6] sm:mt-0 sm:w-auto sm:text-sm"
-                onClick={closeModal}>
-                Close
-              </button>
             </div>
           </div>
         </div>
