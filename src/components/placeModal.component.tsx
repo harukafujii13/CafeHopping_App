@@ -62,7 +62,7 @@ const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
           </div>
           <div className="w-full md:w-1/2 p-4 overflow-y-auto flex flex-col items-center">
             <div
-              className="text-3xl leading-6 font-bold text-primary-gray font-inter my-[1.5rem]"
+              className="text-2xl leading-6 font-bold text-primary-gray font-inter my-[1.5rem]"
               id="modal-headline">
               {place?.name}
             </div>
