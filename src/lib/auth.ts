@@ -60,14 +60,25 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+
   callbacks: {
     async session({ session, user, token }) {
-      session.user.id = token.sub;
+      if (session && session.user && token && token.sub) {
+        session.user.id = token.sub;
+      }
 
       return session;
     },
   },
 };
+//   callbacks: {
+//     async session({ session, user, token }) {
+//       session.user.id = token.sub;
+
+//       return session;
+//     },
+//   },
+// };
 
 //authorize: The authorize function is responsible for validating the provided credentials.
 //If the email and password match an entry in the database, it returns an object with the user's information; otherwise, it returns null to indicate that the credentials are invalid.
