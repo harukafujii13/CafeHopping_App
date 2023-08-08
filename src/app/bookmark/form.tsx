@@ -1,47 +1,140 @@
-// http://localhost:3000/api/bookmark/[userId]
-
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState, FC } from 'react';
+import PlaceModal from '@/components/placeModal.component';
+import BookmarkButton from '@/components/bookmarkButton';
+import { MdFavorite } from 'react-icons/md';
+import StarRating from '@/components/starRating.component';
+import { Place } from '@/components/cafefinder.component';
+import { useSession } from 'next-auth/react';
 
-function Bookmarks({ userId }) {
-  const [bookmarks, setBookmarks] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchBookmarks = async () => {
-      try {
-        const response = await fetch(`/api/bookmark/${userId}`);
-        const data = await response.json();
-        setBookmarks(data.bookmarks);
-        console.log(data.bookmarks);
-      } catch (error) {
-        console.error('There was an error fetching the bookmarks:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // Call the async function
-    fetchBookmarks();
-  }, [userId]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  return (
-    <div>
-      <h1>Bookmarks for User {userId}</h1>
-      <ul>
-        {bookmarks.map((bookmark, index) => (
-          <li key={index}>
-            {bookmark.cafeName} (ID: {bookmark.cafeId})
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+interface Cafe extends Place {
+  id: string;
+  name: string;
+  photos?: { getUrl: () => string }[];
+  rating?: number;
+  place_id: string;
 }
 
-export default Bookmarks;
+const BookmarkPage = () => {
+  const session = useSession();
+  const [bookmarkedCafes, setBookmarkedCafes] = useState<Cafe[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState<Cafe | null>(null);
+
+  console.log(session);
+
+  useEffect(() => {
+    async function fetchBookmarkedCafes() {
+      const userId = session.data?.user?.id;
+      const response = await fetch(`api/bookmark/${userId}`);
+      const data = await response.json();
+      setBookmarkedCafes(data.cafes);
+    }
+
+    fetchBookmarkedCafes();
+  }, []);
+
+  const handleMoreInfo = (cafe: Cafe) => {
+    setSelectedPlace(cafe);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedPlace(null);
+  };
+
+  return (
+    <div className="flex justify-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[2rem] mt-[2rem] mx-[2.5rem] text-primary-gray pb-[3rem]">
+        {bookmarkedCafes?.map((cafe, index) => (
+          <div
+            key={index}
+            className="bg-white shadow-md max-w-sm">
+            {cafe.photos && cafe.photos.length > 0 && (
+              <img
+                className="w-full h-48 object-cover"
+                src={cafe.photos[0].getUrl()}
+                alt={cafe.name}
+              />
+            )}
+            <div className="p-4">
+              <h3 className="font-bold text-xl font-inter">{cafe.name}</h3>
+              <div className="flex flex-col xl:flex-row py-2">
+                {cafe.rating && (
+                  <div className="font-semibold font-inter text-base flex items-center mr-6">
+                    <p className="mr-[0.3rem]">{cafe.rating}</p>
+                    <StarRating rating={cafe.rating} />
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-row gap-3 items-center">
+                <BookmarkButton placeId={cafe.place_id} />
+                <div className="text-primary-gray text-[1.7rem]">
+                  <MdFavorite />
+                </div>
+
+                <button
+                  onClick={() => handleMoreInfo(cafe)}
+                  className="inline-flex items-center px-3 py-2 text-x font-inter font-bold text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-[#b9cbc6] dark:bg-[#95b1a8] dark:hover:bg-primary-green dark:focus:ring-[#688d81]">
+                  More info
+                  <svg
+                    aria-hidden="true"
+                    className="w-4 h-4 ml-2 -mr-1"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fillRule="evenodd"
+                      d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                      clipRule="evenodd"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <PlaceModal
+        isOpen={isModalOpen}
+        closeModal={closeModal}
+        place={selectedPlace}
+      />
+    </div>
+  );
+};
+
+export default BookmarkPage;
+
+// import { faL } from '@fortawesome/free-solid-svg-icons';
+// import { useState } from 'react';
+
+// export const Bookmarks = () => {
+//   let [loading, setLoading] = useState(false);
+
+//   try {
+//     const res = await fetch('api/bookmark/:userId', {
+//       method:'POST',
+//       body: JSON.stringify(),
+//       headers: {
+//         'Content-Type': 'application/json',
+//       }
+//     })
+
+//     setLoading(false);
+//     if(!res.ok){
+//       alert((await res.json()).message)
+//       return
+//     }
+
+//   } catch (error: any) {
+//     setLoading(false)
+//     console.log(error)
+//     alert(error.message)
+//   }
+
+//   return(
+
+//   )
+// };
