@@ -13,7 +13,8 @@ import DistanceToCafe from './distanceToCafe.component';
 import PlaceModal from './placeModal.component';
 import { useWindowWidth } from '@react-hook/window-size';
 import { MdFavorite } from 'react-icons/md';
-import { BsFillBookmarkDashFill } from 'react-icons/bs';
+import BookmarkButton from './bookmarkButton';
+
 export interface Location {
   lat: number;
   lng: number;
@@ -311,9 +312,7 @@ const CafeFinder: FC = () => {
                   </div>
                   {/* Add any additional information about the place here */}
                   <div className="flex flex-row gap-3 items-center">
-                    <div className="text-primary-gray text-[1.7rem]">
-                      <BsFillBookmarkDashFill />
-                    </div>
+                    <BookmarkButton placeId={place?.place_id} />
                     <div className="text-primary-gray text-[1.7rem]">
                       <MdFavorite />
                     </div>
