@@ -60,6 +60,13 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async session({ session, user, token }) {
+      session.user.id = token.sub;
+
+      return session;
+    },
+  },
 };
 
 //authorize: The authorize function is responsible for validating the provided credentials.
