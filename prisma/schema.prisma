@@ -12,28 +12,30 @@ datasource db {
 }
 
 model Cafe {
-  id        String  @id @default(uuid())
+  id        String     @id @default(uuid())
   name      String
-  location  String
-  // Other cafe properties
+  rating    Float?
+  place_id  String
+  bookmarks Bookmark[]
+  photos    String
 }
+
+
 
 model Bookmark {
   id     String @id @default(uuid())
   userId String
   cafeId String
+  cafe   Cafe   @relation(fields: [cafeId], references: [id])
   user   User   @relation(fields: [userId], references: [id])
-
 }
 
-
-
 model User {
-  id        String @id @default(uuid())
+  id        String     @id @default(uuid())
   name      String
-  email     String @unique
+  email     String     @unique
   password  String
-  bookmarks Bookmark[] 
+  bookmarks Bookmark[]
 }
 
 //Model: The model block defines a data model for the User entity in the database. 
