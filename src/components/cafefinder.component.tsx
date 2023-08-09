@@ -19,7 +19,7 @@ export interface Location {
   lat: number;
   lng: number;
 }
-interface LocationWithFunction {
+export interface LocationWithFunction {
   lat: () => number;
   lng: () => number;
 }
@@ -312,7 +312,7 @@ const CafeFinder: FC = () => {
                   </div>
                   {/* Add any additional information about the place here */}
                   <div className="flex flex-row gap-3 items-center">
-                    <BookmarkButton placeId={place?.place_id} />
+                    <BookmarkButton place={place} />
                     <div className="text-primary-gray text-[1.7rem]">
                       <MdFavorite />
                     </div>

@@ -1,23 +1,23 @@
 import React from 'react';
 import { useSession } from 'next-auth/react';
 import { BsFillBookmarkDashFill } from 'react-icons/bs';
+import { Place } from '@/components/cafefinder.component';
+import usePlacesAutocomplete from '@/hooks/autocomplete';
 
-interface BookmarkProps {
-  placeId: string;
-}
-
-const BookmarkButton: React.FC<BookmarkProps> = ({ placeId }) => {
+const BookmarkButton: React.FC<{ place: Place }> = ({ place }) => {
   const { data } = useSession();
-  // console.log('usesession ===', data);
 
-  async function handleBookmarkClick(cafeId: string) {
+  async function handleBookmarkClick() {
     const userId = 'replace-this-with-the-actual-user-id';
+
+    const photosArray = place.photos?.map((photo) => photo.getUrl());
+
     const response = await fetch('/api/bookmark/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userId, cafeId }),
+      body: JSON.stringify({ ...place, photosArray }),
     });
 
     if (!response.ok) {
@@ -29,7 +29,7 @@ const BookmarkButton: React.FC<BookmarkProps> = ({ placeId }) => {
   return (
     <div
       className="text-primary-gray text-[1.7rem]"
-      onClick={() => handleBookmarkClick(placeId)}>
+      onClick={handleBookmarkClick}>
       <BsFillBookmarkDashFill />
     </div>
   );
