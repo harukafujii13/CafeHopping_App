@@ -22,7 +22,9 @@ const BookmarkPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState<Cafe | null>(null);
 
-  useEffect(() => {}, [bookmarkedCafes]);
+  useEffect(() => {
+    console.log(bookmarkedCafes);
+  }, [bookmarkedCafes]);
 
   useEffect(() => {
     async function fetchBookmarkedCafes() {
@@ -31,6 +33,7 @@ const BookmarkPage = () => {
       const data = await response.json();
       console.log(data);
       setBookmarkedCafes(data.bookmarks);
+      console.log(data.bookmarks);
     }
 
     fetchBookmarkedCafes();
@@ -49,35 +52,36 @@ const BookmarkPage = () => {
   return (
     <div className="flex justify-center">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[2rem] mt-[2rem] mx-[2.5rem] text-primary-gray pb-[3rem]">
-        {bookmarkedCafes?.map((cafe, index) => (
+        {bookmarkedCafes?.map((bookmarkedCafe) => (
           <div
-            key={index}
+            key={bookmarkedCafe.cafe.id}
             className="bg-white shadow-md max-w-sm">
-            {cafe.photos && cafe.photos.length > 0 && (
-              <img
-                className="w-full h-48 object-cover"
-                src={cafe.photos[0].getUrl()}
-                alt={cafe.name}
-              />
-            )}
+            <img
+              className="w-full h-48 object-cover"
+              src={bookmarkedCafe.cafe.photos}
+              alt={bookmarkedCafe.cafe.name}
+            />
+
             <div className="p-4">
-              <h3 className="font-bold text-xl font-inter">{cafe.name}</h3>
+              <h3 className="font-bold text-xl font-inter">
+                {bookmarkedCafe.cafe.name}
+              </h3>
               <div className="flex flex-col xl:flex-row py-2">
-                {cafe.rating && (
+                {bookmarkedCafe.cafe.rating && (
                   <div className="font-semibold font-inter text-base flex items-center mr-6">
-                    <p className="mr-[0.3rem]">{cafe.rating}</p>
-                    <StarRating rating={cafe.rating} />
+                    <p className="mr-[0.3rem]">{bookmarkedCafe.cafe.rating}</p>
+                    <StarRating rating={bookmarkedCafe.cafe.rating} />
                   </div>
                 )}
               </div>
               <div className="flex flex-row gap-3 items-center">
-                <BookmarkButton placeId={cafe.place_id} />
+                <BookmarkButton place={bookmarkedCafe.cafe.place_id} />
                 <div className="text-primary-gray text-[1.7rem]">
                   <MdFavorite />
                 </div>
 
                 <button
-                  onClick={() => handleMoreInfo(cafe)}
+                  onClick={() => handleMoreInfo(bookmarkedCafe)}
                   className="inline-flex items-center px-3 py-2 text-x font-inter font-bold text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-[#b9cbc6] dark:bg-[#95b1a8] dark:hover:bg-primary-green dark:focus:ring-[#688d81]">
                   More info
                   <svg

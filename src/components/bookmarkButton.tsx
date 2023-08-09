@@ -2,7 +2,6 @@ import React from 'react';
 import { useSession } from 'next-auth/react';
 import { BsFillBookmarkDashFill } from 'react-icons/bs';
 import { Place } from '@/components/cafefinder.component';
-import usePlacesAutocomplete from '@/hooks/autocomplete';
 
 const BookmarkButton: React.FC<{ place: Place }> = ({ place }) => {
   const { data } = useSession();
