@@ -22,14 +22,15 @@ const BookmarkPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState<Cafe | null>(null);
 
-  console.log(session);
+  useEffect(() => {}, [bookmarkedCafes]);
 
   useEffect(() => {
     async function fetchBookmarkedCafes() {
       const userId = session.data?.user?.id;
       const response = await fetch(`api/bookmark/${userId}`);
       const data = await response.json();
-      setBookmarkedCafes(data.cafes);
+      console.log(data);
+      setBookmarkedCafes(data.bookmarks);
     }
 
     fetchBookmarkedCafes();

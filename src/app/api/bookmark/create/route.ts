@@ -1,26 +1,89 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-
 import { authOptions } from '@/lib/auth';
 
 interface Bookmark {
   userId: string;
   cafeId: string;
+  name: string;
+  photos: string[];
+  rating: number;
+  place_id: string;
 }
 
 export async function POST(req: Request) {
+  // Get user ID from session
+  let userId;
+  console.log(userId);
+  try {
+    const session = await getServerSession(authOptions);
+    if (session && session.user) {
+      userId = session.user.id;
+    } else {
+      throw new Error('Session or user not found.');
+    }
+  } catch (error: any) {
+    return new NextResponse(
+      JSON.stringify({
+        status: 'error',
+        message: error.message || 'Failed to retrieve session.',
+      }),
+      { status: 500 }
+    );
+  }
+
+  // Get data from request body
   const {
-    user: { id: userId },
-  } = await getServerSession(authOptions);
+    name,
+    photos,
+    rating,
+    place_id: cafeId,
+    photosArray,
+  } = (await req.json()) as Bookmark;
 
   try {
-    const { cafeId } = (await req.json()) as Bookmark;
+    // Check if the cafe exists in Prisma database
+    let cafe = await prisma.cafe.findUnique({
+      where: {
+        id: cafeId,
+      },
+    });
 
+    console.log(cafe);
+
+    // If cafe doesn't exist in the Prisma database, create it using data from Google Maps
+    if (!cafe) {
+      const cafe = await prisma.cafe.create({
+        data: {
+          id: cafeId,
+          name,
+          rating,
+          place_id: cafeId,
+          photos: photosArray[0],
+        },
+      });
+    }
+
+    // Check if bookmark already exists
+    const existingBookmark = await prisma.bookmark.findUnique({
+      where: {
+        id: cafe.id,
+      },
+    });
+
+    if (existingBookmark) {
+      return NextResponse.json({
+        status: 'warning',
+        message: 'You have already bookmarked this cafe.',
+      });
+    }
+
+    // Create the bookmark
     const bookmark = await prisma.bookmark.create({
       data: {
         userId,
-        cafeId,
+        cafeId: cafe.id,
       },
     });
 
