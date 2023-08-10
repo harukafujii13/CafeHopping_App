@@ -5,10 +5,9 @@ import PlaceModal from '@/components/placeModal.component';
 import BookmarkButton from '@/components/bookmarkButton';
 import { MdFavorite } from 'react-icons/md';
 import StarRating from '@/components/starRating.component';
-import { Place } from '@/components/cafefinder.component';
 import { useSession } from 'next-auth/react';
 
-interface Cafe extends Place {
+interface Place {
   id: string;
   name: string;
   photos?: { getUrl: () => string }[];
@@ -16,11 +15,15 @@ interface Cafe extends Place {
   place_id: string;
 }
 
+interface Place {
+  cafe: CafeDetails;
+}
+
 const BookmarkPage = () => {
   const session = useSession();
-  const [bookmarkedCafes, setBookmarkedCafes] = useState<Cafe[]>([]);
+  const [bookmarkedCafes, setBookmarkedCafes] = useState<Place[] | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPlace, setSelectedPlace] = useState<Cafe | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
   useEffect(() => {
     console.log(bookmarkedCafes);
@@ -39,7 +42,7 @@ const BookmarkPage = () => {
     fetchBookmarkedCafes();
   }, []);
 
-  const handleMoreInfo = (cafe: Cafe) => {
+  const handleMoreInfo = (cafe: Place) => {
     setSelectedPlace(cafe);
     setIsModalOpen(true);
   };
