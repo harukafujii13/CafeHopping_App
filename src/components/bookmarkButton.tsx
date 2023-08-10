@@ -5,26 +5,26 @@ import { Place } from '@/components/cafefinder.component';
 
 const BookmarkButton: React.FC<{ place: Place }> = ({ place }) => {
   const { data: session } = useSession();
-
   async function handleBookmarkClick() {
     if (!session) {
       console.log('User not authenticated');
       //show a toast later
       return;
     }
-
     const userId = session;
-
-    // const photosArray = place.photos?.map((photo) => photo.getUrl());
-
     const response = await fetch('/api/bookmark/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userId, ...place }),
+      body: JSON.stringify({
+        userId,
+        place: {
+          ...place,
+          photos: place.photos![0].getUrl(),
+        },
+      }),
     });
-
     if (!response.ok) {
       // Error handling
       console.error('Failed to bookmark cafe');
@@ -32,7 +32,6 @@ const BookmarkButton: React.FC<{ place: Place }> = ({ place }) => {
       //show a toast
     }
   }
-
   return (
     <div
       className="text-primary-gray text-[1.7rem]"
@@ -41,5 +40,4 @@ const BookmarkButton: React.FC<{ place: Place }> = ({ place }) => {
     </div>
   );
 };
-
 export default BookmarkButton;

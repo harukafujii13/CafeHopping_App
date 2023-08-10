@@ -26,21 +26,15 @@ const BookmarkPage = () => {
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
   useEffect(() => {
-    console.log(bookmarkedCafes);
-  }, [bookmarkedCafes]);
-
-  useEffect(() => {
     async function fetchBookmarkedCafes() {
       const userId = session.data?.user?.id;
       const response = await fetch(`api/bookmark/${userId}`);
       const data = await response.json();
       console.log(data);
       setBookmarkedCafes(data.bookmarks);
-      console.log(data.bookmarks);
     }
-
     fetchBookmarkedCafes();
-  }, []);
+  }, [session]);
 
   const handleMoreInfo = (cafe: Place) => {
     setSelectedPlace(cafe);
@@ -57,14 +51,14 @@ const BookmarkPage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[2rem] mt-[2rem] mx-[2.5rem] text-primary-gray pb-[3rem]">
         {bookmarkedCafes?.map((bookmarkedCafe) => (
           <div
-            key={bookmarkedCafe.cafe.id}
+            key={bookmarkedCafe.id}
             className="bg-white shadow-md max-w-sm">
             <img
               className="w-full h-48 object-cover"
               src={bookmarkedCafe.cafe.photos}
               alt={bookmarkedCafe.cafe.name}
             />
-
+            ​
             <div className="p-4">
               <h3 className="font-bold text-xl font-inter">
                 {bookmarkedCafe.cafe.name}
@@ -82,7 +76,7 @@ const BookmarkPage = () => {
                 <div className="text-primary-gray text-[1.7rem]">
                   <MdFavorite />
                 </div>
-
+                ​
                 <button
                   onClick={() => handleMoreInfo(bookmarkedCafe)}
                   className="inline-flex items-center px-3 py-2 text-x font-inter font-bold text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-[#b9cbc6] dark:bg-[#95b1a8] dark:hover:bg-primary-green dark:focus:ring-[#688d81]">
@@ -112,7 +106,6 @@ const BookmarkPage = () => {
     </div>
   );
 };
-
 export default BookmarkPage;
 
 // import { faL } from '@fortawesome/free-solid-svg-icons';
