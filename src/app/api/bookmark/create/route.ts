@@ -7,7 +7,7 @@ interface Bookmark {
   userId: string;
   cafeId: string;
   name: string;
-  photos: string[];
+  photos: string;
   rating: number;
   place_id: string;
 }
@@ -39,7 +39,6 @@ export async function POST(req: Request) {
     photos,
     rating,
     place_id: cafeId,
-    photosArray,
   } = (await req.json()) as Bookmark;
 
   try {
@@ -54,13 +53,13 @@ export async function POST(req: Request) {
 
     // If cafe doesn't exist in the Prisma database, create it using data from Google Maps
     if (!cafe) {
-      const cafe = await prisma.cafe.create({
+      const existingBookmark = await prisma.cafe.create({
         data: {
           id: cafeId,
           name,
           rating,
           place_id: cafeId,
-          photos: photosArray[0],
+          photos,
         },
       });
     }
@@ -68,7 +67,7 @@ export async function POST(req: Request) {
     // Check if bookmark already exists
     const existingBookmark = await prisma.bookmark.findUnique({
       where: {
-        id: cafe.id,
+        id: cafeid,
       },
     });
 
