@@ -264,18 +264,6 @@ const CafeFinder: FC = () => {
                       <StarRating rating={selectedPlace.rating} />
                     </div>
                   )}
-                  {/* {selectedPlace.opening_hours && (
-                  <div>
-                    <h4>Opening Hours:</h4>
-                    <ul>
-                      {selectedPlace.opening_hours.weekday_text.map(
-                        (day, index) => (
-                          <li key={index}>{day}</li>
-                        )
-                      )}
-                    </ul>
-                  </div>
-                )} */}
                 </div>
               </InfoWindow>
             )}
