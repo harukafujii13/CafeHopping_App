@@ -10,6 +10,8 @@ interface Bookmark {
   photos: string;
   rating: number;
   place_id: string;
+  lat: number;
+  lng: number;
 }
 
 export async function POST(req: Request) {
@@ -33,8 +35,10 @@ export async function POST(req: Request) {
   }
   // Get data from request body
   const {
-    place: { name, photos, rating, place_id: cafeId },
+    place: { name, photos, rating, place_id: cafeId, geometry },
   } = await req.json();
+  console.log(geometry);
+
   try {
     // Check if the cafe exists in Prisma database
     let cafe = await prisma.cafe.findUnique({
@@ -49,9 +53,11 @@ export async function POST(req: Request) {
         data: {
           id: cafeId,
           name,
-          rating,
+          rating, //doesn't show desimal number
           place_id: cafeId,
           photos,
+          lat: geometry.location.lat,
+          lng: geometry.location.lng,
         },
       });
     }
