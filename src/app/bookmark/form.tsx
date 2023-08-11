@@ -70,7 +70,7 @@ const BookmarkPage = () => {
   };
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center bg-light-green">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[2rem] mt-[2rem] mx-[2.5rem] text-primary-gray pb-[3rem]">
         {bookmarkedCafes?.map((bookmarkedCafe) => (
           <div
