@@ -18,6 +18,8 @@ model Cafe {
   place_id  String
   bookmarks Bookmark[]
   photos    String
+  lat       Float
+  lng       Float
 }
 
 
