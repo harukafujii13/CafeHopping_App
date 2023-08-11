@@ -12,7 +12,7 @@ interface Bookmark {
   place_id: string;
   lat: number;
   lng: number;
-  opening_hours: string;
+  opening_hours: string[];
 }
 
 export async function POST(req: Request) {
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     place: { name, photos, rating, place_id: cafeId, geometry, opening_hours },
   } = await req.json();
 
-  const serializedOpeningHours = JSON.stringify(opening_hours);
+  // const serializedOpeningHours = JSON.stringify(opening_hours.weekday_text);
   // const serializedOpeningHours = JSON.stringify(opening_hours.weekday_text);
 
   console.log(geometry);
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
           photos,
           lat: geometry.location.lat,
           lng: geometry.location.lng,
-          opening_hours: serializedOpeningHours,
+          opening_hours: opening_hours.weekday_text,
         },
       });
     }

@@ -11,6 +11,7 @@ interface ModalProps {
   place: Place | null;
   lat?: number;
   lng?: number;
+  opening_hours?: [];
 }
 
 const PlaceModal: FC<ModalProps> = ({
@@ -19,6 +20,7 @@ const PlaceModal: FC<ModalProps> = ({
   place,
   lat,
   lng,
+  opening_hours,
 }) => {
   const { isLoaded } = useContext(GoogleMapsContext);
   console.log(lat, lng);
@@ -28,6 +30,8 @@ const PlaceModal: FC<ModalProps> = ({
       height: '100%',
     };
   }, []);
+
+  console.log(opening_hours);
 
   return (
     <div
@@ -105,17 +109,34 @@ const PlaceModal: FC<ModalProps> = ({
                   </div>
                 )}
               </div>
-              {place?.opening_hours && (
+              {!opening_hours &&
+                place?.opening_hours &&
+                place.opening_hours.weekday_text && (
+                  <div className="text-left">
+                    <div className="font-medium text-lg text-primary-gray mb-2 font-inter ">
+                      Opening Hours:
+                    </div>
+                    <ul className="list-disc list-inside space-y-2 text-primary-gray text-md font-inter">
+                      {place.opening_hours.weekday_text.map((day, index) => (
+                        <li key={index}>{day}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              {opening_hours && opening_hours.length > 0 && (
                 <div className="text-left">
                   <div className="font-medium text-lg text-primary-gray mb-2 font-inter ">
                     Opening Hours:
                   </div>
                   <ul className="list-disc list-inside space-y-2 text-primary-gray text-md font-inter">
-                    {place.opening_hours.weekday_text.map((day, index) => (
+                    {opening_hours.map((day, index) => (
                       <li key={index}>{day}</li>
                     ))}
                   </ul>
                 </div>
+              )}
+              {opening_hours && opening_hours.length === 0 && (
+                <div>No opening hours provided</div>
               )}
               <div className="px-4 py-3 sm:px-6 flex justify-center items-center">
                 <button

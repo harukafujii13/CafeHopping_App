@@ -33,7 +33,7 @@ interface Place {
   photos?: { getUrl: () => string }[];
   rating?: number;
   place_id: string;
-  opening_hours: string;
+  opening_hours?: { weekday_text: string[] };
 }
 
 interface CafeDetails {
@@ -63,6 +63,7 @@ const BookmarkPage = () => {
     console.log('handleMoreInfo called with:', cafe);
     setSelectedPlace({ ...cafe, lat: cafe.lat, lng: cafe.lng });
     setIsModalOpen(true);
+    console.log(selectedPlace);
   };
 
   const closeModal = () => {
