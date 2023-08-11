@@ -20,7 +20,7 @@ model Cafe {
   photos    String
   lat       Float
   lng       Float
-  opening_hours String
+  opening_hours String[]
 }
 
 
