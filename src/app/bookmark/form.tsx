@@ -7,7 +7,27 @@ import { MdFavorite } from 'react-icons/md';
 import StarRating from '@/components/starRating.component';
 import { useSession } from 'next-auth/react';
 
+// import {
+//   Location,
+//   LocationWithFunction,
+// } from '@/components/cafefinder.component';
+
+interface Location {
+  lat: number;
+  lng: number;
+}
+
+interface LocationWithFunction {
+  lat: () => number;
+  lng: () => number;
+}
+
 interface Place {
+  lng?: any;
+  lat?: any;
+  geometry: {
+    location: Location & Pick<LocationWithFunction, 'lat' | 'lng'>;
+  };
   id: string;
   name: string;
   photos?: { getUrl: () => string }[];
@@ -15,13 +35,15 @@ interface Place {
   place_id: string;
 }
 
-interface Place {
-  cafe: CafeDetails;
+interface CafeDetails {
+  cafe: Place;
 }
 
 const BookmarkPage = () => {
   const session = useSession();
-  const [bookmarkedCafes, setBookmarkedCafes] = useState<Place[] | null>(null);
+  const [bookmarkedCafes, setBookmarkedCafes] = useState<CafeDetails[] | null>(
+    null
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
@@ -36,8 +58,9 @@ const BookmarkPage = () => {
     fetchBookmarkedCafes();
   }, [session]);
 
-  const handleMoreInfo = (cafe: Place) => {
-    setSelectedPlace(cafe);
+  const handleMoreInfo = ({ cafe }: CafeDetails) => {
+    console.log('handleMoreInfo called with:', cafe);
+    setSelectedPlace({ ...cafe, lat: cafe.lat, lng: cafe.lng });
     setIsModalOpen(true);
   };
 
@@ -51,7 +74,7 @@ const BookmarkPage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[2rem] mt-[2rem] mx-[2.5rem] text-primary-gray pb-[3rem]">
         {bookmarkedCafes?.map((bookmarkedCafe) => (
           <div
-            key={bookmarkedCafe.id}
+            key={bookmarkedCafe.cafe.id}
             className="bg-white shadow-md max-w-sm">
             <img
               className="w-full h-48 object-cover"
@@ -72,7 +95,7 @@ const BookmarkPage = () => {
                 )}
               </div>
               <div className="flex flex-row gap-3 items-center">
-                <BookmarkButton place={bookmarkedCafe.cafe.place_id} />
+                <BookmarkButton place={bookmarkedCafe.cafe} />
                 <div className="text-primary-gray text-[1.7rem]">
                   <MdFavorite />
                 </div>
@@ -102,40 +125,10 @@ const BookmarkPage = () => {
         isOpen={isModalOpen}
         closeModal={closeModal}
         place={selectedPlace}
+        lat={selectedPlace?.lat}
+        lng={selectedPlace?.lng}
       />
     </div>
   );
 };
 export default BookmarkPage;
-
-// import { faL } from '@fortawesome/free-solid-svg-icons';
-// import { useState } from 'react';
-
-// export const Bookmarks = () => {
-//   let [loading, setLoading] = useState(false);
-
-//   try {
-//     const res = await fetch('api/bookmark/:userId', {
-//       method:'POST',
-//       body: JSON.stringify(),
-//       headers: {
-//         'Content-Type': 'application/json',
-//       }
-//     })
-
-//     setLoading(false);
-//     if(!res.ok){
-//       alert((await res.json()).message)
-//       return
-//     }
-
-//   } catch (error: any) {
-//     setLoading(false)
-//     console.log(error)
-//     alert(error.message)
-//   }
-
-//   return(
-
-//   )
-// };
