@@ -3,17 +3,25 @@ import StarRating from './starRating.component';
 import { FC, useMemo } from 'react';
 import { GoogleMap, Marker } from '@react-google-maps/api';
 import { useContext } from 'react';
-import { GoogleMapsContext } from '@/components/cafefinder.component';
+import { GoogleMapsContext } from '@/contexts/googleMapContext';
 
 interface ModalProps {
   isOpen: boolean;
   closeModal: () => void;
   place: Place | null;
+  lat?: number;
+  lng?: number;
 }
 
-const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
-  const isLoaded = useContext(GoogleMapsContext);
-
+const PlaceModal: FC<ModalProps> = ({
+  isOpen,
+  closeModal,
+  place,
+  lat,
+  lng,
+}) => {
+  const { isLoaded } = useContext(GoogleMapsContext);
+  console.log(lat, lng);
   const containerStyle = useMemo(() => {
     return {
       width: '100%',
@@ -36,9 +44,8 @@ const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
           aria-modal="true"
           aria-labelledby="modal-headline">
           <div className="w-full md:w-1/2 h-64 md:h-auto flex-shrink-0">
-            {!isLoaded ? (
-              <h1>Loading...</h1>
-            ) : (
+            {!isLoaded && <h1>Loading...</h1>}
+            {isLoaded && !lat && (
               <GoogleMap
                 mapContainerStyle={containerStyle}
                 mapContainerClassName="w-full h-full"
@@ -51,6 +58,27 @@ const PlaceModal: FC<ModalProps> = ({ isOpen, closeModal, place }) => {
                   position={{
                     lat: place?.geometry.location.lat() || 0,
                     lng: place?.geometry.location.lng() || 0,
+                  }}
+                  icon={{
+                    url: '/images/cafe-icon.png',
+                    scaledSize: new window.google.maps.Size(55, 55),
+                  }}
+                />
+              </GoogleMap>
+            )}
+            {isLoaded && lat && lng && (
+              <GoogleMap
+                mapContainerStyle={containerStyle}
+                mapContainerClassName="w-full h-full"
+                zoom={15}
+                center={{
+                  lat: lat,
+                  lng: lng,
+                }}>
+                <Marker
+                  position={{
+                    lat: lat,
+                    lng: lng,
                   }}
                   icon={{
                     url: '/images/cafe-icon.png',
