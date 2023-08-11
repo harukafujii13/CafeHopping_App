@@ -33,6 +33,7 @@ interface Place {
   photos?: { getUrl: () => string }[];
   rating?: number;
   place_id: string;
+  opening_hours: string;
 }
 
 interface CafeDetails {
@@ -127,6 +128,7 @@ const BookmarkPage = () => {
         place={selectedPlace}
         lat={selectedPlace?.lat}
         lng={selectedPlace?.lng}
+        opening_hours={selectedPlace?.opening_hours}
       />
     </div>
   );

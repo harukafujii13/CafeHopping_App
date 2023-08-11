@@ -16,33 +16,6 @@ async function main() {
   });
 
   console.log(user);
-
-  // Create some cafes
-  // const cafe1 = await prisma.cafe.create({
-  //   data: {
-  //     name: 'Cafe One',
-  //     location: 'Location One',
-  //   },
-  // });
-
-  // const cafe2 = await prisma.cafe.create({
-  //   data: {
-  //     name: 'Cafe Two',
-  //     location: 'Location Two',
-  //   },
-  // });
-
-  // console.log(cafe1, cafe2);
-
-  // Create a bookmark for the user
-  //   const bookmark = await prisma.bookmark.create({
-  //     data: {
-  //       userId: user.id,
-  //       cafeId: cafe1.id,
-  //     },
-  //   });
-
-  //   console.log(bookmark);
 }
 
 main()

@@ -1,6 +1,5 @@
 import { Navbar } from '@/components/nav.component';
 import BookmarkPage from './form';
-import Bookmarks from './form';
 
 export default function Bookmark() {
   return (

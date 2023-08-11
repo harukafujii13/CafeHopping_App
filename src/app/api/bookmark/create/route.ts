@@ -12,6 +12,7 @@ interface Bookmark {
   place_id: string;
   lat: number;
   lng: number;
+  opening_hours: string;
 }
 
 export async function POST(req: Request) {
@@ -35,9 +36,14 @@ export async function POST(req: Request) {
   }
   // Get data from request body
   const {
-    place: { name, photos, rating, place_id: cafeId, geometry },
+    place: { name, photos, rating, place_id: cafeId, geometry, opening_hours },
   } = await req.json();
+
+  const serializedOpeningHours = JSON.stringify(opening_hours);
+  // const serializedOpeningHours = JSON.stringify(opening_hours.weekday_text);
+
   console.log(geometry);
+  console.log(opening_hours);
 
   try {
     // Check if the cafe exists in Prisma database
@@ -58,6 +64,7 @@ export async function POST(req: Request) {
           photos,
           lat: geometry.location.lat,
           lng: geometry.location.lng,
+          opening_hours: serializedOpeningHours,
         },
       });
     }
