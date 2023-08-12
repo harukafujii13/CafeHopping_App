@@ -1,11 +1,15 @@
 import { Navbar } from '@/components/nav.component';
+import { Footer } from '@/components/footer.component';
 import BookmarkPage from './form';
 
 export default function Bookmark() {
   return (
-    <div className="h-[100vh] bg-light-green">
+    <div className="flex flex-col bg-light-green min-h-screen">
       <Navbar />
-      <BookmarkPage />
+      <div className="flex-grow">
+        <BookmarkPage />
+      </div>
+      <Footer />
     </div>
   );
 }
