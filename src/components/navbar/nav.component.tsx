@@ -7,9 +7,11 @@ import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { signOut } from 'next-auth/react';
 import { useState, useRef } from 'react';
 import { MdOutlineClose } from 'react-icons/md';
+import { usePathname } from 'next/navigation';
 
 export const Navbar = () => {
   const router = useRouter();
+  const currentRoute = usePathname();
 
   const ref = useRef<string | any>('');
   const [showMenu, setShowMenu] = useState(false);
@@ -24,6 +26,12 @@ export const Navbar = () => {
       setShowMenu(false);
     }
   }
+
+  const activeStyle = 'text-[#4E3104] font-bold';
+  const nonActiveStyle = 'text-primary-gray';
+
+  const activeStyleBurger = 'text-2xl text-primary-green font-rubik font-bold';
+  const nonActiveStyleBurger = 'text-2xl text-[#4E3104]  font-rubik font-bold';
 
   return (
     <div className="w-full h-18 lg:h-16 sticky top-0 z-50 px-4 font-rubik bg-primary-rose">
@@ -42,17 +50,23 @@ export const Navbar = () => {
           <ul className="flex text-primary-gray text-[1.1rem] gap-7 font-normal">
             <Link
               href={'/main'}
-              className="hover:text-[#4E3104]">
+              className={
+                currentRoute === '/main' ? activeStyle : nonActiveStyle
+              }>
               <li>Home</li>
             </Link>
             <Link
               href={'/bookmark'}
-              className="hover:text-[#4E3104]">
+              className={
+                currentRoute === '/bookmark' ? activeStyle : nonActiveStyle
+              }>
               <li>Bookmark</li>
             </Link>
             <Link
               href={'/favorite'}
-              className="hover:text-[#4E3104]">
+              className={
+                currentRoute === '/favorite' ? activeStyle : nonActiveStyle
+              }>
               <li>Favorite</li>
             </Link>
             <FontAwesomeIcon
@@ -80,20 +94,32 @@ export const Navbar = () => {
                 className="text-4xl text-primary-text cursor-pointer text-[#4E3104] hover:text-primary-coral absolute top-4 right-4"
               />
               <ul className="flex flex-col gap-5 items-start mt-[10rem]">
-                <Link href={'/main'}>
-                  <li className="text-2xl text-[#4E3104] hover:text-primary-green font-rubik font-bold">
-                    Home
-                  </li>
+                <Link
+                  href={'/main'}
+                  className={
+                    currentRoute === '/main'
+                      ? activeStyleBurger
+                      : nonActiveStyleBurger
+                  }>
+                  <li>Home</li>
                 </Link>
-                <Link href={'/bookmark'}>
-                  <li className="text-2xl text-[#4E3104] hover:text-primary-green font-rubik font-bold">
-                    Bookmark
-                  </li>
+                <Link
+                  href={'/bookmark'}
+                  className={
+                    currentRoute === '/bookmark'
+                      ? activeStyleBurger
+                      : nonActiveStyleBurger
+                  }>
+                  <li>Bookmark</li>
                 </Link>
-                <Link href={'/favorite'}>
-                  <li className="text-2xl text-[#4E3104] hover:text-primary-green font-rubik font-bold">
-                    Favorite
-                  </li>
+                <Link
+                  href={'/favorite'}
+                  className={
+                    currentRoute === '/favorite'
+                      ? activeStyleBurger
+                      : nonActiveStyleBurger
+                  }>
+                  <li>Favorite</li>
                 </Link>
                 <FontAwesomeIcon
                   icon={faArrowRightFromBracket}
