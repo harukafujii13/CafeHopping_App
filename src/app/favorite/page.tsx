@@ -1,4 +1,4 @@
-import { Navbar } from '@/components/nav.component';
+import { Navbar } from '@/components/navbar/nav.component';
 
 export default function Favorite() {
   return (

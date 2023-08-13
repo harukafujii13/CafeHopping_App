@@ -14,7 +14,7 @@ datasource db {
 model Cafe {
   id        String     @id @default(uuid())
   name      String
-  rating    Float?
+  rating    Float
   place_id  String
   bookmarks Bookmark[]
   photos    String

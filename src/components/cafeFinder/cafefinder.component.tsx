@@ -3,12 +3,12 @@ import { FC, useEffect, useState, useMemo, useRef, useContext } from 'react';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url';
 import usePlacesAutocomplete from '@/hooks/autocomplete';
-import StarRating from './starRating.component';
-import DistanceToCafe from './distanceToCafe.component';
-import PlaceModal from './placeModal.component';
+import StarRating from '../rating/starRating.component';
+import DistanceToCafe from '../distanceToCafe/distanceToCafe.component';
+import PlaceModal from '../modal/placeModal.component';
 import { useWindowWidth } from '@react-hook/window-size';
 import { MdFavorite } from 'react-icons/md';
-import BookmarkButton from './bookmarkButton';
+import BookmarkButton from '../bookmark/bookmarkButton';
 import { GoogleMapsContext } from '@/contexts/googleMapContext';
 
 export interface Location {

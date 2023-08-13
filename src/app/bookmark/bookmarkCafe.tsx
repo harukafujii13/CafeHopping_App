@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState, FC } from 'react';
-import PlaceModal from '@/components/placeModal.component';
-import BookmarkButton from '@/components/bookmarkButton';
+import PlaceModal from '@/components/modal/placeModal.component';
+import BookmarkButton from '@/components/bookmark/bookmarkButton';
 import { MdFavorite } from 'react-icons/md';
-import StarRating from '@/components/starRating.component';
+import StarRating from '@/components/rating/starRating.component';
 import { useSession } from 'next-auth/react';
 
 // import {

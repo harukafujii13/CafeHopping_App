@@ -1,6 +1,6 @@
-import { Navbar } from '@/components/nav.component';
-import { Footer } from '@/components/footer.component';
-import BookmarkPage from './form';
+import { Navbar } from '@/components/navbar/nav.component';
+import { Footer } from '@/components/footer/footer.component';
+import BookmarkPage from './bookmarkCafe';
 
 export default function Bookmark() {
   return (

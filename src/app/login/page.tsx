@@ -1,6 +1,5 @@
-import { LoginForm } from './form';
-import { LoginFrame } from '@/components/login.component';
-// import Googlemap from '@/components/googlemap.component';
+import { LoginForm } from './loginForm';
+import { LoginFrame } from '@/components/login/login.component';
 
 export default function LoginPage() {
   return (

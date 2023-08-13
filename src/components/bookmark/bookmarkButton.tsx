@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSession } from 'next-auth/react';
 import { BsFillBookmarkDashFill } from 'react-icons/bs';
-import { Place } from '@/components/cafefinder.component';
+import { Place } from '@/components/cafeFinder/cafefinder.component';
 
 const BookmarkButton: React.FC<{ place: Place }> = ({ place }) => {
   const { data: session } = useSession();

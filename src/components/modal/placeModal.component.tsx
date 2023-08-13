@@ -1,5 +1,5 @@
-import { Place } from '@/components/cafefinder.component';
-import StarRating from './starRating.component';
+import { Place } from '@/components/cafeFinder/cafefinder.component';
+import StarRating from '../rating/starRating.component';
 import { FC, useMemo } from 'react';
 import { GoogleMap, Marker } from '@react-google-maps/api';
 import { useContext } from 'react';

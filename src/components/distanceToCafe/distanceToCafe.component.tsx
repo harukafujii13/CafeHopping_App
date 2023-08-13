@@ -1,5 +1,5 @@
 import React from 'react';
-import { Location } from './cafefinder.component';
+import { Location } from '../cafeFinder/cafefinder.component';
 interface DistanceToCafeProps {
   currentLocation: Location;
   cafeLocation: Location;

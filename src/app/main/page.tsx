@@ -1,6 +1,6 @@
-import { Navbar } from '@/components/nav.component';
-import CafeFinder from '@/components/cafefinder.component';
-import { Footer } from '@/components/footer.component';
+import { Navbar } from '@/components/navbar/nav.component';
+import CafeFinder from '@/components/cafeFinder/cafefinder.component';
+import { Footer } from '@/components/footer/footer.component';
 
 export default function MainPage() {
   return (
