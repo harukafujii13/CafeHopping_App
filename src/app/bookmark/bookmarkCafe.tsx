@@ -1,16 +1,11 @@
 'use client';
 
-import { useEffect, useState, FC } from 'react';
+import { useEffect, useState } from 'react';
 import PlaceModal from '@/components/modal/placeModal.component';
 import BookmarkButton from '@/components/bookmark/bookmarkButton';
 import { MdFavorite } from 'react-icons/md';
 import StarRating from '@/components/rating/starRating.component';
 import { useSession } from 'next-auth/react';
-
-// import {
-//   Location,
-//   LocationWithFunction,
-// } from '@/components/cafefinder.component';
 
 interface Location {
   lat: number;
@@ -81,6 +76,7 @@ const BookmarkPage = () => {
             <img
               className="w-full h-48 object-cover"
               src={bookmarkedCafe.cafe.photos}
+              //src={bookmarkedCafe.cafe.photos?.[0]?.getUrl()}
               alt={bookmarkedCafe.cafe.name}
             />
             ​

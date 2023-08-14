@@ -2,6 +2,7 @@ import './globals.css';
 import { NextAuthProvider } from './providers';
 import { Inter, Rubik } from 'next/font/google';
 import { GoogleMapsProvider } from '@/contexts/googleMapContext';
+import { CafeProvider } from '@/contexts/cafeContext';
 
 export const metadata = {
   title: 'Cafe Hopping',
@@ -31,7 +32,9 @@ export default function RootLayout({
       className={`${inter.variable}${rubik.variable}`}>
       <body className="h-screen">
         <NextAuthProvider>
-          <GoogleMapsProvider>{children}</GoogleMapsProvider>
+          <GoogleMapsProvider>
+            <CafeProvider>{children}</CafeProvider>
+          </GoogleMapsProvider>
         </NextAuthProvider>
       </body>
     </html>
