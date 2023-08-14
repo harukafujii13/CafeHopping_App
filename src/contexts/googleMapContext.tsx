@@ -1,10 +1,10 @@
 'use client';
 
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext } from 'react';
+import { useJsApiLoader } from '@react-google-maps/api';
 
 interface GoogleMapsContextType {
   isLoaded: boolean;
-  // add more values here if needed, e.g., error state
 }
 
 export const GoogleMapsContext = createContext<
@@ -19,8 +19,6 @@ export const useGoogleMaps = () => {
   return context;
 };
 
-import { useJsApiLoader } from '@react-google-maps/api';
-
 interface GoogleMapsProviderProps {
   children: React.ReactNode;
 }
@@ -32,7 +30,7 @@ export const GoogleMapsProvider = ({ children }: GoogleMapsProviderProps) => {
     language: 'en',
   });
 
-  console.log('Provider : ', isLoaded);
+  // console.log('Provider : ', isLoaded);
 
   return (
     <GoogleMapsContext.Provider value={{ isLoaded }}>

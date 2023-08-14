@@ -15,10 +15,12 @@ export interface Location {
   lat: number;
   lng: number;
 }
+
 interface LocationWithFunction {
   lat: () => number;
   lng: () => number;
 }
+
 export interface Place {
   geometry: {
     location: Location & Pick<LocationWithFunction, 'lat' | 'lng'>;
@@ -29,11 +31,14 @@ export interface Place {
   place_id: string;
   opening_hours?: { weekday_text: string[] };
 }
+
 const getCafeLocation = (place: Place) => {
   const loc: LocationWithFunction = place.geometry.location;
   return { lat: loc.lat(), lng: loc.lng() };
 };
+
 const libraries: Libraries = ['places'];
+
 const getPlaceDetails = (placeId: string | undefined) => {
   return new Promise<string[]>((resolve, reject) => {
     if (!placeId) return resolve([] as string[]);
@@ -57,7 +62,12 @@ const CafeFinder: FC = () => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { isLoaded } = useContext(GoogleMapsContext);
+
+  const contextValue = useContext(GoogleMapsContext);
+  if (!contextValue) {
+    throw new Error('CafeFinder must be used within a GoogleMapsProvider');
+  }
+  const { isLoaded } = contextValue;
 
   const breakpoints = {
     xs: 480,
@@ -66,7 +76,9 @@ const CafeFinder: FC = () => {
     lg: 1024,
     xl: 1280,
   };
+
   const onlyWidth = useWindowWidth();
+
   const containerStyle = useMemo(() => {
     let width;
     if (onlyWidth < breakpoints.xs) {
@@ -88,6 +100,7 @@ const CafeFinder: FC = () => {
       margin: '0 auto',
     };
   }, [onlyWidth]);
+
   useEffect(() => {
     console.log('places UE --->', places);
   }, [places]);
@@ -100,6 +113,7 @@ const CafeFinder: FC = () => {
       setCurrentLocation(location);
     });
   }, []);
+
   //retrieves the user's current location when the component mounts
   useEffect(() => {
     console.log(isLoaded && currentLocation);
@@ -113,6 +127,7 @@ const CafeFinder: FC = () => {
           radius: 5000, // Change as per your requirements
           type: 'cafe',
         },
+
         async (results, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK && results) {
             const renderedPlace = results.map((result) => ({
@@ -132,6 +147,7 @@ const CafeFinder: FC = () => {
       );
     }
   }, [isLoaded, currentLocation]);
+
   const handleSearch = () => {
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode(
@@ -152,7 +168,9 @@ const CafeFinder: FC = () => {
       }
     );
   };
+
   usePlacesAutocomplete({ input: searchInputRef.current });
+
   const handleMarkerClick = (place: Place) => {
     const service = new google.maps.places.PlacesService(
       document.createElement('div')
@@ -172,14 +190,17 @@ const CafeFinder: FC = () => {
       }
     );
   };
+
   const handleMoreInfo = (place: Place) => {
     console.log('handleMoreInfo', place);
     setSelectedPlace(place);
     setIsModalOpen(true);
   };
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
   return (
     <div>
       <div className="flex m-[2rem] items-center justify-center ">

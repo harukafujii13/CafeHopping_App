@@ -22,8 +22,13 @@ const PlaceModal: FC<ModalProps> = ({
   lng,
   opening_hours,
 }) => {
-  const { isLoaded } = useContext(GoogleMapsContext);
-  console.log(lat, lng);
+  const contextValue = useContext(GoogleMapsContext);
+  if (!contextValue) {
+    throw new Error('PlaceModal must be used within a GoogleMapsProvider');
+  }
+  const { isLoaded } = contextValue;
+
+  // console.log(lat, lng);
   const containerStyle = useMemo(() => {
     return {
       width: '100%',
@@ -31,7 +36,7 @@ const PlaceModal: FC<ModalProps> = ({
     };
   }, []);
 
-  console.log(opening_hours);
+  // console.log(opening_hours);
 
   return (
     <div
