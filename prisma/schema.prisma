@@ -31,6 +31,8 @@ model Bookmark {
   cafeId String
   cafe   Cafe   @relation(fields: [cafeId], references: [id])
   user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([userId, cafeId]) 
 }
 
 model User {
@@ -42,4 +44,6 @@ model User {
 }
 
 //Model: The model block defines a data model for the User entity in the database. 
+//The @@unique([userId, cafeId]) makes sure that a combination of userId and 
+//cafeId is unique in the Bookmark table.
 //// npx prisma db push
