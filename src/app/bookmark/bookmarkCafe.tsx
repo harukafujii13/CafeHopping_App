@@ -32,6 +32,7 @@ interface Place {
 }
 
 interface CafeDetails {
+  id: string;
   cafe: Place;
 }
 
@@ -93,7 +94,11 @@ const BookmarkPage = () => {
                 )}
               </div>
               <div className="flex flex-row gap-3 items-center">
-                <BookmarkButton place={bookmarkedCafe.cafe} />
+                <BookmarkButton
+                  id={bookmarkedCafe.id}
+                  place={bookmarkedCafe.cafe}
+                  isBookmarkPage
+                />
                 <div className="text-primary-gray text-[1.7rem]">
                   <MdFavorite />
                 </div>

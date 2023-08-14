@@ -1,7 +1,7 @@
 'use client';
 //to keep track of bookmarked cafes
 
-import { createContext, useState, ReactNode } from 'react';
+import { createContext, useState, ReactNode, useEffect } from 'react';
 
 interface Cafe {
   id: string;
@@ -32,6 +32,22 @@ interface CafeProviderProps {
 export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   const [bookmarkedCafes, setBookmarkedCafes] = useState<Cafe[]>([]);
 
+  ///useEffect
+
+  useEffect(() => {
+    const fetchBookmarks = async () => {
+      try {
+        const response = await fetch('/api/bookmark/create');
+        const data = await response.json();
+        setBookmarkedCafes(data);
+      } catch (error) {
+        console.error('Error fetching the bookmarked cafes:', error);
+      }
+    };
+
+    fetchBookmarks();
+  }, []);
+
   const addToBookmarks = (place: Place) => {
     const cafe: Cafe = {
       id: place.place_id,
@@ -52,6 +68,9 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   };
 
   const isBookmarked = (cafeId: string) => {
+    //fetch all bookmarks
+    //save to variable
+
     return bookmarkedCafes.some((cafe) => cafe.id === cafeId);
   };
 

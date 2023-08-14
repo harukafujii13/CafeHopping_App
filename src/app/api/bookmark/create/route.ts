@@ -39,11 +39,8 @@ export async function POST(req: Request) {
     place: { name, photos, rating, place_id: cafeId, geometry, opening_hours },
   } = await req.json();
 
-  // const serializedOpeningHours = JSON.stringify(opening_hours.weekday_text);
-  // const serializedOpeningHours = JSON.stringify(opening_hours.weekday_text);
-
-  console.log(geometry);
-  console.log(opening_hours);
+  // console.log(geometry);
+  // console.log(opening_hours);
 
   try {
     // Check if the cafe exists in Prisma database
@@ -59,7 +56,7 @@ export async function POST(req: Request) {
         data: {
           id: cafeId,
           name,
-          rating, //doesn't show desimal number
+          rating,
           place_id: cafeId,
           photos,
           lat: geometry.location.lat,
@@ -70,12 +67,16 @@ export async function POST(req: Request) {
     }
 
     // Check if bookmark already exists
-    const existingBookmark = await prisma.bookmark.findUnique({
+    const existingBookmarkCafe = await prisma.bookmark.findUnique({
       where: {
-        id: cafeId,
+        // id: cafeId,
+        userId_cafeId: {
+          userId: userId,
+          cafeId: cafeId,
+        },
       },
     });
-    if (existingBookmark) {
+    if (existingBookmarkCafe) {
       return NextResponse.json({
         status: 'warning',
         message: 'You have already bookmarked this cafe.',

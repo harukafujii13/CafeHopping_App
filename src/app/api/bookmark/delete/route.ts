@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
-export async function DELETE(req: Request) {
+export async function POST(req: Request) {
   // Get user ID from session
   let userId;
   try {
@@ -23,15 +23,14 @@ export async function DELETE(req: Request) {
     );
   }
 
-  const { cafeId } = await req.json();
+  const { bookmarkId } = await req.json();
+
+  console.log('bookmarkId', bookmarkId);
 
   try {
     await prisma.bookmark.delete({
       where: {
-        userId_cafeId: {
-          userId: userId,
-          cafeId: cafeId,
-        },
+        id: bookmarkId,
       },
     });
 

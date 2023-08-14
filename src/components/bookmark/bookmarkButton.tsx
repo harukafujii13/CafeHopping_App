@@ -4,13 +4,18 @@ import { BsFillBookmarkDashFill } from 'react-icons/bs';
 import { Place } from '@/components/cafeFinder/cafefinder.component';
 import { CafeContext } from '@/contexts/cafeContext';
 
-const BookmarkButton: React.FC<{ place: Place }> = ({ place }) => {
+const BookmarkButton: React.FC<{
+  id: string;
+  place: Place;
+  isBookmarkPage: boolean;
+}> = ({ id, place, isBookmarkPage = false }) => {
   const { data: session } = useSession();
 
   const { isBookmarked, addToBookmarks, removeFromBookmarks } =
     useContext(CafeContext);
 
-  const bookmarkColor = isBookmarked(place.place_id) ? '#F6BD60' : '#6b7280';
+  const bookmarkColor =
+    isBookmarkPage || isBookmarked(place.place_id) ? '#F6BD60' : '#6b7280';
 
   async function handleBookmarkClick() {
     if (!session) {
@@ -20,7 +25,7 @@ const BookmarkButton: React.FC<{ place: Place }> = ({ place }) => {
     }
 
     //Check if cafe is already bookmarked
-    const alreadyBookmarked = isBookmarked(place.place_id);
+    const alreadyBookmarked = isBookmarkPage || isBookmarked(place.place_id);
 
     if (alreadyBookmarked) {
       removeFromBookmarks(place.place_id);
@@ -34,20 +39,25 @@ const BookmarkButton: React.FC<{ place: Place }> = ({ place }) => {
 
     try {
       const apiEndpoint = alreadyBookmarked
-        ? '//api/bookmark/delete'
+        ? '/api/bookmark/delete'
         : '/api/bookmark/create';
+
+      const body = alreadyBookmarked
+        ? { bookmarkId: id }
+        : {
+            userId: session.user?.id,
+            place: {
+              ...place,
+              photos: place.photos![0].getUrl(),
+            },
+          };
+
       const response = await fetch(apiEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          userId: session.user?.id,
-          place: {
-            ...place,
-            photos: place.photos![0].getUrl(),
-          },
-        }),
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
