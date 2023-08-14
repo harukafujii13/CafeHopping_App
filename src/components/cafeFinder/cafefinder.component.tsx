@@ -260,12 +260,16 @@ const CafeFinder: FC = () => {
                 <h2 className="text-base font-bold mb-2 font-inter">
                   {selectedPlace.name}
                 </h2>
-                {selectedPlace.photos && selectedPlace.photos.length > 0 && (
+                {selectedPlace.photos && selectedPlace.photos.length > 0 ? (
                   <img
                     className="w-40 h-40 object-cover mb-2"
                     src={selectedPlace.photos[0].getUrl()}
                     alt={selectedPlace.name}
                   />
+                ) : (
+                  <div className="w-15 h-15 object-cover mb-2 text-sm flex text-center items-center justify-center font-normal">
+                    No Image
+                  </div>
                 )}
                 {selectedPlace.rating && (
                   <div className="flex items-center">
@@ -286,12 +290,16 @@ const CafeFinder: FC = () => {
             <div
               key={index}
               className="bg-white shadow-md max-w-sm">
-              {place.photos && place.photos.length > 0 && (
+              {place.photos && place.photos.length > 0 ? (
                 <img
                   className=" w-full h-48 object-cover"
                   src={place.photos[0].getUrl()}
                   alt={place.name}
                 />
+              ) : (
+                <div className="w-full h-48 flex items-center justify-center bg-gray-300 text-white border-inherit text-lg font-normal">
+                  No Image
+                </div>
               )}
               <div className="p-4">
                 <h3 className="font-bold text-xl font-inter">{place.name}</h3>
@@ -309,7 +317,6 @@ const CafeFinder: FC = () => {
                     />
                   )}
                 </div>
-                {/* Add any additional information about the place here */}
                 <div className="flex flex-row gap-3 items-center">
                   <BookmarkButton place={place} />
                   <div className="text-primary-gray text-[1.7rem]">
