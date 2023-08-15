@@ -36,7 +36,7 @@ const PlaceModal: FC<ModalProps> = ({
       height: '100%',
     };
   }, []);
-  // console.log(opening_hours);
+
   return (
     <div
       className={`fixed z-50 inset-0 overflow-y-auto ${
