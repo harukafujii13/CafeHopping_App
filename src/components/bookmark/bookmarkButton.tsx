@@ -14,7 +14,7 @@ const BookmarkButton = ({ place }: { place: Place | BookMarkPlace }) => {
   //Check if cafe is already bookmarked
   const alreadyBookmarked = isBookmarked(place.place_id);
 
-  const bookmarkColor = alreadyBookmarked ? '#218380' : '#6b7280';
+  const bookmarkColor = alreadyBookmarked ? '#004346' : '#6b7280';
 
   async function handleBookmarkClick() {
     if (!session) {
