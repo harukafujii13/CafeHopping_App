@@ -1,6 +1,6 @@
 'use client';
 import { createContext, useContext, useState } from 'react';
-import { useJsApiLoader } from '@react-google-maps/api';
+import { useJsApiLoader, Libraries } from '@react-google-maps/api';
 interface GoogleMapsContextType {
   isLoaded: boolean;
 }
@@ -17,18 +17,12 @@ export const useGoogleMaps = () => {
 interface GoogleMapsProviderProps {
   children: React.ReactNode;
 }
-type Libraries = (
-  | 'places'
-  | 'geometry'
-  | 'drawing'
-  | 'localContext'
-  | 'visualization'
-)[];
+
 export const GoogleMapsProvider = ({ children }: GoogleMapsProviderProps) => {
   const [libraries] = useState<Libraries>(['places', 'geometry']);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
-    libraries: libraries, // adjust as necessary
+    libraries: libraries,
     language: 'en',
   });
   // console.log('Provider : ', isLoaded);
