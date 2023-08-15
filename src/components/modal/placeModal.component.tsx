@@ -1,4 +1,5 @@
 import { Place } from '@/components/cafeFinder/cafefinder.component';
+import { BookMarkPlace } from '@/app/bookmark/bookmarkCafe';
 import StarRating from '../rating/starRating.component';
 import { FC, useMemo } from 'react';
 import { GoogleMap, Marker } from '@react-google-maps/api';
@@ -8,10 +9,10 @@ import { GoogleMapsContext } from '@/contexts/googleMapContext';
 interface ModalProps {
   isOpen: boolean;
   closeModal: () => void;
-  place: Place | null;
+  place: Place | BookMarkPlace | null;
   lat?: number;
   lng?: number;
-  opening_hours?: [];
+  opening_hours?: string[];
 }
 
 const PlaceModal: FC<ModalProps> = ({
@@ -26,8 +27,8 @@ const PlaceModal: FC<ModalProps> = ({
   if (!contextValue) {
     throw new Error('PlaceModal must be used within a GoogleMapsProvider');
   }
-  const { isLoaded } = contextValue;
 
+  const { isLoaded } = contextValue;
   // console.log(lat, lng);
   const containerStyle = useMemo(() => {
     return {
@@ -35,9 +36,7 @@ const PlaceModal: FC<ModalProps> = ({
       height: '100%',
     };
   }, []);
-
   // console.log(opening_hours);
-
   return (
     <div
       className={`fixed z-50 inset-0 overflow-y-auto ${
@@ -146,7 +145,7 @@ const PlaceModal: FC<ModalProps> = ({
               <div className="px-4 py-3 sm:px-6 flex justify-center items-center">
                 <button
                   type="button"
-                  className="inline-flex justify-center rounded-md px-6 py-2 bg-primary-coral text-base font-medium text-white font-inter hover:bg-primary-rose focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b9cbc6] text-sm"
+                  className="inline-flex justify-center rounded-md px-6 py-2 bg-primary-coral text-base font-medium text-white font-inter hover:bg-primary-rose focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b9cbc6]"
                   onClick={closeModal}>
                   Close
                 </button>
@@ -158,5 +157,4 @@ const PlaceModal: FC<ModalProps> = ({
     </div>
   );
 };
-
 export default PlaceModal;

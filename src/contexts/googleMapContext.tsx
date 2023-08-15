@@ -1,16 +1,12 @@
 'use client';
-
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { useJsApiLoader } from '@react-google-maps/api';
-
 interface GoogleMapsContextType {
   isLoaded: boolean;
 }
-
 export const GoogleMapsContext = createContext<
   GoogleMapsContextType | undefined
 >(undefined);
-
 export const useGoogleMaps = () => {
   const context = useContext(GoogleMapsContext);
   if (!context) {
@@ -18,20 +14,24 @@ export const useGoogleMaps = () => {
   }
   return context;
 };
-
 interface GoogleMapsProviderProps {
   children: React.ReactNode;
 }
-
+type Libraries = (
+  | 'places'
+  | 'geometry'
+  | 'drawing'
+  | 'localContext'
+  | 'visualization'
+)[];
 export const GoogleMapsProvider = ({ children }: GoogleMapsProviderProps) => {
+  const [libraries] = useState<Libraries>(['places', 'geometry']);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
-    libraries: ['places', 'geometry'], // adjust as necessary
+    libraries: libraries, // adjust as necessary
     language: 'en',
   });
-
   // console.log('Provider : ', isLoaded);
-
   return (
     <GoogleMapsContext.Provider value={{ isLoaded }}>
       {children}

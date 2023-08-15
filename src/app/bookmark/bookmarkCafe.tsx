@@ -1,11 +1,11 @@
 'use client';
-
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { useSession } from 'next-auth/react';
+import { MdFavorite } from 'react-icons/md';
 import PlaceModal from '@/components/modal/placeModal.component';
 import BookmarkButton from '@/components/bookmark/bookmarkButton';
-import { MdFavorite } from 'react-icons/md';
 import StarRating from '@/components/rating/starRating.component';
-import { useSession } from 'next-auth/react';
+import { CafeContext } from '@/contexts/cafeContext';
 
 interface Location {
   lat: number;
@@ -25,11 +25,13 @@ interface Place {
   };
   id: string;
   name: string;
-  photos?: { getUrl: () => string }[];
+  photos?: string;
   rating?: number;
   place_id: string;
   opening_hours?: { weekday_text: string[] };
 }
+
+export interface BookMarkPlace extends Place {}
 
 interface CafeDetails {
   id: string;
@@ -40,20 +42,21 @@ const BookmarkPage = () => {
   const session = useSession();
   const [bookmarkedCafes, setBookmarkedCafes] = useState<CafeDetails[] | null>(
     null
-  );
+  ); //stores an array of bookmarked cafes
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const { bookmarkedCafes: bookmarkedCafesState } = useContext(CafeContext);
 
   useEffect(() => {
     async function fetchBookmarkedCafes() {
       const userId = session.data?.user?.id;
       const response = await fetch(`api/bookmark/${userId}`);
       const data = await response.json();
-      console.log(data);
       setBookmarkedCafes(data.bookmarks);
     }
     fetchBookmarkedCafes();
-  }, [session]);
+  }, [session, bookmarkedCafesState]);
+  //re-run whenever session or bookmarkedCafesState changes.
 
   const handleMoreInfo = ({ cafe }: CafeDetails) => {
     console.log('handleMoreInfo called with:', cafe);
@@ -77,7 +80,6 @@ const BookmarkPage = () => {
             <img
               className="w-full h-48 object-cover"
               src={bookmarkedCafe.cafe.photos}
-              //src={bookmarkedCafe.cafe.photos?.[0]?.getUrl()}
               alt={bookmarkedCafe.cafe.name}
             />
             ​
@@ -94,11 +96,7 @@ const BookmarkPage = () => {
                 )}
               </div>
               <div className="flex flex-row gap-3 items-center">
-                <BookmarkButton
-                  id={bookmarkedCafe.id}
-                  place={bookmarkedCafe.cafe}
-                  isBookmarkPage
-                />
+                <BookmarkButton place={bookmarkedCafe.cafe} />
                 <div className="text-primary-gray text-[1.7rem]">
                   <MdFavorite />
                 </div>

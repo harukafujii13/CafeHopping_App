@@ -1,21 +1,20 @@
-import React, { useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { useSession } from 'next-auth/react';
 import { BsFillBookmarkDashFill } from 'react-icons/bs';
 import { Place } from '@/components/cafeFinder/cafefinder.component';
+import { BookMarkPlace } from '@/app/bookmark/bookmarkCafe';
 import { CafeContext } from '@/contexts/cafeContext';
 
-const BookmarkButton: React.FC<{
-  id: string;
-  place: Place;
-  isBookmarkPage: boolean;
-}> = ({ id, place, isBookmarkPage = false }) => {
+const BookmarkButton = ({ place }: { place: Place | BookMarkPlace }) => {
   const { data: session } = useSession();
 
-  const { isBookmarked, addToBookmarks, removeFromBookmarks } =
+  const { isBookmarked, fetchBookmarks, removeFromBookmarks, bookmarkedCafes } =
     useContext(CafeContext);
 
-  const bookmarkColor =
-    isBookmarkPage || isBookmarked(place.place_id) ? '#F6BD60' : '#6b7280';
+  //Check if cafe is already bookmarked
+  const alreadyBookmarked = isBookmarked(place.place_id);
+
+  const bookmarkColor = alreadyBookmarked ? '#218380' : '#6b7280';
 
   async function handleBookmarkClick() {
     if (!session) {
@@ -24,55 +23,58 @@ const BookmarkButton: React.FC<{
       return;
     }
 
-    //Check if cafe is already bookmarked
-    const alreadyBookmarked = isBookmarkPage || isBookmarked(place.place_id);
-
-    if (alreadyBookmarked) {
-      removeFromBookmarks(place.place_id);
-    } else {
-      addToBookmarks(place);
-    }
-
     const userId = session;
-
     // Send request to backend
-
     try {
       const apiEndpoint = alreadyBookmarked
         ? '/api/bookmark/delete'
         : '/api/bookmark/create';
 
       const body = alreadyBookmarked
-        ? { bookmarkId: id }
-        : {
-            userId: session.user?.id,
-            place: {
-              ...place,
-              photos: place.photos![0].getUrl(),
+        ? {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
             },
-          };
-
-      const response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
-
+            body: JSON.stringify({ bookmarkId: getBookmarkId(place.place_id) }),
+          }
+        : null;
+      const response = await fetch(
+        apiEndpoint,
+        body || {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userId, place }),
+        }
+      );
       if (!response.ok) {
         throw new Error('Failed to modify bookmark');
+      }
+      const data = await response.json();
+      if (data.message === 'Bookmark deleted successfully') {
+        //remove from context
+        removeFromBookmarks(place.place_id);
+      } else {
+        fetchBookmarks();
       }
     } catch (error: any) {
       console.error(error.message);
     }
   }
+
+  const getBookmarkId = (placeId: string) => {
+    const bookmark = bookmarkedCafes.find((cafe) => cafe.cafeId === placeId);
+    return bookmark?.id;
+  };
   return (
     <div
-      className="text-primary-gray text-[1.7rem]"
+      className="text-primary-gray text-[1.7rem] cursor-pointer"
       onClick={handleBookmarkClick}>
       <BsFillBookmarkDashFill style={{ color: bookmarkColor }} />
     </div>
   );
 };
+
 export default BookmarkButton;

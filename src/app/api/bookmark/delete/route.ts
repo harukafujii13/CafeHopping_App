@@ -3,9 +3,10 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
-export async function POST(req: Request) {
+export async function PATCH(req: Request) {
   // Get user ID from session
   let userId;
+
   try {
     const session = await getServerSession(authOptions);
     if (session && session.user) {
@@ -25,15 +26,12 @@ export async function POST(req: Request) {
 
   const { bookmarkId } = await req.json();
 
-  console.log('bookmarkId', bookmarkId);
-
   try {
     await prisma.bookmark.delete({
       where: {
         id: bookmarkId,
       },
     });
-
     return NextResponse.json({
       status: 'success',
       message: 'Bookmark deleted successfully',
@@ -48,3 +46,5 @@ export async function POST(req: Request) {
     );
   }
 }
+
+// PATCH request will include a payload that specifies the changes to be made to the resource.

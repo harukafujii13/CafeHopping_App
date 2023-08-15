@@ -1,5 +1,13 @@
 'use client';
-import { FC, useEffect, useState, useMemo, useRef, useContext } from 'react';
+import {
+  FC,
+  useEffect,
+  useState,
+  useMemo,
+  useRef,
+  useContext,
+  useCallback,
+} from 'react';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url';
 import usePlacesAutocomplete from '@/hooks/autocomplete';
@@ -10,6 +18,7 @@ import { useWindowWidth } from '@react-hook/window-size';
 import { MdFavorite } from 'react-icons/md';
 import BookmarkButton from '../bookmark/bookmarkButton';
 import { GoogleMapsContext } from '@/contexts/googleMapContext';
+import { CafeContext } from '@/contexts/cafeContext';
 
 export interface Location {
   lat: number;
@@ -26,7 +35,7 @@ export interface Place {
     location: Location & Pick<LocationWithFunction, 'lat' | 'lng'>;
   };
   name: string;
-  photos?: { getUrl: () => string }[];
+  photos?: string;
   rating?: number;
   place_id: string;
   opening_hours?: { weekday_text: string[] };
@@ -55,20 +64,18 @@ const getPlaceDetails = (placeId: string | undefined) => {
     });
   });
 };
-
 const CafeFinder: FC = () => {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const contextValue = useContext(GoogleMapsContext);
   if (!contextValue) {
     throw new Error('CafeFinder must be used within a GoogleMapsProvider');
   }
   const { isLoaded } = contextValue;
-
+  const { isBookmarked } = useContext(CafeContext);
   const breakpoints = {
     xs: 480,
     sm: 640,
@@ -76,9 +83,7 @@ const CafeFinder: FC = () => {
     lg: 1024,
     xl: 1280,
   };
-
   const onlyWidth = useWindowWidth();
-
   const containerStyle = useMemo(() => {
     let width;
     if (onlyWidth < breakpoints.xs) {
@@ -100,10 +105,6 @@ const CafeFinder: FC = () => {
       margin: '0 auto',
     };
   }, [onlyWidth]);
-
-  useEffect(() => {
-    console.log('places UE --->', places);
-  }, [places]);
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       const location: Location = {
@@ -113,10 +114,8 @@ const CafeFinder: FC = () => {
       setCurrentLocation(location);
     });
   }, []);
-
   //retrieves the user's current location when the component mounts
   useEffect(() => {
-    console.log(isLoaded && currentLocation);
     if (isLoaded && currentLocation) {
       const service = new google.maps.places.PlacesService(
         document.createElement('div')
@@ -127,13 +126,12 @@ const CafeFinder: FC = () => {
           radius: 5000, // Change as per your requirements
           type: 'cafe',
         },
-
         async (results, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK && results) {
             const renderedPlace = results.map((result) => ({
               geometry: result.geometry,
               name: result.name,
-              photos: result.photos,
+              photos: result?.photos?.map((photo) => photo.getUrl())[0],
               rating: result.rating,
               place_id: result.place_id, // Store place_id from results to use in Place Details request
             })) as unknown as Place[];
@@ -147,7 +145,6 @@ const CafeFinder: FC = () => {
       );
     }
   }, [isLoaded, currentLocation]);
-
   const handleSearch = () => {
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode(
@@ -168,9 +165,7 @@ const CafeFinder: FC = () => {
       }
     );
   };
-
   usePlacesAutocomplete({ input: searchInputRef.current });
-
   const handleMarkerClick = (place: Place) => {
     const service = new google.maps.places.PlacesService(
       document.createElement('div')
@@ -190,17 +185,13 @@ const CafeFinder: FC = () => {
       }
     );
   };
-
   const handleMoreInfo = (place: Place) => {
-    console.log('handleMoreInfo', place);
     setSelectedPlace(place);
     setIsModalOpen(true);
   };
-
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
   return (
     <div>
       <div className="flex m-[2rem] items-center justify-center ">
@@ -260,10 +251,10 @@ const CafeFinder: FC = () => {
                 <h2 className="text-base font-bold mb-2 font-inter">
                   {selectedPlace.name}
                 </h2>
-                {selectedPlace.photos && selectedPlace.photos.length > 0 ? (
+                {selectedPlace.photos ? (
                   <img
                     className="w-40 h-40 object-cover mb-2"
-                    src={selectedPlace.photos[0].getUrl()}
+                    src={selectedPlace.photos}
                     alt={selectedPlace.name}
                   />
                 ) : (
@@ -290,10 +281,10 @@ const CafeFinder: FC = () => {
             <div
               key={index}
               className="bg-white shadow-md max-w-sm">
-              {place.photos && place.photos.length > 0 ? (
+              {place.photos ? (
                 <img
                   className=" w-full h-48 object-cover"
-                  src={place.photos[0].getUrl()}
+                  src={place.photos}
                   alt={place.name}
                 />
               ) : (
@@ -322,7 +313,6 @@ const CafeFinder: FC = () => {
                   <div className="text-primary-gray text-[1.7rem]">
                     <MdFavorite />
                   </div>
-
                   <button
                     onClick={() => handleMoreInfo(place)}
                     className="inline-flex items-center px-3 py-2 text-x font-inter font-bold text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-[#b9cbc6] dark:bg-[#95b1a8] dark:hover:bg-primary-green dark:focus:ring-[#688d81]">
