@@ -128,7 +128,8 @@ const BookmarkPage = () => {
         place={selectedPlace}
         lat={selectedPlace?.lat}
         lng={selectedPlace?.lng}
-        opening_hours={selectedPlace?.opening_hours}
+        // opening_hours={selectedPlace?.opening_hours?.weekday_text}
+        opening_hours={selectedPlace?.opening_hours as unknown as string[]}
       />
     </div>
   );
