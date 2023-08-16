@@ -50,16 +50,18 @@ export const LikesButton = ({ cafeId }: { cafeId: Place | BookMarkPlace }) => {
     }
   };
 
-  const likeColor = isLiked ? '#F3C0B9' : '#6b7280';
+  const likeColor = isLiked ? '#DE1A17' : '#6b7280';
 
   return (
     <div
-      className={`text-primary-gray text-[1.7rem] cursor-pointer`}
+      className={`text-primary-gray text-[1.8rem] cursor-pointer flex gap-1 items-center justify-center`}
       style={{ color: likeColor }}
       onClick={handleLikeClick}>
       <MdFavorite />
       {likesCount[cafeId.place_id] > 0 && (
-        <span>{likesCount[cafeId.place_id]}</span>
+        <span className="text-[1.3rem] font-medium text-primary-gray">
+          {likesCount[cafeId.place_id]}
+        </span>
       )}
     </div>
   );
