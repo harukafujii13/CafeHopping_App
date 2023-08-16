@@ -7,50 +7,66 @@ import { BookMarkPlace } from '@/app/bookmark/bookmarkCafe';
 
 export const LikesButton = ({ cafeId }: { cafeId: Place | BookMarkPlace }) => {
   const { data: session } = useSession();
-  // console.log(cafeId);
 
-  const { likesCount, fetchLikesCount } = useContext(CafeContext);
+  const { likesCount, fetchLikesCount, isLiked, removeFromLikes, likedCafes } =
+    useContext(CafeContext);
 
-  const isLiked =
-    likesCount[cafeId.place_id] && likesCount[cafeId.place_id] > 0;
-  console.log('cafeId.place_id', cafeId.place_id); //undifined
+  const alreadyLiked = isLiked(cafeId.place_id);
+  // console.log('cafeId.place_id', cafeId.place_id);
+  const likeColor = alreadyLiked ? '#DE1A17' : '#6b7280';
 
-  const handleLikeClick = async () => {
-    console.log({ isLiked, likesCount });
+  async function handleLikeClick() {
     if (!session) {
       console.log('User not authenticated');
-      // Show a toast later
       return;
     }
 
-    const { user } = session;
-
-    const apiEndpoint = isLiked
-      ? `/api/cafe/${cafeId}/unlike`
-      : `/api/cafe/${cafeId}/like`;
+    const userId = session;
 
     try {
-      const response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ cafeId }),
-      });
-      console.log('response', response);
+      const apiEndpoint = alreadyLiked
+        ? `/api/cafe/${cafeId.place_id}/unlike`
+        : `/api/cafe/${cafeId.place_id}/like`;
 
-      if (!response.ok) {
-        throw new Error('Failed to modify like');
+      const body = alreadyLiked
+        ? {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ cafeId: getLikeId }),
+          }
+        : null;
+
+      const response = await fetch(
+        apiEndpoint,
+        body || {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(cafeId.place_id),
+        }
+      );
+      if (!response) {
+        throw new Error('Failed to modify liked');
       }
 
-      // Re-fetch the updated like count for this cafe from the server
-      fetchLikesCount(cafeId.place_id);
+      const data = await response.json();
+      if (data.message === 'Liked deleted successfully') {
+        removeFromLikes(cafeId.place_id);
+      } else {
+        fetchLikesCount(cafeId.place_id);
+      }
     } catch (error: any) {
-      console.error(error.message);
+      console.log(error);
     }
-  };
+  }
 
-  const likeColor = isLiked ? '#DE1A17' : '#6b7280';
+  const getLikeId = (cafeId: string) => {
+    const like = likedCafes.find((cafe) => cafe.cafeId === cafeId);
+    return like?.id;
+  };
 
   return (
     <div

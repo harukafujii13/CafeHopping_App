@@ -23,7 +23,11 @@ export async function POST(req: Request) {
     );
   }
 
-  const { cafeId } = await req.json(); //create a Like
+  const body = await req.json();
+
+  console.log('------body-----', body);
+  const { cafeId } = body;
+  console.log('------cafeId', cafeId);
 
   try {
     const existingLike = await prisma.like.findUnique({
