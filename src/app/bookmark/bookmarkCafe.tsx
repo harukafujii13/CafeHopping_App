@@ -1,11 +1,11 @@
 'use client';
 import { useEffect, useState, useContext } from 'react';
 import { useSession } from 'next-auth/react';
-import { MdFavorite } from 'react-icons/md';
 import PlaceModal from '@/components/modal/placeModal.component';
 import BookmarkButton from '@/components/bookmark/bookmarkButton';
 import StarRating from '@/components/rating/starRating.component';
 import { CafeContext } from '@/contexts/cafeContext';
+import LikesButton from '@/components/likes/likesButton.component';
 
 interface Location {
   lat: number;
@@ -97,10 +97,7 @@ const BookmarkPage = () => {
               </div>
               <div className="flex flex-row gap-3 items-center">
                 <BookmarkButton place={bookmarkedCafe.cafe} />
-                <div className="text-primary-gray text-[1.7rem]">
-                  <MdFavorite />
-                </div>
-                ​
+                <LikesButton cafeId={bookmarkedCafe.cafe} />​
                 <button
                   onClick={() => handleMoreInfo(bookmarkedCafe)}
                   className="inline-flex items-center px-3 py-2 text-x font-inter font-bold text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-[#b9cbc6] dark:bg-[#95b1a8] dark:hover:bg-primary-green dark:focus:ring-[#688d81]">

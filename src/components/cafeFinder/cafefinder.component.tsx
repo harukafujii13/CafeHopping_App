@@ -15,10 +15,10 @@ import StarRating from '../rating/starRating.component';
 import DistanceToCafe from '../distanceToCafe/distanceToCafe.component';
 import PlaceModal from '../modal/placeModal.component';
 import { useWindowWidth } from '@react-hook/window-size';
-import { MdFavorite } from 'react-icons/md';
 import BookmarkButton from '../bookmark/bookmarkButton';
 import { GoogleMapsContext } from '@/contexts/googleMapContext';
 import { CafeContext } from '@/contexts/cafeContext';
+import LikesButton from '../likes/likesButton.component';
 
 export interface Location {
   lat: number;
@@ -310,9 +310,7 @@ const CafeFinder: FC = () => {
                 </div>
                 <div className="flex flex-row gap-3 items-center">
                   <BookmarkButton place={place} />
-                  <div className="text-primary-gray text-[1.7rem]">
-                    <MdFavorite />
-                  </div>
+                  <LikesButton cafeId={place} />
                   <button
                     onClick={() => handleMoreInfo(place)}
                     className="inline-flex items-center px-3 py-2 text-x font-inter font-bold text-center text-white bg-primary-coral rounded-lg hover:bg-primary-rose focus:ring-4 focus:outline-none focus:ring-[#b9cbc6] dark:bg-[#95b1a8] dark:hover:bg-primary-green dark:focus:ring-[#688d81]">
