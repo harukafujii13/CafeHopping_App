@@ -24,6 +24,9 @@ interface CafeContextProps {
   fetchBookmarks: () => void;
   removeFromBookmarks: (cafeId: string) => void;
   isBookmarked: (cafeId: string) => boolean;
+
+  likesCount: { [cafeId: string]: number };
+  fetchLikesCount: (cafeId: string) => void;
 }
 
 export const CafeContext = createContext<CafeContextProps>({
@@ -31,6 +34,8 @@ export const CafeContext = createContext<CafeContextProps>({
   fetchBookmarks: () => {},
   removeFromBookmarks: () => {},
   isBookmarked: () => false,
+  likesCount: {},
+  fetchLikesCount: () => {},
 });
 
 interface CafeProviderProps {
@@ -39,8 +44,12 @@ interface CafeProviderProps {
 
 export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   const [bookmarkedCafes, setBookmarkedCafes] = useState<Cafe[]>([]);
+  const [likesCount, setLikesCount] = useState<{ [cafeId: string]: number }>(
+    {}
+  );
   const { data: session } = useSession();
 
+  //bookmark
   const fetchBookmarks = useCallback(async () => {
     try {
       const user = session?.user?.id;
@@ -52,9 +61,43 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
     }
   }, [session]);
 
+  //likes
+  const fetchLikesCount = async (cafeId: string) => {
+    try {
+      const response = await fetch(`/api/cafe/${cafeId}/likes-count`);
+      const data = await response.json();
+      setLikesCount((prevCounts) => ({ ...prevCounts, [cafeId]: data.count }));
+    } catch (error) {
+      console.error('Error fetching the likes count:', error);
+    }
+  };
+
+  //all likes
+  const fetchAllLikes = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/allLikes`);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch all likes');
+      }
+
+      const likes = await response.json();
+
+      const newLikesCount: { [cafeId: string]: number } = {};
+      likes.forEach((like: { cafeId: string; count: number }) => {
+        newLikesCount[like.cafeId] = like.count;
+      });
+
+      setLikesCount(newLikesCount);
+    } catch (error) {
+      console.error('Error fetching the all Likes:', error);
+    }
+  }, []);
+
   useEffect(() => {
     fetchBookmarks();
-  }, [session]);
+    fetchAllLikes();
+  }, [session, fetchBookmarks, fetchAllLikes]);
   //whenever the session object changes, effectively re-fetching the bookmarked cafes list
   //when the user logs in/out.
 
@@ -75,6 +118,8 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
         removeFromBookmarks,
         isBookmarked,
         fetchBookmarks,
+        likesCount,
+        fetchLikesCount,
       }}>
       {children}
     </CafeContext.Provider>

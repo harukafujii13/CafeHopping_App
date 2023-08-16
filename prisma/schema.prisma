@@ -17,6 +17,7 @@ model Cafe {
   rating    Float
   place_id  String
   bookmarks Bookmark[]
+  likes     Like[]
   photos    String
   lat       Float
   lng       Float
@@ -41,6 +42,17 @@ model User {
   email     String     @unique
   password  String
   bookmarks Bookmark[]
+  likes     Like[] 
+}
+
+model Like {
+  id     String @id @default(uuid())
+  userId String
+  cafeId String
+  cafe   Cafe   @relation(fields: [cafeId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+
 }
 
 //Model: The model block defines a data model for the User entity in the database. 
