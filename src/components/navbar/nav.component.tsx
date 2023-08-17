@@ -62,13 +62,7 @@ export const Navbar = () => {
               }>
               <li>Bookmark</li>
             </Link>
-            <Link
-              href={'/favorite'}
-              className={
-                currentRoute === '/favorite' ? activeStyle : nonActiveStyle
-              }>
-              <li>Favorite</li>
-            </Link>
+
             <FontAwesomeIcon
               icon={faArrowRightFromBracket}
               className="h-[27px] cursor-pointer hover:text-[#4E3104]"
@@ -112,15 +106,7 @@ export const Navbar = () => {
                   }>
                   <li>Bookmark</li>
                 </Link>
-                <Link
-                  href={'/favorite'}
-                  className={
-                    currentRoute === '/favorite'
-                      ? activeStyleBurger
-                      : nonActiveStyleBurger
-                  }>
-                  <li>Favorite</li>
-                </Link>
+
                 <FontAwesomeIcon
                   icon={faArrowRightFromBracket}
                   className="h-[27px] cursor-pointer hover:text-primary-green text-[#4E3104]"
