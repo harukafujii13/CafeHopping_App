@@ -23,11 +23,9 @@ export async function POST(req: Request) {
     );
   }
 
-  const body = await req.json();
-
-  console.log('------body-----', body);
-  const { cafeId } = body;
-  console.log('------cafeId', cafeId);
+  const {
+    place: { name, photos, rating, place_id: cafeId, geometry, opening_hours },
+  } = await req.json();
 
   try {
     const existingLike = await prisma.like.findFirst({
@@ -36,6 +34,7 @@ export async function POST(req: Request) {
         cafeId: cafeId,
       },
     });
+
     if (existingLike) {
       return NextResponse.json({
         status: 'warning',
@@ -43,6 +42,31 @@ export async function POST(req: Request) {
       });
     }
 
+    let cafe = await prisma.cafe.findUnique({
+      where: {
+        id: cafeId,
+      },
+    });
+
+    // If cafe doesn't exist in the Prisma database, create it using data from Google Maps
+    if (!cafe) {
+      cafe = await prisma.cafe.create({
+        data: {
+          id: cafeId,
+          name,
+          rating,
+          place_id: cafeId,
+          photos,
+          lat: geometry.location.lat,
+          lng: geometry.location.lng,
+          opening_hours: opening_hours.weekday_text,
+        },
+      });
+    }
+
+    console.log(cafe);
+
+    //create Like
     const like = await prisma.like.create({
       data: {
         userId,

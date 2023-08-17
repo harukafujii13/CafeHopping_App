@@ -7,9 +7,11 @@ import {
   useEffect,
   useCallback,
 } from 'react';
+
 import { useSession } from 'next-auth/react';
 import { User } from '@prisma/client';
 import { Place } from '@/components/cafeFinder/cafefinder.component';
+
 interface Cafe {
   id: string;
   cafe: Place;
@@ -17,6 +19,7 @@ interface Cafe {
   user: User;
   userId: string;
 }
+
 interface CafeContextProps {
   bookmarkedCafes: Cafe[];
   fetchBookmarks: () => void;

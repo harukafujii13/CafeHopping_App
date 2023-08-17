@@ -29,32 +29,31 @@ export const LikesButton = ({ cafeId }: { cafeId: Place | BookMarkPlace }) => {
 
     const userId = session.user?.id;
 
+    const apiEndpoint =
+      alreadyLiked && alreadyLikedByUser
+        ? `/api/cafe/${cafeId.place_id}/unlike`
+        : `/api/cafe/${cafeId.place_id}/like`;
+
+    const bodyData = {
+      cafeId: cafeId.place_id,
+      place: {
+        name: cafeId.name,
+        photos: cafeId.photos,
+        rating: cafeId.rating,
+        place_id: cafeId.place_id,
+        geometry: cafeId.geometry,
+        opening_hours: cafeId.opening_hours,
+      },
+    };
+
     try {
-      const apiEndpoint =
-        alreadyLiked && alreadyLikedByUser
-          ? `/api/cafe/${cafeId.place_id}/unlike`
-          : `/api/cafe/${cafeId.place_id}/like`;
-
-      const body = alreadyLiked
-        ? {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ cafeId: cafeId.place_id }),
-          }
-        : null;
-
-      const response = await fetch(
-        apiEndpoint,
-        body || {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ cafeId: cafeId.place_id }),
-        }
-      );
+      const response = await fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyData),
+      });
 
       if (!response) {
         throw new Error('Failed to modify liked');
@@ -70,11 +69,6 @@ export const LikesButton = ({ cafeId }: { cafeId: Place | BookMarkPlace }) => {
       console.log(error);
     }
   }
-
-  // const getLikeId = (cafeId: string) => {
-  //   const like = likedCafes.find((cafe) => cafe.cafeId === cafeId);
-  //   return like?.cafeId;
-  // };
 
   return (
     <div

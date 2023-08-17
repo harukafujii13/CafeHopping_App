@@ -29,6 +29,8 @@ export async function GET(req: Request, context: any) {
     });
     return NextResponse.json(allLikesByUser);
   } catch (error: any) {
+    console.log(error);
+
     return new NextResponse(
       JSON.stringify({
         status: 'error',
