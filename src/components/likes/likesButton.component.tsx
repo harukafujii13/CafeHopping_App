@@ -27,7 +27,7 @@ export const LikesButton = ({ cafeId }: { cafeId: Place | BookMarkPlace }) => {
       return;
     }
 
-    const userId = session;
+    const userId = session.user?.id;
 
     try {
       const apiEndpoint =
@@ -71,10 +71,10 @@ export const LikesButton = ({ cafeId }: { cafeId: Place | BookMarkPlace }) => {
     }
   }
 
-  const getLikeId = (cafeId: string) => {
-    const like = likedCafes.find((cafe) => cafe.cafeId === cafeId);
-    return like?.cafeId;
-  };
+  // const getLikeId = (cafeId: string) => {
+  //   const like = likedCafes.find((cafe) => cafe.cafeId === cafeId);
+  //   return like?.cafeId;
+  // };
 
   return (
     <div
