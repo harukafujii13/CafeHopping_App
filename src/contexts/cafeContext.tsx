@@ -83,7 +83,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
 
   const fetchAllLikes = useCallback(async () => {
     try {
-      const response = await fetch(`/api/allLikes`);
+      const response = await fetch(`/api/allLikesByUser`);
       if (!response.ok) {
         throw new Error('Failed to fetch all likes');
       }
@@ -180,6 +180,7 @@ export default CafeProvider;
 //fetchBookmarks: A function that fetches the user’s current bookmarks.
 //removeFromBookmarks: A function that removes a cafe from the user's bookmarks.
 //isBookmarked: A function that checks whether a cafe is bookmarked or not.
+
 //useCallback
 //It sends an API request to fetch the bookmarked cafes for the logged-in user
 //and sets them in the bookmarkedCafes state. It depends on the session object,
