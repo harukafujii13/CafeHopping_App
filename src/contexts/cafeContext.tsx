@@ -10,7 +10,6 @@ import {
 import { useSession } from 'next-auth/react';
 import { User } from '@prisma/client';
 import { Place } from '@/components/cafeFinder/cafefinder.component';
-
 interface Cafe {
   id: string;
   cafe: Place;
@@ -18,7 +17,6 @@ interface Cafe {
   user: User;
   userId: string;
 }
-
 interface CafeContextProps {
   bookmarkedCafes: Cafe[];
   fetchBookmarks: () => void;
@@ -33,6 +31,7 @@ interface CafeContextProps {
   isLikedByUser: (cafeId: string) => boolean;
   likesCount: { [cafeId: string]: number };
 }
+
 export const CafeContext = createContext<CafeContextProps>({
   bookmarkedCafes: [],
   fetchBookmarks: () => {},
@@ -51,6 +50,7 @@ export const CafeContext = createContext<CafeContextProps>({
 interface CafeProviderProps {
   children: ReactNode;
 }
+
 export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   const [bookmarkedCafes, setBookmarkedCafes] = useState<Cafe[]>([]);
   const [likedCafes, setLikedCafes] = useState<Cafe[]>([]);
@@ -58,7 +58,6 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
     {}
   );
   const { data: session } = useSession();
-
   //bookmark
   const fetchBookmarks = useCallback(async () => {
     try {
@@ -83,7 +82,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
 
   const fetchAllLikes = useCallback(async () => {
     try {
-      const response = await fetch(`/api/allLikesByUser`);
+      const response = await fetch(`/api/allLikes`);
       if (!response.ok) {
         throw new Error('Failed to fetch all likes');
       }
@@ -92,7 +91,6 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       likes.forEach((like: { cafeId: string; count: number }) => {
         newLikesCount[like.cafeId] = like.count;
       });
-
       setLikesCount(newLikesCount);
     } catch (error) {
       console.error('Error fetching the all Likes:', error);
@@ -144,6 +142,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
     //   prevCafes.filter((cafe) => cafe.cafeId !== cafeId)
     // );
   };
+
   const isBookmarked = (cafeId: string) => {
     return bookmarkedCafes.some((cafe) => cafe.cafeId === cafeId);
   };
@@ -153,7 +152,6 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   const isLikedByUser = (cafeId: string) => {
     return likedCafes.some((cafe) => cafe.cafeId === cafeId);
   };
-
   return (
     <CafeContext.Provider
       value={{
