@@ -15,6 +15,7 @@ export const LikesButton = ({ cafeId }: { cafeId: Place | BookMarkPlace }) => {
     isLikedByUser,
     removeFromLikes,
     likedCafes,
+    fetchAllLikesByUser,
   } = useContext(CafeContext);
 
   const alreadyLiked = isLiked(cafeId.place_id);
@@ -68,6 +69,8 @@ export const LikesButton = ({ cafeId }: { cafeId: Place | BookMarkPlace }) => {
       }
     } catch (error: any) {
       console.log(error);
+    } finally {
+      fetchAllLikesByUser();
     }
   }
 
