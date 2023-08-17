@@ -8,11 +8,17 @@ import { BookMarkPlace } from '@/app/bookmark/bookmarkCafe';
 export const LikesButton = ({ cafeId }: { cafeId: Place | BookMarkPlace }) => {
   const { data: session } = useSession();
 
-  const { likesCount, fetchLikesCount, isLiked, removeFromLikes, likedCafes } =
-    useContext(CafeContext);
+  const {
+    likesCount,
+    fetchLikesCount,
+    isLiked,
+    isLikedByUser,
+    removeFromLikes,
+    likedCafes,
+  } = useContext(CafeContext);
 
   const alreadyLiked = isLiked(cafeId.place_id);
-  // console.log('cafeId.place_id', cafeId.place_id);
+  const alreadyLikedByUser = isLikedByUser(cafeId.place_id);
   const likeColor = alreadyLiked ? '#DE1A17' : '#6b7280';
 
   async function handleLikeClick() {
@@ -24,17 +30,18 @@ export const LikesButton = ({ cafeId }: { cafeId: Place | BookMarkPlace }) => {
     const userId = session;
 
     try {
-      const apiEndpoint = alreadyLiked
-        ? `/api/cafe/${cafeId.place_id}/unlike`
-        : `/api/cafe/${cafeId.place_id}/like`;
+      const apiEndpoint =
+        alreadyLiked && alreadyLikedByUser
+          ? `/api/cafe/${cafeId.place_id}/unlike`
+          : `/api/cafe/${cafeId.place_id}/like`;
 
       const body = alreadyLiked
         ? {
-            method: 'PATCH',
+            method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ cafeId: getLikeId }),
+            body: JSON.stringify({ cafeId: cafeId.place_id }),
           }
         : null;
 
@@ -45,15 +52,16 @@ export const LikesButton = ({ cafeId }: { cafeId: Place | BookMarkPlace }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(cafeId.place_id),
+          body: JSON.stringify({ cafeId: cafeId.place_id }),
         }
       );
+
       if (!response) {
         throw new Error('Failed to modify liked');
       }
 
       const data = await response.json();
-      if (data.message === 'Liked deleted successfully') {
+      if (data.message === 'Like removed successfully') {
         removeFromLikes(cafeId.place_id);
       } else {
         fetchLikesCount(cafeId.place_id);
@@ -65,7 +73,7 @@ export const LikesButton = ({ cafeId }: { cafeId: Place | BookMarkPlace }) => {
 
   const getLikeId = (cafeId: string) => {
     const like = likedCafes.find((cafe) => cafe.cafeId === cafeId);
-    return like?.id;
+    return like?.cafeId;
   };
 
   return (
@@ -82,5 +90,4 @@ export const LikesButton = ({ cafeId }: { cafeId: Place | BookMarkPlace }) => {
     </div>
   );
 };
-
 export default LikesButton;

@@ -5,7 +5,6 @@ import { authOptions } from '@/lib/auth';
 
 export async function POST(req: Request) {
   let userId;
-
   try {
     const session = await getServerSession(authOptions);
     if (session && session.user) {
@@ -22,16 +21,19 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
-
   const { cafeId } = await req.json(); //make it unLike
 
   try {
+    const existingLike = await prisma.like.findFirst({
+      where: {
+        userId: userId,
+        cafeId: cafeId,
+      },
+    });
+
     await prisma.like.delete({
       where: {
-        userId_cafeId: {
-          userId: userId,
-          cafeId: cafeId,
-        },
+        id: existingLike?.id,
       },
     });
 

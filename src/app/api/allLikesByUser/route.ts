@@ -3,8 +3,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
-export async function POST(req: Request) {
-  // Get user ID from session
+export async function GET(req: Request, context: any) {
   let userId;
   try {
     const session = await getServerSession(authOptions);
@@ -22,34 +21,13 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
-
-  const body = await req.json();
-
-  console.log('------body-----', body);
-  const { cafeId } = body;
-  console.log('------cafeId', cafeId);
-
   try {
-    const existingLike = await prisma.like.findFirst({
+    const allLikesByUser = await prisma.like.findMany({
       where: {
-        userId: userId,
-        cafeId: cafeId,
-      },
-    });
-    if (existingLike) {
-      return NextResponse.json({
-        status: 'warning',
-        message: 'You have already liked this cafe.',
-      });
-    }
-
-    const like = await prisma.like.create({
-      data: {
         userId,
-        cafeId,
       },
     });
-    return NextResponse.json(like);
+    return NextResponse.json(allLikesByUser);
   } catch (error: any) {
     return new NextResponse(
       JSON.stringify({
