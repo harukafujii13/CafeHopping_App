@@ -111,12 +111,24 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
     } catch (error) {
       console.error('Error fetching the all Likes by user:', error);
     }
-  }, []);
+  }, [session]);
 
   useEffect(() => {
-    fetchBookmarks();
-    fetchAllLikes();
-    fetchAllLikesByUser();
+    console.log(likedCafes);
+  }, [likedCafes]);
+  useEffect(() => {
+    if (session) {
+      fetchBookmarks();
+      fetchAllLikes();
+      fetchAllLikesByUser();
+    }
+  }, [session, fetchAllLikes, fetchBookmarks, fetchAllLikesByUser]);
+  useEffect(() => {
+    if (session) {
+      fetchBookmarks();
+      fetchAllLikes();
+      fetchAllLikesByUser();
+    }
   }, [session, fetchAllLikes, fetchBookmarks, fetchAllLikesByUser]);
   //whenever the session object changes, effectively re-fetching the bookmarked cafes list
   //when the user logs in/out.
