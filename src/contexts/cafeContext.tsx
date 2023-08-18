@@ -114,7 +114,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   }, [session]);
 
   useEffect(() => {
-    console.log(likedCafes);
+    // console.log(likedCafes);
   }, [likedCafes]);
   useEffect(() => {
     if (session) {

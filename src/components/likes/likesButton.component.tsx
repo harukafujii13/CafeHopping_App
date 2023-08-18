@@ -21,7 +21,7 @@ export const LikesButton = ({ cafeId }: { cafeId: Place | BookMarkPlace }) => {
   const alreadyLiked = isLiked(cafeId.place_id);
   const alreadyLikedByUser = isLikedByUser(cafeId.place_id);
   const likeColor = alreadyLiked && alreadyLikedByUser ? '#DE1A17' : '#6b7280';
-  console.log(likeColor);
+  // console.log(likeColor);
 
   async function handleLikeClick() {
     if (!session) {
