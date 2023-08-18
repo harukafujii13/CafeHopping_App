@@ -22,6 +22,7 @@ model Cafe {
   lat       Float
   lng       Float
   opening_hours String[]
+  reviews   Review[]
 }
 
 
@@ -43,6 +44,7 @@ model User {
   password  String
   bookmarks Bookmark[]
   likes     Like[] 
+  reviews   Review[]
 }
 
 model Like {
@@ -54,6 +56,20 @@ model Like {
 
 
 }
+
+model Review {
+  id        String    @id @default(uuid())
+  content   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    String
+  cafeId    String
+  user      User      @relation(fields: [userId], references: [id])
+  cafe      Cafe      @relation(fields: [cafeId], references: [id])
+
+  @@unique([userId, cafeId])
+}
+
 
 //Model: The model block defines a data model for the User entity in the database. 
 //The @@unique([userId, cafeId]) makes sure that a combination of userId and 
