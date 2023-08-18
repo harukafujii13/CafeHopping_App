@@ -28,7 +28,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/components/googlemap.componenttsx"
+    "src/components/googlemap.componenttsx",
+    "src/components/reviewComment/editReviewButton.componenttsx"
   ],
   "exclude": ["node_modules"]
 }
