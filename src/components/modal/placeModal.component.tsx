@@ -5,6 +5,7 @@ import { FC, useMemo } from 'react';
 import { GoogleMap, Marker } from '@react-google-maps/api';
 import { useContext } from 'react';
 import { GoogleMapsContext } from '@/contexts/googleMapContext';
+import { AiFillCloseCircle } from 'react-icons/ai';
 
 interface ModalProps {
   isOpen: boolean;
@@ -47,7 +48,7 @@ const PlaceModal: FC<ModalProps> = ({
           className="fixed inset-0 bg-gray-800 opacity-50 transition-opacity"
           aria-hidden="true"></div>
         <div
-          className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all flex flex-col md:flex-row space-x-0 md:space-x-4 w-11/12 lg:w-2/3 xl:w-1/2"
+          className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all flex flex-col md:flex-row space-x-0 md:space-x-4 w-11/12 h-[45rem] md:w-[50rem] md:h-[30rem]  lg:w-[60rem] lg:h-[32rem]"
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-headline">
@@ -96,60 +97,68 @@ const PlaceModal: FC<ModalProps> = ({
               </GoogleMap>
             )}
           </div>
-          <div className="w-full md:w-1/2 p-4 overflow-y-auto flex flex-col items-center">
-            <div
-              className="text-2xl leading-6 font-bold text-primary-gray font-inter my-[1.5rem]"
-              id="modal-headline">
-              {place?.name}
+
+          <div className="w-full md:w-1/2 p-[1rem] overflow-y-auto ">
+            <div className="flex justify-end items-center text-[1.7rem] text-primary-gray hover:text-primary-coral">
+              <AiFillCloseCircle
+                className="cursor-pointer"
+                onClick={closeModal}
+              />
             </div>
-            <div>
-              <div className="mb-2">
-                {place?.rating && (
-                  <div className="font-semibold font-inter text-base flex items-center mr-6">
-                    <div className="mr-[0.3rem] text-primary-gray font-inter font-medium text-lg">
-                      Rating: {place.rating}
-                    </div>
-                    <StarRating rating={place.rating} />
-                  </div>
-                )}
+            <div className="flex flex-col items-center">
+              <div
+                className="text-2xl leading-6 font-bold text-primary-gray font-inter my-[1rem]"
+                id="modal-headline">
+                {place?.name}
               </div>
-              {!opening_hours &&
-                place?.opening_hours &&
-                place.opening_hours.weekday_text && (
+              <div>
+                <div className="mb-2">
+                  {place?.rating && (
+                    <div className="font-semibold font-inter text-base flex items-center mr-6">
+                      <div className="mr-[0.3rem] text-primary-gray font-inter font-medium text-lg">
+                        Rating: {place.rating}
+                      </div>
+                      <StarRating rating={place.rating} />
+                    </div>
+                  )}
+                </div>
+                {!opening_hours &&
+                  place?.opening_hours &&
+                  place.opening_hours.weekday_text && (
+                    <div className="text-left">
+                      <div className="font-medium text-lg text-primary-gray mb-2 font-inter ">
+                        Opening Hours:
+                      </div>
+                      <ul className="list-disc list-inside space-y-2 text-primary-gray text-md font-inter">
+                        {place.opening_hours.weekday_text.map((day, index) => (
+                          <li key={index}>{day}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                {opening_hours && opening_hours.length > 0 && (
                   <div className="text-left">
                     <div className="font-medium text-lg text-primary-gray mb-2 font-inter ">
                       Opening Hours:
                     </div>
                     <ul className="list-disc list-inside space-y-2 text-primary-gray text-md font-inter">
-                      {place.opening_hours.weekday_text.map((day, index) => (
+                      {opening_hours.map((day, index) => (
                         <li key={index}>{day}</li>
                       ))}
                     </ul>
                   </div>
                 )}
-              {opening_hours && opening_hours.length > 0 && (
-                <div className="text-left">
-                  <div className="font-medium text-lg text-primary-gray mb-2 font-inter ">
-                    Opening Hours:
-                  </div>
-                  <ul className="list-disc list-inside space-y-2 text-primary-gray text-md font-inter">
-                    {opening_hours.map((day, index) => (
-                      <li key={index}>{day}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {opening_hours && opening_hours.length === 0 && (
-                <div>No opening hours provided</div>
-              )}
-              <div className="px-4 py-3 sm:px-6 flex justify-center items-center">
-                <button
-                  type="button"
-                  className="inline-flex justify-center rounded-md px-6 py-2 bg-primary-coral text-base font-medium text-white font-inter hover:bg-primary-rose focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b9cbc6]"
-                  onClick={closeModal}>
-                  Close
-                </button>
+                {opening_hours && opening_hours.length === 0 && (
+                  <div>No opening hours provided</div>
+                )}
               </div>
+            </div>
+            <div className="flex justify-end items-center my-[1rem]">
+              <button
+                type="button"
+                className="inline-flex justify-center rounded-md px-3 py-1.5 bg-primary-coral text-base font-medium text-white font-inter hover:bg-primary-rose focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b9cbc6]">
+                Create Review
+              </button>
             </div>
           </div>
         </div>
