@@ -7,6 +7,7 @@ import { useContext } from 'react';
 import { GoogleMapsContext } from '@/contexts/googleMapContext';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import ReviewForm from '../reviewComment/reviewInputForm.component';
+import { GrFormClose } from 'react-icons/gr';
 
 interface ModalProps {
   isOpen: boolean;
@@ -39,11 +40,14 @@ const PlaceModal: FC<ModalProps> = ({
     };
   }, []);
 
-  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [ReviewFormOpen, setShowReviewFormOpen] = useState(false);
 
-  const handleReviewSubmit = (data) => {
-    console.log(data);
-    setShowReviewForm(false);
+  const handleOpenForm = () => {
+    setShowReviewFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setShowReviewFormOpen(false);
   };
 
   return (
@@ -162,15 +166,24 @@ const PlaceModal: FC<ModalProps> = ({
               </div>
             </div>
             <div className="flex justify-end items-center my-[1rem]">
-              {!showReviewForm && (
+              {!ReviewFormOpen && (
                 <button
+                  onClick={handleOpenForm}
                   type="button"
-                  className="inline-flex justify-center rounded-md px-4 py-2 bg-primary-coral text-base font-medium text-white font-inter hover:bg-primary-rose focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b9cbc6]"
-                  onClick={() => setShowReviewForm(true)}>
+                  className="inline-flex justify-center rounded-md px-4 py-2 bg-primary-coral text-base font-medium text-white font-inter hover:bg-primary-rose focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b9cbc6]">
                   Create Review
                 </button>
               )}
-              {showReviewForm && <ReviewForm onSubmit={handleReviewSubmit} />}
+              {ReviewFormOpen && (
+                <div className="bg-white w-full h-[15rem] p-[1rem] rounded-lg">
+                  <div
+                    className="flex justify-end mb-3 text-xl font-bold"
+                    onClick={handleCloseForm}>
+                    <GrFormClose />
+                  </div>
+                  <ReviewForm />
+                </div>
+              )}
             </div>
           </div>
         </div>

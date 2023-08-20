@@ -5,6 +5,19 @@ interface ReviewProps {
   reviewerName: string; // This will come from the associated User model
 }
 
+// model Review {
+//   id        String    @id @default(uuid())
+//   content   String
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @updatedAt
+//   userId    String
+//   cafeId    String
+//   user      User      @relation(fields: [userId], references: [id])
+//   cafe      Cafe      @relation(fields: [cafeId], references: [id])
+
+//   @@unique([userId, cafeId])
+// }
+
 const ReviewCard: React.FC<ReviewProps> = ({
   reviewId,
   content,
