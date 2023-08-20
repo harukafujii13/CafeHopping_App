@@ -1,44 +1,25 @@
-import React, { useState } from 'react';
-import EditReviewButton from './editReviewForm';
-import EditReviewForm from './removeReviewButton.component';
-
 interface ReviewProps {
-  review: ReviewType;
-  onDelete: () => void;
-  onUpdate: (newText: string) => void;
+  reviewId: string;
+  content: string;
+  createdAt: string; // or Date depending on how you handle dates in your frontend
+  reviewerName: string; // This will come from the associated User model
 }
 
-const Review: React.FC<ReviewProps> = ({ review, onDelete, onUpdate }) => {
-  const [isEditing, setIsEditing] = useState(false);
-
-  const handleEdit = () => setIsEditing(true);
-
-  const handleSave = (newText: string) => {
-    onUpdate(newText);
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => setIsEditing(false);
-
+const ReviewCard: React.FC<ReviewProps> = ({
+  reviewId,
+  content,
+  createdAt,
+  reviewerName,
+}) => {
   return (
-    <div>
-      {isEditing ? (
-        <EditReviewForm
-          initialText={review.text}
-          onSave={handleSave}
-          onCancel={handleCancel}
-        />
-      ) : (
-        <>
-          <p>{review.text}</p>
-          <div className="flex">
-            <EditReviewButton onEdit={handleEdit} />
-            {/* ... other buttons, like the delete button ... */}
-          </div>
-        </>
-      )}
+    <div className="p-4 border rounded shadow">
+      <div className="flex justify-between">
+        <h2 className="text-xl font-bold">{reviewerName}</h2>
+        <span>{new Date(createdAt).toLocaleDateString()}</span>
+      </div>
+      <p className="mt-2">{content}</p>
     </div>
   );
 };
 
-export default Review;
+export default ReviewCard;

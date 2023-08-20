@@ -1,11 +1,12 @@
 import { Place } from '@/components/cafeFinder/cafefinder.component';
 import { BookMarkPlace } from '@/app/bookmark/bookmarkCafe';
 import StarRating from '../rating/starRating.component';
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { GoogleMap, Marker } from '@react-google-maps/api';
 import { useContext } from 'react';
 import { GoogleMapsContext } from '@/contexts/googleMapContext';
 import { AiFillCloseCircle } from 'react-icons/ai';
+import ReviewForm from '../reviewComment/reviewInputForm.component';
 
 interface ModalProps {
   isOpen: boolean;
@@ -38,6 +39,13 @@ const PlaceModal: FC<ModalProps> = ({
     };
   }, []);
 
+  const [showReviewForm, setShowReviewForm] = useState(false);
+
+  const handleReviewSubmit = (data) => {
+    console.log(data);
+    setShowReviewForm(false);
+  };
+
   return (
     <div
       className={`fixed z-50 inset-0 overflow-y-auto ${
@@ -48,7 +56,7 @@ const PlaceModal: FC<ModalProps> = ({
           className="fixed inset-0 bg-gray-800 opacity-50 transition-opacity"
           aria-hidden="true"></div>
         <div
-          className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all flex flex-col md:flex-row space-x-0 md:space-x-4 w-11/12 h-[45rem] md:w-[50rem] md:h-[30rem]  lg:w-[60rem] lg:h-[32rem]"
+          className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all flex flex-col md:flex-row space-x-0  w-11/12 h-[45rem] md:w-[50rem] md:h-[30rem]  lg:w-[60rem] lg:h-[32rem]"
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-headline">
@@ -98,7 +106,7 @@ const PlaceModal: FC<ModalProps> = ({
             )}
           </div>
 
-          <div className="w-full md:w-1/2 p-[1rem] overflow-y-auto ">
+          <div className="w-full md:w-1/2 p-[1.5rem] overflow-y-auto bg-[#F3F6F5]">
             <div className="flex justify-end items-center text-[1.7rem] text-primary-gray hover:text-primary-coral">
               <AiFillCloseCircle
                 className="cursor-pointer"
@@ -154,11 +162,15 @@ const PlaceModal: FC<ModalProps> = ({
               </div>
             </div>
             <div className="flex justify-end items-center my-[1rem]">
-              <button
-                type="button"
-                className="inline-flex justify-center rounded-md px-3 py-1.5 bg-primary-coral text-base font-medium text-white font-inter hover:bg-primary-rose focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b9cbc6]">
-                Create Review
-              </button>
+              {!showReviewForm && (
+                <button
+                  type="button"
+                  className="inline-flex justify-center rounded-md px-4 py-2 bg-primary-coral text-base font-medium text-white font-inter hover:bg-primary-rose focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b9cbc6]"
+                  onClick={() => setShowReviewForm(true)}>
+                  Create Review
+                </button>
+              )}
+              {showReviewForm && <ReviewForm onSubmit={handleReviewSubmit} />}
             </div>
           </div>
         </div>

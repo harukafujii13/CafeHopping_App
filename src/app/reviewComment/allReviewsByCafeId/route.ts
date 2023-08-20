@@ -1,45 +1,33 @@
 //fetch a list of all reviews
 
 import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { NextApiResponse } from 'next';
+import { NextApiRequest } from 'next';
 
-export async function GET(req: Request, context: any) {
-  let userId;
-  try {
-    const session = await getServerSession(authOptions);
-    if (session && session.user) {
-      userId = session.user.id;
-    } else {
-      throw new Error('Session or user not found.');
-    }
-  } catch (error: any) {
-    return new NextResponse(
-      JSON.stringify({
-        status: 'error',
-        message: error.message || 'Failed to retrieve session.',
-      }),
-      { status: 500 }
-    );
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const cafeId = req.query.cafeId as string;
+
+  // Ensure cafeId is provided
+  if (!cafeId) {
+    return res.status(400).json({ message: 'cafeId must be provided' });
   }
 
   try {
-    const allReviewsByUser = await prisma.review.findMany({
+    const allReviewsByCafe = await prisma.review.findMany({
       where: {
-        userId,
+        cafeId,
       },
     });
-    return NextResponse.json(allReviewsByUser);
-  } catch (error: any) {
-    console.log(error);
 
-    return new NextResponse(
-      JSON.stringify({
-        status: 'error',
-        message: error.message,
-      }),
-      { status: 500 }
-    );
+    return res.status(200).json(allReviewsByCafe);
+  } catch (error: any) {
+    console.error(error);
+    return res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
   }
 }
