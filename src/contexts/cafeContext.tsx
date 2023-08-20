@@ -159,6 +159,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   };
 
   const isBookmarked = (cafeId: string) => {
+    //some error
     return bookmarkedCafes.some((cafe) => cafe.cafeId === cafeId);
   };
   const isLiked = (cafeId: string) => {
