@@ -114,7 +114,10 @@ const PlaceModal: FC<ModalProps> = ({
             <div className="flex justify-end items-center text-[1.7rem] text-primary-gray hover:text-primary-coral">
               <AiFillCloseCircle
                 className="cursor-pointer"
-                onClick={closeModal}
+                onClick={() => {
+                  closeModal();
+                  handleCloseForm();
+                }}
               />
             </div>
             <div className="flex flex-col items-center">
