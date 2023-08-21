@@ -18,6 +18,8 @@ interface Cafe {
   cafeId?: string;
   user: User;
   userId: string;
+  content?: string;
+  userName?: string;
 }
 
 interface CafeContextProps {
@@ -25,6 +27,7 @@ interface CafeContextProps {
   fetchBookmarks: () => void;
   removeFromBookmarks: (cafeId: string) => void;
   isBookmarked: (cafeId: string) => boolean;
+
   fetchAllLikes: (cafeId: string) => void;
   fetchAllLikesByUser: () => void;
   likedCafes: Cafe[];
@@ -33,6 +36,13 @@ interface CafeContextProps {
   isLiked: (cafeId: string) => boolean;
   isLikedByUser: (cafeId: string) => boolean;
   likesCount: { [cafeId: string]: number };
+
+  userReviews: Cafe[];
+  fetchReviewsByCafeId: (cafeId: string) => void;
+  addReview: (cafeId: string, content: string) => void;
+  updateReview: (reviewId: string, content: string) => void;
+  deleteReview: (reviewId: string) => void;
+  isReviewed: () => Cafe | undefined;
 }
 
 export const CafeContext = createContext<CafeContextProps>({
@@ -40,6 +50,7 @@ export const CafeContext = createContext<CafeContextProps>({
   fetchBookmarks: () => {},
   removeFromBookmarks: () => {},
   isBookmarked: () => false,
+
   fetchAllLikes: () => {},
   fetchAllLikesByUser: () => {},
   likedCafes: [],
@@ -48,6 +59,13 @@ export const CafeContext = createContext<CafeContextProps>({
   removeFromLikes: () => {},
   isLiked: () => false,
   isLikedByUser: () => false,
+
+  isReviewed: () => undefined,
+  userReviews: [],
+  fetchReviewsByCafeId: () => {},
+  addReview: () => {},
+  updateReview: () => {},
+  deleteReview: () => {},
 });
 
 interface CafeProviderProps {
@@ -60,8 +78,11 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   const [likesCount, setLikesCount] = useState<{ [cafeId: string]: number }>(
     {}
   );
+  const [userReviews, setUserReviews] = useState<Cafe[]>([]);
+
   const { data: session } = useSession();
-  //bookmark
+
+  //Fetch bookmark
   const fetchBookmarks = useCallback(async () => {
     try {
       const user = session?.user?.id;
@@ -73,6 +94,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
     }
   }, [session]);
 
+  //Fetch Likes count
   const fetchLikesCount = useCallback(async (cafeId: string) => {
     try {
       const response = await fetch(`/api/cafe/${cafeId}/likes-count`);
@@ -83,6 +105,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
     }
   }, []);
 
+  //Fetch all Likes
   const fetchAllLikes = useCallback(async () => {
     try {
       const response = await fetch(`/api/allLikes`);
@@ -100,6 +123,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
     }
   }, []);
 
+  //Fetch Likes by user
   const fetchAllLikesByUser = useCallback(async () => {
     try {
       const response = await fetch(`/api/allLikesByUser`);
@@ -113,6 +137,27 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
     }
   }, [session]);
 
+  //Fetch Reviews
+  const fetchReviewsByCafeId = useCallback(
+    async (cafeId: string) => {
+      try {
+        const response = await fetch(
+          `/api/reviewComment/${cafeId}/allReviewsByCafeId`
+        );
+        if (!response.ok) {
+          if (!response.ok) {
+            throw new Error('Failed to fetch all reviews by cafeId');
+          }
+          const reviewsByCafeId = await response.json();
+          setUserReviews(reviewsByCafeId);
+        }
+      } catch (error) {
+        console.error('Error fetching the all reviews by cafeId:', error);
+      }
+    },
+    [session]
+  );
+
   useEffect(() => {
     // console.log(likedCafes);
   }, [likedCafes]);
@@ -122,23 +167,25 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       fetchAllLikes();
       fetchAllLikesByUser();
     }
-  }, [session, fetchAllLikes, fetchBookmarks, fetchAllLikesByUser]);
-  useEffect(() => {
-    if (session) {
-      fetchBookmarks();
-      fetchAllLikes();
-      fetchAllLikesByUser();
-    }
-  }, [session, fetchAllLikes, fetchBookmarks, fetchAllLikesByUser]);
+  }, [
+    session,
+    fetchAllLikes,
+    fetchBookmarks,
+    fetchAllLikesByUser,
+    fetchReviewsByCafeId,
+  ]);
+
   //whenever the session object changes, effectively re-fetching the bookmarked cafes list
   //when the user logs in/out.
 
+  //Remove bookmarks
   const removeFromBookmarks = (cafeId: string) => {
     setBookmarkedCafes((prevCafes) =>
       prevCafes.filter((cafe) => cafe.cafeId !== cafeId)
     );
   };
 
+  //Remove Likes
   const removeFromLikes = (cafeId: string) => {
     const currentLikesCount = likesCount[cafeId];
     if (currentLikesCount === 1) {
@@ -158,16 +205,94 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
     // );
   };
 
+  //Delete Reviews
+  const deleteReview = async (id: string) => {
+    try {
+      const response = await fetch(`/api/reviewComment/${id}/deleteReview`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setUserReviews((prevReviews) =>
+          prevReviews.filter((review) => review.id !== id)
+        );
+      }
+    } catch (error) {
+      console.error('Error deleting the review:', error);
+    }
+  };
+
+  //Reviews create
+  const addReview = async (cafeId: string, content: string) => {
+    try {
+      const response = await fetch(`/api/allReviewsByCafeId/createReview`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          cafeId,
+          content,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setUserReviews((prevReviews) => [...prevReviews, data.review]);
+      }
+    } catch (error) {
+      console.error('Error adding the review:', error);
+    }
+  };
+
+  //Reviews update
+  const updateReview = async (id: string, content: string) => {
+    try {
+      const response = await fetch(`/api/reviewComment/${id}/updateReview`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setUserReviews((prevReviews) =>
+          prevReviews.map((review) => (review.id === id ? data.review : review))
+        );
+      }
+    } catch (error) {
+      console.error('Error updating the review:', error);
+    }
+  };
+
+  //Bookmarked
   const isBookmarked = (cafeId: string) => {
     //some error
     return bookmarkedCafes.some((cafe) => cafe.cafeId === cafeId);
   };
+
+  //Liked
   const isLiked = (cafeId: string) => {
     return likesCount[cafeId] > 0;
   };
+
+  //Liked by user
   const isLikedByUser = (cafeId: string) => {
     return likedCafes.some((cafe) => cafe.cafeId === cafeId);
   };
+
+  //Reviewed by user
+  const isReviewed = () => {
+    const user = session?.user?.id;
+    return userReviews.find((cafe) => cafe.userId === user);
+  };
+
   return (
     <CafeContext.Provider
       value={{
@@ -175,6 +300,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
         removeFromBookmarks,
         isBookmarked,
         fetchBookmarks,
+
         likedCafes,
         likesCount,
         fetchLikesCount,
@@ -183,6 +309,13 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
         removeFromLikes,
         isLiked,
         isLikedByUser,
+
+        userReviews,
+        fetchReviewsByCafeId,
+        addReview,
+        updateReview,
+        isReviewed,
+        deleteReview,
       }}>
       {children}
     </CafeContext.Provider>

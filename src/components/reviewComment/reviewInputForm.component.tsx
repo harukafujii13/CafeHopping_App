@@ -1,46 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useSession } from 'next-auth/react';
+import { Place } from '@/components/cafeFinder/cafefinder.component';
+import { BookMarkPlace } from '@/app/bookmark/bookmarkCafe';
+import { CafeContext } from '@/contexts/cafeContext';
 
-interface ReviewFormProps {
-  onSubmit: (data: { content: string }) => void;
-}
+const ReviewInputForm = ({
+  place,
+}: {
+  place: Place | BookMarkPlace | null;
+}) => {
+  const { data: session } = useSession();
+  const [review, setReview] = useState('');
 
-const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const target = e.target as typeof e.target & {
-      reviewerName: { value: string };
-      content: { value: string };
+  const { isReviewed, fetchReviewsByCafeId, userReviews, addReview } =
+    useContext(CafeContext);
+
+  // Check if cafe is already reviewed
+  const alreadyReviewed = isReviewed();
+
+  async function handleReviewSubmit() {
+    if (!session) {
+      console.log('User not authenticated');
+      return;
+    }
+
+    const userId = session.user?.id;
+
+    const apiEndpoint = alreadyReviewed
+      ? `/api/reviewComment/${alreadyReviewed.id}/updateReview`
+      : '/api/reviewComment/createReview';
+
+    const body = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId, place, review }),
     };
 
-    const data = {
-      reviewerName: target.reviewerName.value,
-      content: target.content.value,
-    };
-    onSubmit(data);
-  };
+    try {
+      const response = await fetch(apiEndpoint, body);
+      if (!response.ok) {
+        throw new Error('Failed to submit review');
+      }
+      const data = await response.json();
+      if (
+        data.message === 'Review updated successfully' ||
+        data.message === 'Review created successfully'
+      ) {
+        fetchReviewsByCafeId(place!.place_id); // Fetch reviews by cafe ID after updating or creating
+      }
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  }
 
   return (
     <div>
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-3 text-primary-gray">
-        <div className="flex jusify-start text-primary-gray text-base">
-          User Name
-        </div>
-        <div className="flex flex-col justify-center items-center gap-3 justify-center">
-          <textarea
-            className="w-full rounded-lg h-[5rem]"
-            placeholder="Your Review"
-            required></textarea>
-          <button
-            type="submit"
-            className="inline-flex justify-center  rounded-md w-[10rem] px-4 py-2 bg-primary-coral text-base font-medium text-white font-inter hover:bg-primary-rose focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b9cbc6]">
-            Submit Review
-          </button>
-        </div>
-      </form>
+      <textarea
+        value={review}
+        onChange={(e) => setReview(e.target.value)}
+        placeholder="Write your review here..."
+      />
+      <button onClick={handleReviewSubmit}>
+        {alreadyReviewed ? 'Update Review' : 'Submit Review'}
+      </button>
     </div>
   );
 };
 
-export default ReviewForm;
+export default ReviewInputForm;

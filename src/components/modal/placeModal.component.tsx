@@ -1,13 +1,14 @@
 import { Place } from '@/components/cafeFinder/cafefinder.component';
 import { BookMarkPlace } from '@/app/bookmark/bookmarkCafe';
 import StarRating from '../rating/starRating.component';
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo, useState, useEffect } from 'react';
 import { GoogleMap, Marker } from '@react-google-maps/api';
-import { useContext } from 'react';
+import { useContext, useCallback } from 'react';
 import { GoogleMapsContext } from '@/contexts/googleMapContext';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import ReviewForm from '../reviewComment/reviewInputForm.component';
 import { GrFormClose } from 'react-icons/gr';
+import ReviewCard from '../../components/reviewComment/reviewCard.component';
 
 interface ModalProps {
   isOpen: boolean;
@@ -41,6 +42,7 @@ const PlaceModal: FC<ModalProps> = ({
   }, []);
 
   const [ReviewFormOpen, setShowReviewFormOpen] = useState(false);
+  const [reviews, setReviews] = useState([]);
 
   const handleOpenForm = () => {
     setShowReviewFormOpen(true);
@@ -49,6 +51,27 @@ const PlaceModal: FC<ModalProps> = ({
   const handleCloseForm = () => {
     setShowReviewFormOpen(false);
   };
+
+  const fetchReviewsByCafeId = useCallback(async (cafeId: string) => {
+    try {
+      const response = await fetch(
+        `/api/reviewComment/${cafeId}/allReviewsByCafeId`
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch all reviews by cafeId');
+      }
+      const reviewsByCafeId = await response.json();
+      setReviews(reviewsByCafeId);
+    } catch (error) {
+      console.error('Error fetching the all reviews by cafeId:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (place && place.place_id) {
+      fetchReviewsByCafeId(place.place_id);
+    }
+  }, [place, fetchReviewsByCafeId]);
 
   return (
     <div
@@ -184,10 +207,16 @@ const PlaceModal: FC<ModalProps> = ({
                     onClick={handleCloseForm}>
                     <GrFormClose />
                   </div>
-                  <ReviewForm />
+                  <ReviewForm place={place} />
                 </div>
               )}
             </div>
+            {reviews.map((item, index) => (
+              <ReviewCard
+                review={item}
+                key={index}
+              />
+            ))}
           </div>
         </div>
       </div>
