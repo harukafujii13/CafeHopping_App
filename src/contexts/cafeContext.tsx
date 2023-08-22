@@ -287,10 +287,17 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
     return likedCafes.some((cafe) => cafe.cafeId === cafeId);
   };
 
-  //Reviewed by user
-  const isReviewed = () => {
+  // Reviewed by user
+  // const isReviewed = () => {
+  //   const user = session?.user?.id;
+  //   return userReviews.find((cafe) => cafe.userId === user);
+  // };
+
+  const isReviewed = (cafeId: string) => {
     const user = session?.user?.id;
-    return userReviews.find((cafe) => cafe.userId === user);
+    return userReviews.find(
+      (cafe) => cafe.userId === user && cafe.cafeId === cafeId
+    );
   };
 
   return (

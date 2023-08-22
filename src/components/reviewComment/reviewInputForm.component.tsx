@@ -10,6 +10,8 @@ const ReviewInputForm = ({
   place: Place | BookMarkPlace | null;
 }) => {
   const { data: session } = useSession();
+  // console.log('/////data', data);
+
   const [review, setReview] = useState('');
 
   const { isReviewed, fetchReviewsByCafeId, userReviews, addReview } =
@@ -17,6 +19,7 @@ const ReviewInputForm = ({
 
   // Check if cafe is already reviewed
   const alreadyReviewed = isReviewed();
+  // console.log('/////alreadyReviewed', alreadyReviewed);
 
   async function handleReviewSubmit() {
     if (!session) {
@@ -25,6 +28,9 @@ const ReviewInputForm = ({
     }
 
     const userId = session.user?.id;
+    // console.log('Session User ID:', session?.user?.id);
+    console.log('Is Reviewed:', isReviewed());
+    console.log(userReviews);
 
     const apiEndpoint = alreadyReviewed
       ? `/api/reviewComment/${alreadyReviewed.id}/updateReview`
@@ -35,13 +41,15 @@ const ReviewInputForm = ({
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userId, place, review }),
+      body: JSON.stringify({ userId, place: { ...place, content: review } }),
     };
+
+    console.log(body);
 
     try {
       const response = await fetch(apiEndpoint, body);
       if (!response.ok) {
-        throw new Error('Failed to submit review');
+        throw new Error('Failed to submit review'); //error
       }
       const data = await response.json();
       if (
@@ -56,13 +64,16 @@ const ReviewInputForm = ({
   }
 
   return (
-    <div>
+    <div className="flex flex-col text-primary-gray gap-4 items-center justify-center">
       <textarea
+        className="rounded-lg text-sm w-full h-[6rem]"
         value={review}
         onChange={(e) => setReview(e.target.value)}
         placeholder="Write your review here..."
       />
-      <button onClick={handleReviewSubmit}>
+      <button
+        onClick={handleReviewSubmit}
+        className="inline-flex justify-center rounded-md px-4 py-2 bg-primary-coral text-base font-medium text-white font-inter hover:bg-primary-rose focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b9cbc6]">
         {alreadyReviewed ? 'Update Review' : 'Submit Review'}
       </button>
     </div>

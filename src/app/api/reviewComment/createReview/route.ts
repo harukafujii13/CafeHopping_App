@@ -4,13 +4,24 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
+interface Review {
+  userId: string;
+  cafeId: string;
+  content: string;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export async function POST(req: Request) {
   // Get user ID from session
   let userId;
+
   try {
     const session = await getServerSession(authOptions);
     if (session && session.user) {
       userId = session.user.id;
+      // console.log('///////userId', userId);
     } else {
       throw new Error('Session or user not found.');
     }
@@ -25,7 +36,12 @@ export async function POST(req: Request) {
   }
 
   // Get data from request body
-  const { cafeId, content } = await req.json();
+  const {
+    place: { place_id: cafeId, content },
+  } = await req.json();
+
+  // console.log('////////cafeId:', cafeId);
+  // console.log('////////content:', content);
 
   try {
     // Check if review already exists

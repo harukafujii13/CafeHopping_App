@@ -203,7 +203,7 @@ const PlaceModal: FC<ModalProps> = ({
               {ReviewFormOpen && (
                 <div className="bg-white w-full h-[15rem] p-[1rem] rounded-lg">
                   <div
-                    className="flex justify-end mb-3 text-xl font-bold"
+                    className="flex justify-end mb-4 text-xl font-bold"
                     onClick={handleCloseForm}>
                     <GrFormClose />
                   </div>
@@ -211,12 +211,12 @@ const PlaceModal: FC<ModalProps> = ({
                 </div>
               )}
             </div>
-            {reviews.map((item, index) => (
+            {/* {reviews.map((item, index) => (
               <ReviewCard
                 review={item}
                 key={index}
               />
-            ))}
+            ))} */}
           </div>
         </div>
       </div>
