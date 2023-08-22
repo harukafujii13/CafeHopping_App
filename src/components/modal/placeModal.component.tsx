@@ -58,7 +58,7 @@ const PlaceModal: FC<ModalProps> = ({
   }, [place, fetchReviewsByCafeId]);
   return (
     <div
-      className={`fixed z-50 inset-0 overflow-y-auto ${
+      className={`fixed z-50 inset-0 overflow-y-auto  ${
         isOpen ? '' : 'hidden'
       }`}>
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
@@ -116,7 +116,7 @@ const PlaceModal: FC<ModalProps> = ({
             )}
           </div>
           ​
-          <div className="w-full md:w-1/2 p-[1.5rem] overflow-y-auto bg-[#F3F6F5]">
+          <div className="w-full md:w-1/2 p-[1.5rem] overflow-y-auto">
             <div className="flex justify-end items-center text-[1.7rem] text-primary-gray hover:text-primary-coral">
               <AiFillCloseCircle
                 className="cursor-pointer"
@@ -184,7 +184,7 @@ const PlaceModal: FC<ModalProps> = ({
                 </button>
               )}
               {ReviewFormOpen && (
-                <div className="bg-white w-full h-[15rem] p-[1rem] rounded-lg">
+                <div className="bg-[#F3F6F5] w-full h-[15rem] p-[1rem] rounded-lg">
                   <div
                     className="flex justify-end mb-4 text-xl font-bold"
                     onClick={handleCloseForm}>
