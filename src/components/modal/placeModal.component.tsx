@@ -8,8 +8,8 @@ import { GoogleMapsContext } from '@/contexts/googleMapContext';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import ReviewForm from '../reviewComment/reviewInputForm.component';
 import { GrFormClose } from 'react-icons/gr';
+import { CafeContext } from '@/contexts/cafeContext';
 import ReviewCard from '../../components/reviewComment/reviewCard.component';
-
 interface ModalProps {
   isOpen: boolean;
   closeModal: () => void;
@@ -18,7 +18,6 @@ interface ModalProps {
   lng?: number;
   opening_hours?: string[];
 }
-
 const PlaceModal: FC<ModalProps> = ({
   isOpen,
   closeModal,
@@ -31,7 +30,7 @@ const PlaceModal: FC<ModalProps> = ({
   if (!contextValue) {
     throw new Error('PlaceModal must be used within a GoogleMapsProvider');
   }
-
+  const { fetchReviewsByCafeId, isReviewed } = useContext(CafeContext);
   const { isLoaded } = contextValue;
   // console.log(lat, lng);
   const containerStyle = useMemo(() => {
@@ -40,39 +39,19 @@ const PlaceModal: FC<ModalProps> = ({
       height: '100%',
     };
   }, []);
-
   const [ReviewFormOpen, setShowReviewFormOpen] = useState(false);
-  const [reviews, setReviews] = useState([]);
-
+  const [isUserEditing, setIsUserEditing] = useState(false);
   const handleOpenForm = () => {
     setShowReviewFormOpen(true);
   };
-
   const handleCloseForm = () => {
     setShowReviewFormOpen(false);
   };
-
-  const fetchReviewsByCafeId = useCallback(async (cafeId: string) => {
-    try {
-      const response = await fetch(
-        `/api/reviewComment/${cafeId}/allReviewsByCafeId`
-      );
-      if (!response.ok) {
-        throw new Error('Failed to fetch all reviews by cafeId');
-      }
-      const reviewsByCafeId = await response.json();
-      setReviews(reviewsByCafeId);
-    } catch (error) {
-      console.error('Error fetching the all reviews by cafeId:', error);
-    }
-  }, []);
-
   useEffect(() => {
     if (place && place.place_id) {
       fetchReviewsByCafeId(place.place_id);
     }
   }, [place, fetchReviewsByCafeId]);
-
   return (
     <div
       className={`fixed z-50 inset-0 overflow-y-auto ${
@@ -132,7 +111,7 @@ const PlaceModal: FC<ModalProps> = ({
               </GoogleMap>
             )}
           </div>
-
+          ​
           <div className="w-full md:w-1/2 p-[1.5rem] overflow-y-auto bg-[#F3F6F5]">
             <div className="flex justify-end items-center text-[1.7rem] text-primary-gray hover:text-primary-coral">
               <AiFillCloseCircle
@@ -207,15 +186,18 @@ const PlaceModal: FC<ModalProps> = ({
                     onClick={handleCloseForm}>
                     <GrFormClose />
                   </div>
-                  <ReviewForm place={place} />
+                  {!isReviewed(place!.place_id) && <ReviewForm place={place} />}
                 </div>
               )}
             </div>
             {/* {reviews.map((item, index) => (
-              <ReviewCard
-                review={item}
-                key={index}
-              />
+              isUserEditing ? ( <Form />) : (
+                <ReviewCard
+                  review={item}
+                  key={index}
+                  setIsUserEditing={setIsUserEditing}
+                />
+              )
             ))} */}
           </div>
         </div>
