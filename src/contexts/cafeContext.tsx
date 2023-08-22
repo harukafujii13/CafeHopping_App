@@ -7,11 +7,9 @@ import {
   useEffect,
   useCallback,
 } from 'react';
-
 import { useSession } from 'next-auth/react';
 import { User } from '@prisma/client';
 import { Place } from '@/components/cafeFinder/cafefinder.component';
-
 interface Cafe {
   id: string;
   cafe: Place;
@@ -21,13 +19,11 @@ interface Cafe {
   content?: string;
   userName?: string;
 }
-
 interface CafeContextProps {
   bookmarkedCafes: Cafe[];
   fetchBookmarks: () => void;
   removeFromBookmarks: (cafeId: string) => void;
   isBookmarked: (cafeId: string) => boolean;
-
   fetchAllLikes: (cafeId: string) => void;
   fetchAllLikesByUser: () => void;
   likedCafes: Cafe[];
@@ -36,21 +32,18 @@ interface CafeContextProps {
   isLiked: (cafeId: string) => boolean;
   isLikedByUser: (cafeId: string) => boolean;
   likesCount: { [cafeId: string]: number };
-
   userReviews: Cafe[];
   fetchReviewsByCafeId: (cafeId: string) => void;
   addReview: (cafeId: string, content: string) => void;
   updateReview: (reviewId: string, content: string) => void;
   deleteReview: (reviewId: string) => void;
-  isReviewed: () => Cafe | undefined;
+  isReviewed: (cafeId: string) => Cafe | undefined;
 }
-
 export const CafeContext = createContext<CafeContextProps>({
   bookmarkedCafes: [],
   fetchBookmarks: () => {},
   removeFromBookmarks: () => {},
   isBookmarked: () => false,
-
   fetchAllLikes: () => {},
   fetchAllLikesByUser: () => {},
   likedCafes: [],
@@ -59,7 +52,6 @@ export const CafeContext = createContext<CafeContextProps>({
   removeFromLikes: () => {},
   isLiked: () => false,
   isLikedByUser: () => false,
-
   isReviewed: () => undefined,
   userReviews: [],
   fetchReviewsByCafeId: () => {},
@@ -67,11 +59,9 @@ export const CafeContext = createContext<CafeContextProps>({
   updateReview: () => {},
   deleteReview: () => {},
 });
-
 interface CafeProviderProps {
   children: ReactNode;
 }
-
 export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   const [bookmarkedCafes, setBookmarkedCafes] = useState<Cafe[]>([]);
   const [likedCafes, setLikedCafes] = useState<Cafe[]>([]);
@@ -79,9 +69,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
     {}
   );
   const [userReviews, setUserReviews] = useState<Cafe[]>([]);
-
   const { data: session } = useSession();
-
   //Fetch bookmark
   const fetchBookmarks = useCallback(async () => {
     try {
@@ -93,7 +81,6 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       console.error('Error fetching the bookmarked cafes:', error);
     }
   }, [session]);
-
   //Fetch Likes count
   const fetchLikesCount = useCallback(async (cafeId: string) => {
     try {
@@ -104,7 +91,6 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       console.error('Error fetching the likes count:', error);
     }
   }, []);
-
   //Fetch all Likes
   const fetchAllLikes = useCallback(async () => {
     try {
@@ -122,7 +108,6 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       console.error('Error fetching the all Likes:', error);
     }
   }, []);
-
   //Fetch Likes by user
   const fetchAllLikesByUser = useCallback(async () => {
     try {
@@ -136,7 +121,6 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       console.error('Error fetching the all Likes by user:', error);
     }
   }, [session]);
-
   //Fetch Reviews
   const fetchReviewsByCafeId = useCallback(
     async (cafeId: string) => {
@@ -145,19 +129,16 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
           `/api/reviewComment/${cafeId}/allReviewsByCafeId`
         );
         if (!response.ok) {
-          if (!response.ok) {
-            throw new Error('Failed to fetch all reviews by cafeId');
-          }
-          const reviewsByCafeId = await response.json();
-          setUserReviews(reviewsByCafeId);
+          throw new Error('Failed to fetch all reviews by cafeId');
         }
+        const reviewsByCafeId = await response.json();
+        setUserReviews(reviewsByCafeId.allReviewsByCafe);
       } catch (error) {
         console.error('Error fetching the all reviews by cafeId:', error);
       }
     },
     [session]
   );
-
   useEffect(() => {
     // console.log(likedCafes);
   }, [likedCafes]);
@@ -174,17 +155,14 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
     fetchAllLikesByUser,
     fetchReviewsByCafeId,
   ]);
-
   //whenever the session object changes, effectively re-fetching the bookmarked cafes list
   //when the user logs in/out.
-
   //Remove bookmarks
   const removeFromBookmarks = (cafeId: string) => {
     setBookmarkedCafes((prevCafes) =>
       prevCafes.filter((cafe) => cafe.cafeId !== cafeId)
     );
   };
-
   //Remove Likes
   const removeFromLikes = (cafeId: string) => {
     const currentLikesCount = likesCount[cafeId];
@@ -204,14 +182,12 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
     //   prevCafes.filter((cafe) => cafe.cafeId !== cafeId)
     // );
   };
-
   //Delete Reviews
   const deleteReview = async (id: string) => {
     try {
       const response = await fetch(`/api/reviewComment/${id}/deleteReview`, {
         method: 'DELETE',
       });
-
       if (response.ok) {
         setUserReviews((prevReviews) =>
           prevReviews.filter((review) => review.id !== id)
@@ -221,7 +197,6 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       console.error('Error deleting the review:', error);
     }
   };
-
   //Reviews create
   const addReview = async (cafeId: string, content: string) => {
     try {
@@ -235,9 +210,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
           content,
         }),
       });
-
       const data = await response.json();
-
       if (data.success) {
         setUserReviews((prevReviews) => [...prevReviews, data.review]);
       }
@@ -245,7 +218,6 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       console.error('Error adding the review:', error);
     }
   };
-
   //Reviews update
   const updateReview = async (id: string, content: string) => {
     try {
@@ -258,9 +230,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
           content,
         }),
       });
-
       const data = await response.json();
-
       if (data.success) {
         setUserReviews((prevReviews) =>
           prevReviews.map((review) => (review.id === id ? data.review : review))
@@ -270,34 +240,27 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       console.error('Error updating the review:', error);
     }
   };
-
   //Bookmarked
   const isBookmarked = (cafeId: string) => {
     //some error
     return bookmarkedCafes.some((cafe) => cafe.cafeId === cafeId);
   };
-
   //Liked
   const isLiked = (cafeId: string) => {
     return likesCount[cafeId] > 0;
   };
-
   //Liked by user
   const isLikedByUser = (cafeId: string) => {
     return likedCafes.some((cafe) => cafe.cafeId === cafeId);
   };
-
   // Reviewed by user
   // const isReviewed = () => {
   //   const user = session?.user?.id;
   //   return userReviews.find((cafe) => cafe.userId === user);
   // };
-
   const isReviewed = (cafeId: string) => {
     const user = session?.user?.id;
-    return userReviews.find(
-      (cafe) => cafe.userId === user && cafe.cafeId === cafeId
-    );
+    return userReviews.find((cafe) => cafe.userId === user);
   };
 
   return (
@@ -307,7 +270,6 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
         removeFromBookmarks,
         isBookmarked,
         fetchBookmarks,
-
         likedCafes,
         likesCount,
         fetchLikesCount,
@@ -316,7 +278,6 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
         removeFromLikes,
         isLiked,
         isLikedByUser,
-
         userReviews,
         fetchReviewsByCafeId,
         addReview,
@@ -329,12 +290,10 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   );
 };
 export default CafeProvider;
-
 //bookmarkedCafes: An array of Cafe objects representing the cafes that the user has bookmarked.
 //fetchBookmarks: A function that fetches the user’s current bookmarks.
 //removeFromBookmarks: A function that removes a cafe from the user's bookmarks.
 //isBookmarked: A function that checks whether a cafe is bookmarked or not.
-
 //useCallback
 //It sends an API request to fetch the bookmarked cafes for the logged-in user
 //and sets them in the bookmarkedCafes state. It depends on the session object,
