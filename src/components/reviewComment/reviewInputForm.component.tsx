@@ -3,7 +3,6 @@ import { useSession } from 'next-auth/react';
 import { Place } from '@/components/cafeFinder/cafefinder.component';
 import { BookMarkPlace } from '@/app/bookmark/bookmarkCafe';
 import { CafeContext } from '@/contexts/cafeContext';
-
 const ReviewInputForm = ({
   place,
 }: {
@@ -11,31 +10,26 @@ const ReviewInputForm = ({
 }) => {
   const { data: session } = useSession();
   // console.log('/////data', data);
-
   const [review, setReview] = useState('');
-
-  const { isReviewed, fetchReviewsByCafeId, userReviews, addReview } =
+  const { isReviewed, fetchReviewsByCafeId, addReview } =
     useContext(CafeContext);
 
   // Check if cafe is already reviewed
   const alreadyReviewed = isReviewed();
-  // console.log('/////alreadyReviewed', alreadyReviewed);
+  // const alreadyReviewed = place?.place_id
+  //   ? isReviewed(place.place_id)
+  //   : undefined;
 
+  // console.log('/////alreadyReviewed', alreadyReviewed);
   async function handleReviewSubmit() {
     if (!session) {
       console.log('User not authenticated');
       return;
     }
-
     const userId = session.user?.id;
-    // console.log('Session User ID:', session?.user?.id);
-    console.log('Is Reviewed:', isReviewed());
-    console.log(userReviews);
-
     const apiEndpoint = alreadyReviewed
       ? `/api/reviewComment/${alreadyReviewed.id}/updateReview`
       : '/api/reviewComment/createReview';
-
     const body = {
       method: 'POST',
       headers: {
@@ -43,9 +37,7 @@ const ReviewInputForm = ({
       },
       body: JSON.stringify({ userId, place: { ...place, content: review } }),
     };
-
     console.log(body);
-
     try {
       const response = await fetch(apiEndpoint, body);
       if (!response.ok) {
@@ -62,7 +54,6 @@ const ReviewInputForm = ({
       console.error(error.message);
     }
   }
-
   return (
     <div className="flex flex-col text-primary-gray gap-4 items-center justify-center">
       <textarea
@@ -79,5 +70,4 @@ const ReviewInputForm = ({
     </div>
   );
 };
-
 export default ReviewInputForm;

@@ -2,6 +2,7 @@ import { Place } from '@/components/cafeFinder/cafefinder.component';
 import { BookMarkPlace } from '@/app/bookmark/bookmarkCafe';
 import StarRating from '../rating/starRating.component';
 import { FC, useMemo, useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { GoogleMap, Marker } from '@react-google-maps/api';
 import { useContext, useCallback } from 'react';
 import { GoogleMapsContext } from '@/contexts/googleMapContext';
@@ -30,7 +31,9 @@ const PlaceModal: FC<ModalProps> = ({
   if (!contextValue) {
     throw new Error('PlaceModal must be used within a GoogleMapsProvider');
   }
-  const { fetchReviewsByCafeId, isReviewed } = useContext(CafeContext);
+  const { data: session } = useSession();
+  const { fetchReviewsByCafeId, isReviewed, cafeReviews } =
+    useContext(CafeContext);
   const { isLoaded } = contextValue;
   // console.log(lat, lng);
   const containerStyle = useMemo(() => {
@@ -46,6 +49,7 @@ const PlaceModal: FC<ModalProps> = ({
   };
   const handleCloseForm = () => {
     setShowReviewFormOpen(false);
+    setIsUserEditing(false);
   };
   useEffect(() => {
     if (place && place.place_id) {
@@ -186,19 +190,21 @@ const PlaceModal: FC<ModalProps> = ({
                     onClick={handleCloseForm}>
                     <GrFormClose />
                   </div>
-                  {!isReviewed(place!.place_id) && <ReviewForm place={place} />}
+                  {!isReviewed() && <ReviewForm place={place} />}
                 </div>
               )}
             </div>
-            {/* {reviews.map((item, index) => (
-              isUserEditing ? ( <Form />) : (
+            {cafeReviews.map((item, index) =>
+              isUserEditing && item.user.id === session?.user?.id ? (
+                <ReviewForm place={place} />
+              ) : (
                 <ReviewCard
                   review={item}
                   key={index}
                   setIsUserEditing={setIsUserEditing}
                 />
               )
-            ))} */}
+            )}
           </div>
         </div>
       </div>

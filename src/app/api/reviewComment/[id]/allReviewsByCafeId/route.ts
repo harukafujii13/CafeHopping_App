@@ -17,6 +17,9 @@ export async function GET(req: Request, context: any) {
       where: {
         cafeId,
       },
+      include: {
+        user: true,
+      },
     });
     return NextResponse.json({
       status: 'success',

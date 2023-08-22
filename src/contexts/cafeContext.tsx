@@ -19,6 +19,14 @@ interface Cafe {
   content?: string;
   userName?: string;
 }
+interface CafeReview {
+  id: string;
+  cafeId: string; // ID from the Prisma schema
+  content: string;
+  createdAt: string;
+  userId: string;
+  user: User;
+}
 interface CafeContextProps {
   bookmarkedCafes: Cafe[];
   fetchBookmarks: () => void;
@@ -32,12 +40,12 @@ interface CafeContextProps {
   isLiked: (cafeId: string) => boolean;
   isLikedByUser: (cafeId: string) => boolean;
   likesCount: { [cafeId: string]: number };
-  userReviews: Cafe[];
+  cafeReviews: CafeReview[];
   fetchReviewsByCafeId: (cafeId: string) => void;
   addReview: (cafeId: string, content: string) => void;
   updateReview: (reviewId: string, content: string) => void;
   deleteReview: (reviewId: string) => void;
-  isReviewed: (cafeId: string) => Cafe | undefined;
+  isReviewed: () => CafeReview | undefined;
 }
 export const CafeContext = createContext<CafeContextProps>({
   bookmarkedCafes: [],
@@ -53,7 +61,7 @@ export const CafeContext = createContext<CafeContextProps>({
   isLiked: () => false,
   isLikedByUser: () => false,
   isReviewed: () => undefined,
-  userReviews: [],
+  cafeReviews: [],
   fetchReviewsByCafeId: () => {},
   addReview: () => {},
   updateReview: () => {},
@@ -68,7 +76,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   const [likesCount, setLikesCount] = useState<{ [cafeId: string]: number }>(
     {}
   );
-  const [userReviews, setUserReviews] = useState<Cafe[]>([]);
+  const [cafeReviews, setCafeReviews] = useState<CafeReview[]>([]);
   const { data: session } = useSession();
   //Fetch bookmark
   const fetchBookmarks = useCallback(async () => {
@@ -132,7 +140,8 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
           throw new Error('Failed to fetch all reviews by cafeId');
         }
         const reviewsByCafeId = await response.json();
-        setUserReviews(reviewsByCafeId.allReviewsByCafe);
+        console.log('reviewsByCafeId', reviewsByCafeId);
+        setCafeReviews(reviewsByCafeId.allReviewsByCafe);
       } catch (error) {
         console.error('Error fetching the all reviews by cafeId:', error);
       }
@@ -189,7 +198,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
         method: 'DELETE',
       });
       if (response.ok) {
-        setUserReviews((prevReviews) =>
+        setCafeReviews((prevReviews) =>
           prevReviews.filter((review) => review.id !== id)
         );
       }
@@ -212,7 +221,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       });
       const data = await response.json();
       if (data.success) {
-        setUserReviews((prevReviews) => [...prevReviews, data.review]);
+        setCafeReviews((prevReviews) => [...prevReviews, data.review]);
       }
     } catch (error) {
       console.error('Error adding the review:', error);
@@ -232,7 +241,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       });
       const data = await response.json();
       if (data.success) {
-        setUserReviews((prevReviews) =>
+        setCafeReviews((prevReviews) =>
           prevReviews.map((review) => (review.id === id ? data.review : review))
         );
       }
@@ -256,13 +265,12 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   // Reviewed by user
   // const isReviewed = () => {
   //   const user = session?.user?.id;
-  //   return userReviews.find((cafe) => cafe.userId === user);
+  //   return cafeReviews.find((cafe) => cafe.userId === user);
   // };
-  const isReviewed = (cafeId: string) => {
+  const isReviewed = () => {
     const user = session?.user?.id;
-    return userReviews.find((cafe) => cafe.userId === user);
+    return cafeReviews.find((cafe) => cafe.userId === user);
   };
-
   return (
     <CafeContext.Provider
       value={{
@@ -278,7 +286,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
         removeFromLikes,
         isLiked,
         isLikedByUser,
-        userReviews,
+        cafeReviews,
         fetchReviewsByCafeId,
         addReview,
         updateReview,

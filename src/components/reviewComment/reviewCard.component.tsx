@@ -1,56 +1,55 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, Dispatch } from 'react';
+import { useSession } from 'next-auth/react';
 import { GrFormClose } from 'react-icons/gr';
 import { CafeContext } from '@/contexts/cafeContext';
 import ReviewForm from '../../components/reviewComment/reviewInputForm.component';
-
+import { User } from '@prisma/client';
 interface ReviewProps {
-  reviewId: string;
-  content: string;
-  createdAt: string;
-  reviewerName: string;
-  userName: string;
-  cafeId: string; // ID from the Prisma schema
+  review: {
+    id: string;
+    content: string;
+    createdAt: string;
+    userId: string;
+    cafeId: string; // ID from the Prisma schema
+    user: User;
+  };
+  setIsUserEditing: Dispatch<React.SetStateAction<boolean>>;
 }
-
-const ReviewCard: React.FC<ReviewProps> = ({ review }) => {
+const ReviewCard: React.FC<ReviewProps> = ({ review, setIsUserEditing }) => {
   const [reviewFormOpen, setReviewFormOpen] = useState(false);
   const { isReviewed, fetchReviewsByCafeId, deleteReview } =
     useContext(CafeContext);
-
+  const { data: session } = useSession();
   // Check if the cafe has already been reviewed by the user
-  const alreadyReviewed = isReviewed(cafeId);
+  const alreadyReviewed = isReviewed();
 
   const handleOpenForm = () => {
-    setReviewFormOpen(true);
+    // setReviewFormOpen(true);
+    setIsUserEditing(true);
   };
-
   const handleCloseForm = () => {
-    setReviewFormOpen(false);
+    // setReviewFormOpen(false);
+    setIsUserEditing(false);
   };
-
   const handleRemove = async () => {
     if (!alreadyReviewed) {
       console.error("Review doesn't exist");
       return;
     }
-
     try {
       const response = await fetch('/api/reviewComment/[id]/deleteReview', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ reviewId }),
+        body: JSON.stringify({ reviewId: review.id }),
       });
-
       if (!response.ok) {
         throw new Error('Failed to delete review');
       }
-
       const data = await response.json();
-
       if (data.message === 'Review deleted successfully') {
-        deleteReview(cafeId);
+        deleteReview(review.cafeId);
       } else {
         console.error('Unexpected response:', data);
       }
@@ -58,18 +57,17 @@ const ReviewCard: React.FC<ReviewProps> = ({ review }) => {
       console.error(error.message);
     }
   };
-
   return (
     <>
       <div className="p-4 border rounded shadow text-primary-gray font-inter">
         <div className="flex  justify-between">
-          <div className="text-xl font-bold">{reviewerName}</div>
-          <span>{new Date(createdAt).toLocaleDateString()}</span>
+          <div className="text-xl font-bold">{review.user.name}</div>
+          <span>{new Date(review.createdAt).toLocaleDateString()}</span>
         </div>
-        <p className="mt-2">{content}</p>
+        <p className="mt-2">{review.content}</p>
       </div>
-
-      {reviewFormOpen && (
+      ​
+      {/* {reviewFormOpen && (
         <div className="bg-white w-full h-[15rem] p-[1rem] rounded-lg">
           <div
             className="flex justify-end mb-3 text-xl font-bold"
@@ -78,13 +76,13 @@ const ReviewCard: React.FC<ReviewProps> = ({ review }) => {
           </div>
           <ReviewForm
             placeId={placeId}
-            initialReview={content}
+            initialReview={review.content}
           />
         </div>
-      )}
-
+      )} */}
+      ​
       <div>
-        {userName === reviewerName ? (
+        {review.user.id === session?.user?.id ? (
           <>
             <button
               type="button"
@@ -104,5 +102,4 @@ const ReviewCard: React.FC<ReviewProps> = ({ review }) => {
     </>
   );
 };
-
 export default ReviewCard;
