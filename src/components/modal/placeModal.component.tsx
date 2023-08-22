@@ -175,7 +175,7 @@ const PlaceModal: FC<ModalProps> = ({
               </div>
             </div>
             <div className="flex justify-end items-center my-[1rem]">
-              {!ReviewFormOpen && (
+              {!ReviewFormOpen && !isReviewed() && (
                 <button
                   onClick={handleOpenForm}
                   type="button"
