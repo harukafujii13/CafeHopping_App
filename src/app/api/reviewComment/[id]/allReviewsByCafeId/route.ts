@@ -1,13 +1,9 @@
-//fetch a list of all reviews
-
 import { prisma } from '@/lib/prisma';
 import { NextApiResponse } from 'next';
 import { NextApiRequest } from 'next';
 import { NextResponse } from 'next/server';
-
 export async function GET(req: Request, context: any) {
   const cafeId: string = await context.params!.id;
-
   if (!cafeId) {
     return new NextResponse(
       JSON.stringify({
@@ -16,14 +12,12 @@ export async function GET(req: Request, context: any) {
       { status: 400 }
     );
   }
-
   try {
     const allReviewsByCafe = await prisma.review.findMany({
       where: {
         cafeId,
       },
     });
-
     return NextResponse.json({
       status: 'success',
       allReviewsByCafe,
