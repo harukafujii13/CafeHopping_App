@@ -196,7 +196,14 @@ const PlaceModal: FC<ModalProps> = ({
             </div>
             {cafeReviews.map((item, index) =>
               isUserEditing && item.user.id === session?.user?.id ? (
-                <ReviewForm place={place} />
+                <div className="bg-[#F3F6F5] w-full h-[15rem] p-[1rem] rounded-lg">
+                  <div
+                    className="flex justify-end mb-4 text-xl font-bold"
+                    onClick={handleCloseForm}>
+                    <GrFormClose />
+                  </div>
+                  <ReviewForm place={place} />
+                </div>
               ) : (
                 <ReviewCard
                   review={item}
