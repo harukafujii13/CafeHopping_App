@@ -35,42 +35,12 @@ const ReviewCard: React.FC<ReviewProps> = ({ review, setIsUserEditing }) => {
       return;
     }
 
-    const userId = session.user?.id;
-
     if (!alreadyReviewed) {
       console.error("Review doesn't exist");
       return;
     }
 
-    const apiEndpoint = `/api/reviewComment/${alreadyReviewed.id}/deleteReview`;
-
-    const body = {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ reviewId: review.id }), //probrem????
-    };
-
-    console.log('body/////', body);
-    console.log('Review Object////', review);
-    console.log('reviewId///////', review.id);
-
-    try {
-      const response = await fetch(apiEndpoint, body);
-
-      if (!response.ok) {
-        throw new Error('Failed to delete review');
-      }
-      const data = await response.json();
-      if (data.message === 'Review deleted successfully') {
-        deleteReview(review.id);
-      } else {
-        console.error('Unexpected response:', data);
-      }
-    } catch (error: any) {
-      console.error(error.message);
-    }
+    deleteReview(review.id);
   }
   return (
     <>
