@@ -1,8 +1,6 @@
 import React, { useState, useContext, Dispatch } from 'react';
 import { useSession } from 'next-auth/react';
-import { GrFormClose } from 'react-icons/gr';
 import { CafeContext } from '@/contexts/cafeContext';
-import ReviewForm from '../../components/reviewComment/reviewInputForm.component';
 import { User } from '@prisma/client';
 interface ReviewProps {
   review: {
@@ -16,47 +14,64 @@ interface ReviewProps {
   setIsUserEditing: Dispatch<React.SetStateAction<boolean>>;
 }
 const ReviewCard: React.FC<ReviewProps> = ({ review, setIsUserEditing }) => {
-  const [reviewFormOpen, setReviewFormOpen] = useState(false);
   const { isReviewed, fetchReviewsByCafeId, deleteReview } =
     useContext(CafeContext);
   const { data: session } = useSession();
+
   // Check if the cafe has already been reviewed by the user
   const alreadyReviewed = isReviewed();
 
   const handleOpenForm = () => {
-    // setReviewFormOpen(true);
     setIsUserEditing(true);
   };
+
   const handleCloseForm = () => {
-    // setReviewFormOpen(false);
     setIsUserEditing(false);
   };
-  const handleRemove = async () => {
+
+  async function handleRemove() {
+    if (!session) {
+      console.log('User not authenticated');
+      return;
+    }
+
+    const userId = session.user?.id;
+
     if (!alreadyReviewed) {
       console.error("Review doesn't exist");
       return;
     }
+
+    const apiEndpoint = `/api/reviewComment/${alreadyReviewed.id}/deleteReview`;
+
+    const body = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ reviewId: review.id }), //probrem????
+    };
+
+    console.log('body/////', body);
+    console.log('Review Object////', review);
+    console.log('reviewId///////', review.id);
+
     try {
-      const response = await fetch('/api/reviewComment/[id]/deleteReview', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ reviewId: review.id }),
-      });
+      const response = await fetch(apiEndpoint, body);
+
       if (!response.ok) {
         throw new Error('Failed to delete review');
       }
       const data = await response.json();
       if (data.message === 'Review deleted successfully') {
-        deleteReview(review.cafeId);
+        deleteReview(review.id);
       } else {
         console.error('Unexpected response:', data);
       }
     } catch (error: any) {
       console.error(error.message);
     }
-  };
+  }
   return (
     <>
       <div className="p-4 border rounded-lg shadow text-primary-gray font-inter flex flex-col gap-2 mb-2 bg-[#F3F6F5]">

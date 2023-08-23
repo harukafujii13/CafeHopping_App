@@ -8,6 +8,7 @@ import { authOptions } from '@/lib/auth';
 export async function DELETE(req: Request) {
   // Get user ID from session
   let userId;
+
   try {
     const session = await getServerSession(authOptions);
     if (session && session.user) {
@@ -25,12 +26,11 @@ export async function DELETE(req: Request) {
     );
   }
 
-  // Get the review ID from the request URL parameter
-  const reviewId = req.url?.split('/').slice(-3)[0];
-
   try {
+    console.log('////reviewId', req);
+    const { reviewId } = await req.json(); ////error!!!
     // Find and delete the review by its ID
-    const deletedReview = await prisma.review.delete({
+    await prisma.review.delete({
       where: {
         id: reviewId,
       },

@@ -27,9 +27,11 @@ const ReviewInputForm = ({
       return;
     }
     const userId = session.user?.id;
+
     const apiEndpoint = alreadyReviewed
       ? `/api/reviewComment/${alreadyReviewed.id}/updateReview`
       : '/api/reviewComment/createReview';
+
     const body = {
       method: 'POST',
       headers: {
@@ -37,7 +39,8 @@ const ReviewInputForm = ({
       },
       body: JSON.stringify({ userId, place: { ...place, content: review } }),
     };
-    console.log(body);
+    // console.log(body);
+
     try {
       const response = await fetch(apiEndpoint, body);
       if (!response.ok) {
