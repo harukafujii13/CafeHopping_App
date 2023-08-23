@@ -190,7 +190,12 @@ const PlaceModal: FC<ModalProps> = ({
                     onClick={handleCloseForm}>
                     <GrFormClose />
                   </div>
-                  {!isReviewed() && <ReviewForm place={place} />}
+                  {!isReviewed() && (
+                    <ReviewForm
+                      place={place}
+                      setShowReviewFormOpen={setShowReviewFormOpen}
+                    />
+                  )}
                 </div>
               )}
             </div>
