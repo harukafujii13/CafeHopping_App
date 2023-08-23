@@ -36,12 +36,7 @@ export async function POST(req: Request) {
   }
 
   // Get data from request body
-  const {
-    place: { place_id: cafeId, content },
-  } = await req.json();
-
-  // console.log('////////cafeId:', cafeId);
-  // console.log('////////content:', content);
+  const { cafeId, content } = await req.json();
 
   try {
     // Check if review already exists
@@ -67,15 +62,12 @@ export async function POST(req: Request) {
         cafeId,
         content,
       },
-    });
-
-    return NextResponse.json({
-      review: {
-        userId: review.userId,
-        cafeId: review.cafeId,
-        content: review.content,
+      include: {
+        user: true,
       },
     });
+
+    return NextResponse.json({ review });
   } catch (error: any) {
     console.log({ error });
     return new NextResponse(

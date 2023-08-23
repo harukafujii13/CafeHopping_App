@@ -148,6 +148,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
     },
     [session]
   );
+
   useEffect(() => {
     // console.log(likedCafes);
   }, [likedCafes]);
@@ -167,6 +168,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   //whenever the session object changes, effectively re-fetching the bookmarked cafes list
   //when the user logs in/out.
   //Remove bookmarks
+
   const removeFromBookmarks = (cafeId: string) => {
     setBookmarkedCafes((prevCafes) =>
       prevCafes.filter((cafe) => cafe.cafeId !== cafeId)
@@ -209,18 +211,16 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   //Reviews create
   const addReview = async (cafeId: string, content: string) => {
     try {
-      const response = await fetch(`/api/allReviewsByCafeId/createReview`, {
+      const response = await fetch(`/api/reviewComment/createReview`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          cafeId,
-          content,
-        }),
+        body: JSON.stringify({ cafeId, content }),
       });
       const data = await response.json();
-      if (data.success) {
+
+      if (response.ok) {
         setCafeReviews((prevReviews) => [...prevReviews, data.review]);
       }
     } catch (error) {

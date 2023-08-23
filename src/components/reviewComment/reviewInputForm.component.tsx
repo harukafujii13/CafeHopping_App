@@ -26,36 +26,8 @@ const ReviewInputForm = ({
       console.log('User not authenticated');
       return;
     }
-    const userId = session.user?.id;
 
-    const apiEndpoint = alreadyReviewed
-      ? `/api/reviewComment/${alreadyReviewed.id}/updateReview`
-      : '/api/reviewComment/createReview';
-
-    const body = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ userId, place: { ...place, content: review } }),
-    };
-    // console.log(body);
-
-    try {
-      const response = await fetch(apiEndpoint, body);
-      if (!response.ok) {
-        throw new Error('Failed to submit review'); //error
-      }
-      const data = await response.json();
-      if (
-        data.message === 'Review updated successfully' ||
-        data.message === 'Review created successfully'
-      ) {
-        fetchReviewsByCafeId(place!.place_id); // Fetch reviews by cafe ID after updating or creating
-      }
-    } catch (error: any) {
-      console.error(error.message);
-    }
+    addReview(place!.place_id, review);
   }
   return (
     <div className="flex flex-col text-primary-gray gap-4 items-center justify-center">
