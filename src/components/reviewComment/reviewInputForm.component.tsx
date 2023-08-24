@@ -64,7 +64,7 @@ const ReviewInputForm = ({
     return <div>Loading...</div>;
   }
   return (
-    <div className="flex flex-col text-primary-gray  items-center justify-center">
+    <div className="flex flex-col text-primary-gray  items-center justify-center font-inter">
       <textarea
         className="rounded-lg text-sm w-full h-[6rem]"
         value={review}

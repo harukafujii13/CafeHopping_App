@@ -68,7 +68,7 @@ const ReviewCard: React.FC<ReviewProps> = ({ review, setIsUserEditing }) => {
                 type="button"
                 className="inline-flex justify-center rounded-md w-[5rem] px-1 py-1 bg-primary-coral text-base font-medium text-white font-inter hover:bg-primary-rose focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b9cbc6]"
                 onClick={handleRemove}>
-                Remove
+                Delete
               </button>
             </div>
           ) : null}
