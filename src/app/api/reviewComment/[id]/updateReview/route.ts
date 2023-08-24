@@ -7,25 +7,24 @@ export async function PATCH(
   req: Request,
   { params }: { params: { id: string; content: string } }
 ) {
+  // Get user ID from session
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
+
   // Get the review ID from the provided params
   const reviewId = params.id;
 
-  // Get data from request body
-  let content;
-  try {
-    const body = await req.json();
-    content = body.content;
-  } catch (error) {
-    console.error('Failed to parse request body.', error);
+  const { content } = await req.json();
+
+  if (!content) {
     return new NextResponse(
       JSON.stringify({
         status: 'error',
-        message: 'Invalid request body.',
+        message: 'Content does not exist in request body.',
       }),
       { status: 400 }
     );
   }
-
   try {
     // Check if review exists and belongs to the current user
     const existingReview = await prisma.review.findUnique({
@@ -40,7 +39,6 @@ export async function PATCH(
           'Review not found or you are not authorized to update this review.',
       });
     }
-
     // Update the review
     const updatedReview = await prisma.review.update({
       where: {
@@ -49,16 +47,13 @@ export async function PATCH(
       data: {
         content,
       },
+      include: {
+        user: true,
+      },
     });
-
     return NextResponse.json({
       success: true,
-      review: {
-        id: updatedReview.id,
-        userId: updatedReview.userId,
-        cafeId: updatedReview.cafeId,
-        content: updatedReview.content,
-      },
+      review: updatedReview,
     });
   } catch (error: any) {
     console.error('Failed to update review.', error);

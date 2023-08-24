@@ -11,6 +11,7 @@ import ReviewForm from '../reviewComment/reviewInputForm.component';
 import { GrFormClose } from 'react-icons/gr';
 import { CafeContext } from '@/contexts/cafeContext';
 import ReviewCard from '../../components/reviewComment/reviewCard.component';
+
 interface ModalProps {
   isOpen: boolean;
   closeModal: () => void;
@@ -19,6 +20,7 @@ interface ModalProps {
   lng?: number;
   opening_hours?: string[];
 }
+
 const PlaceModal: FC<ModalProps> = ({
   isOpen,
   closeModal,
@@ -44,18 +46,22 @@ const PlaceModal: FC<ModalProps> = ({
   }, []);
   const [ReviewFormOpen, setShowReviewFormOpen] = useState(false);
   const [isUserEditing, setIsUserEditing] = useState(false);
+
   const handleOpenForm = () => {
     setShowReviewFormOpen(true);
   };
+
   const handleCloseForm = () => {
     setShowReviewFormOpen(false);
     setIsUserEditing(false);
   };
+
   useEffect(() => {
     if (place && place.place_id) {
       fetchReviewsByCafeId(place.place_id);
     }
   }, [place, fetchReviewsByCafeId]);
+
   return (
     <div
       className={`fixed z-50 inset-0 overflow-y-auto  ${
@@ -201,13 +207,19 @@ const PlaceModal: FC<ModalProps> = ({
             </div>
             {cafeReviews.map((item, index) =>
               isUserEditing && item.user.id === session?.user?.id ? (
-                <div className="bg-[#F3F6F5] w-full h-[15rem] p-[1rem] rounded-lg">
+                <div
+                  className="bg-[#F3F6F5] w-full h-[15rem] p-[1rem] rounded-lg"
+                  key={index}>
                   <div
                     className="flex justify-end mb-4 text-xl font-bold"
                     onClick={handleCloseForm}>
                     <GrFormClose />
                   </div>
-                  <ReviewForm place={place} />
+                  <ReviewForm
+                    place={place}
+                    editingReview={item}
+                    setIsUserEditing={setIsUserEditing}
+                  />
                 </div>
               ) : (
                 <ReviewCard

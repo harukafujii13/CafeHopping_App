@@ -19,9 +19,9 @@ interface Cafe {
   content?: string;
   userName?: string;
 }
-interface CafeReview {
+export interface CafeReview {
   id: string;
-  cafeId: string; // ID from the Prisma schema
+  cafeId: string;
   content: string;
   createdAt: string;
   userId: string;
@@ -47,6 +47,7 @@ interface CafeContextProps {
   deleteReview: (reviewId: string) => void;
   isReviewed: () => CafeReview | undefined;
 }
+
 export const CafeContext = createContext<CafeContextProps>({
   bookmarkedCafes: [],
   fetchBookmarks: () => {},
@@ -67,9 +68,11 @@ export const CafeContext = createContext<CafeContextProps>({
   updateReview: () => {},
   deleteReview: () => {},
 });
+
 interface CafeProviderProps {
   children: ReactNode;
 }
+
 export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   const [bookmarkedCafes, setBookmarkedCafes] = useState<Cafe[]>([]);
   const [likedCafes, setLikedCafes] = useState<Cafe[]>([]);
@@ -78,6 +81,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
   );
   const [cafeReviews, setCafeReviews] = useState<CafeReview[]>([]);
   const { data: session } = useSession();
+
   //Fetch bookmark
   const fetchBookmarks = useCallback(async () => {
     try {
@@ -89,6 +93,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       console.error('Error fetching the bookmarked cafes:', error);
     }
   }, [session]);
+
   //Fetch Likes count
   const fetchLikesCount = useCallback(async (cafeId: string) => {
     try {
@@ -99,6 +104,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       console.error('Error fetching the likes count:', error);
     }
   }, []);
+
   //Fetch all Likes
   const fetchAllLikes = useCallback(async () => {
     try {
@@ -116,6 +122,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       console.error('Error fetching the all Likes:', error);
     }
   }, []);
+
   //Fetch Likes by user
   const fetchAllLikesByUser = useCallback(async () => {
     try {
@@ -129,6 +136,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       console.error('Error fetching the all Likes by user:', error);
     }
   }, [session]);
+
   //Fetch Reviews
   const fetchReviewsByCafeId = useCallback(
     async (cafeId: string) => {
@@ -193,6 +201,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
     //   prevCafes.filter((cafe) => cafe.cafeId !== cafeId)
     // );
   };
+
   //Delete Reviews
   const deleteReview = async (id: string) => {
     try {
@@ -208,6 +217,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       console.error('Error deleting the review:', error);
     }
   };
+
   //Reviews create
   const addReview = async (cafeId: string, content: string) => {
     try {
@@ -219,7 +229,6 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
         body: JSON.stringify({ cafeId, content }),
       });
       const data = await response.json();
-
       if (response.ok) {
         setCafeReviews((prevReviews) => [...prevReviews, data.review]);
       }
@@ -227,6 +236,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       console.error('Error adding the review:', error);
     }
   };
+
   //Reviews update
   const updateReview = async (id: string, content: string) => {
     try {
@@ -240,7 +250,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
         }),
       });
       const data = await response.json();
-      if (data.success) {
+      if (response.ok) {
         setCafeReviews((prevReviews) =>
           prevReviews.map((review) => (review.id === id ? data.review : review))
         );
@@ -249,28 +259,34 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
       console.error('Error updating the review:', error);
     }
   };
+
   //Bookmarked
   const isBookmarked = (cafeId: string) => {
     //some error
     return bookmarkedCafes.some((cafe) => cafe.cafeId === cafeId);
   };
+
   //Liked
   const isLiked = (cafeId: string) => {
     return likesCount[cafeId] > 0;
   };
+
   //Liked by user
   const isLikedByUser = (cafeId: string) => {
     return likedCafes.some((cafe) => cafe.cafeId === cafeId);
   };
+
   // Reviewed by user
   // const isReviewed = () => {
   //   const user = session?.user?.id;
   //   return cafeReviews.find((cafe) => cafe.userId === user);
   // };
+
   const isReviewed = () => {
     const user = session?.user?.id;
     return cafeReviews.find((cafe) => cafe.userId === user);
   };
+
   return (
     <CafeContext.Provider
       value={{
