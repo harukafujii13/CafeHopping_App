@@ -59,10 +59,10 @@ const BookmarkPage = () => {
   //re-run whenever session or bookmarkedCafesState changes.
 
   const handleMoreInfo = ({ cafe }: CafeDetails) => {
-    console.log('handleMoreInfo called with:', cafe);
+    // console.log('handleMoreInfo called with:', cafe);
     setSelectedPlace({ ...cafe, lat: cafe.lat, lng: cafe.lng });
     setIsModalOpen(true);
-    console.log(selectedPlace);
+    // console.log(selectedPlace);
   };
 
   const closeModal = () => {

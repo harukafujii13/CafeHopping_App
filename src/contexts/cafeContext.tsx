@@ -148,7 +148,7 @@ export const CafeProvider: React.FC<CafeProviderProps> = ({ children }) => {
           throw new Error('Failed to fetch all reviews by cafeId');
         }
         const reviewsByCafeId = await response.json();
-        console.log('reviewsByCafeId', reviewsByCafeId);
+        // console.log('reviewsByCafeId', reviewsByCafeId);
         setCafeReviews(reviewsByCafeId.allReviewsByCafe);
       } catch (error) {
         console.error('Error fetching the all reviews by cafeId:', error);
