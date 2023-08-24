@@ -6,7 +6,8 @@
     "dev": "next dev",
     "start": "next start",
     "lint": "next lint",
-    "build": "next build"
+    "build": "next build",
+    "vercel-build": "npx prisma generate && next build"
   },
   "prisma": {
     "seed": "npx ts-node --compiler-options {\"module\":\"commonjs\"} prisma/seed.ts"
