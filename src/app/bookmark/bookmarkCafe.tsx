@@ -6,6 +6,7 @@ import BookmarkButton from '@/components/bookmark/bookmarkButton';
 import StarRating from '@/components/rating/starRating.component';
 import { CafeContext } from '@/contexts/cafeContext';
 import LikesButton from '@/components/likes/likesButton.component';
+import PlacePhoto from '@/components/placePhoto/placePhoto.component';
 
 interface Location {
   lat: number;
@@ -77,12 +78,7 @@ const BookmarkPage = () => {
           <div
             key={bookmarkedCafe.cafe.id}
             className="bg-white shadow-md max-w-sm">
-            <img
-              className="w-full h-48 object-cover"
-              src={bookmarkedCafe.cafe.photos}
-              alt={bookmarkedCafe.cafe.name}
-            />
-            ​
+            <PlacePhoto place={bookmarkedCafe.cafe} />​
             <div className="p-4">
               <h3 className="font-bold text-xl font-inter">
                 {bookmarkedCafe.cafe.name}
