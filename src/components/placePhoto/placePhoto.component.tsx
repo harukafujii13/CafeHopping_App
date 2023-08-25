@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Place } from '@/components/cafeFinder/cafefinder.component';
 
 const PlacePhoto = ({ place }: { place: Place }) => {
-  const [photoUrl, setPhotoUrl] = useState('/images/woody-bg.jpg');
+  const [photoUrl, setPhotoUrl] = useState('/images/latteImg.jpg');
 
   useEffect(() => {
     const service = new window.google.maps.places.PlacesService(
