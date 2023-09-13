@@ -1,34 +1,50 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ☕️ Cafe Hopping
 
-## Getting Started
+## ** ABOUT **
 
-First, run the development server:
+The Cafe Finder app is a full-stack application built for cafe enthusiasts to discover and engage with cafes in their vicinity or in specified areas. Whether you are looking to explore new cafes nearby or find the most-liked cafes in a particular area, this app has got you covered. It integrates essential features that enhance the user's experience and aids in making informed choices when selecting a cafe.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+### Feature
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Discover cafes nearby or in a specified area: Utilizing the Google Maps API, users can easily find cafes in their chosen areas, with detailed information about each establishment readily available.
+- Bookmark your favorite spots: Have a cafe you particularly love? Save it to your favorites for easy access later.
+- See the most-liked cafes: Leverage the like feature to explore cafes that are popular and highly rated by other users.
+- Review system: Read reviews from other users to help find the perfect spot for your next cafe visit.
+- Personalized experiences: Thanks to the integration of next-auth for user authentication, users can have personalized experiences, including the ability to save their favorite cafes and read reviews to make informed choices.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### The aim of this project
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+The primary goal of creating the Cafe Finder app was to build a full-stack application utilizing the latest version of Next.js and integrating it with the Google Maps API.
+Moreover, this project served as a profound learning curve to understand and master the use of Prisma alongside the latest version of Next.js. It has been a journey of exploration and learning, further enhancing my skills in developing full-stack applications.
 
-## Learn More
+### Some of the challenges I faced through this project
 
-To learn more about Next.js, take a look at the following resources:
+I needed to enable a customized experience where each user could have their favorite cafes bookmarked, "like" different cafes, and see personalized reviews. Creating a function to track these preferences using "Context" was quite challenging.
+Also, Using TypeScript for this project brought about an extra layer of complexity, especially when fetching data from the Google Maps API. Keeping track of data types across the entire app proved to be a challenging task.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### The technologies I used for this app
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- Nextjs
+- next-auth
+- PostgreSQL
+- Prisma
+- TypeScript
+- Google Maps API
+- tailwind
+- Vercel
 
-## Deploy on Vercel
+## ** Preview **
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### [Cafe Hopping](https://cafe-hopping.vercel.app/)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Home page
+<img width="1440" alt="home" src="">
+
+bookmark feature
+<img width="1440" alt="bookmark" src="">
+
+Like feature
+<img width="1440" alt="like" src="">
+
+Review feature
+<img width="1440" alt="review" src="">
