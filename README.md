@@ -4,7 +4,7 @@
 
 The Cafe Finder app is a full-stack application built for cafe enthusiasts to discover and engage with cafes in their vicinity or in specified areas. Whether you are looking to explore new cafes nearby or find the most-liked cafes in a particular area, this app has got you covered. It integrates essential features that enhance the user's experience and aids in making informed choices when selecting a cafe.
 
-### Feature
+### Features
 
 - Discover cafes nearby or in a specified area: Utilizing the Google Maps API, users can easily find cafes in their chosen areas, with detailed information about each establishment readily available.
 - Bookmark your favorite spots: Have a cafe you particularly love? Save it to your favorites for easy access later.
@@ -32,19 +32,3 @@ Also, Using TypeScript for this project brought about an extra layer of complexi
 - Google Maps API
 - tailwind
 - Vercel
-
-## ** Preview **
-
-### [Cafe Hopping](https://cafe-hopping.vercel.app/)
-
-Home page
-<img width="1440" alt="home" src="">
-
-bookmark feature
-<img width="1440" alt="bookmark" src="">
-
-Like feature
-<img width="1440" alt="like" src="">
-
-Review feature
-<img width="1440" alt="review" src="">
