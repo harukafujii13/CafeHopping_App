@@ -32,3 +32,8 @@ Also, Using TypeScript for this project brought about an extra layer of complexi
 - Google Maps API
 - tailwind
 - Vercel
+
+### Test User
+
+- Email: test@test.com
+- Password: test12345
